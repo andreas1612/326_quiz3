@@ -1,0 +1,51 @@
+wget https://srec.cs.ucy.ac.cy/epl326-quiz-B/107286.tar.gz
+tar -xzvf 107286.tar.gz
+
+openssl aes-256-cbc -e -in secret-file -out secret-file.enc 
+openssl aes-256-cbc -d -in secret-file.enc -out secretfile.decrypted
+
+openssl aes-256-cbc -a -in secret-file -out secret-file.enc
+
+echo "Hello world" | openssl aes-256-cbc -a -k mypass
+echo "Hello world" | openssl aes-256-cbc -a -nosalt -k mypass 
+
+echo
+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAA" | openssl aes-128-ecb -a -nosalt -k mypass 
+
+echo
+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAA" | openssl aes-128-cbc -a -nosalt -k
+mypass 
+
+reveal the magic passphrase and use it to decrypt the symmetric key stop 
+the passphrase is your id concatenated with two magic digits stop  10728640
+the passphrase is stored hashed in your files stop 
+sha two five six stop 
+crack it first stop 
+submit the first solution to blackboard which is rksrh
+
+enc help
+help
+genrsa help
+rsa help
+dgst help
+
+openssl genrsa -des3 -out private.pem 2048 
+openssl rsa -noout -text -in private.pem 
+
+openssl md5 /etc/passwd
+
+echo "Hello World" | openssl dgst -sha256
+openssl dgst -sha256 shattered-1.pdf 
+
+openssl dgst -sha256 /etc/passwd > etc.passwd.hash  
+cat etc.passwd.hash 
+openssl rsautl -sign -inkey private.pem -in etc.passwd.hash >
+signature 
+openssl rsautl -verify -inkey private.pem -in signature 
+
+openssl rsautl -encrypt -inkey private.pem -in etc.passwd.hash -out
+file.enc 
+openssl rsautl -decrypt -inkey private.pem -in file.enc -out
+file.dec 

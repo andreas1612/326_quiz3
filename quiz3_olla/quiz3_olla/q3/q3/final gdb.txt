@@ -1,0 +1,2101 @@
+bin.1
+
+
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>ls -l
+total 68
+-rw-r--r-- 1 pbekri01 cs22 1071 Apr  7  2023 answers.txt
+-rwxr-xr-x 1 pbekri01 cs22 7552 Apr  4  2022 bin.0
+-rwxr-xr-x 1 pbekri01 cs22 7864 Apr  4  2023 bin.1
+-rwxr-xr-x 1 pbekri01 cs22 7864 Apr  4  2023 bin.2
+-rwxr-xr-x 1 pbekri01 cs22 8020 Apr  4  2023 bin.3
+-rwxr-xr-x 1 pbekri01 cs22 8072 Apr  4  2023 bin.4
+-rw-r--r-- 1 pbekri01 cs22   19 Apr 10 20:40 file.1
+-rw-r--r-- 1 pbekri01 cs22   63 Apr  7  2023 file.2
+-rw-r--r-- 1 pbekri01 cs22  128 Apr  7  2023 file.3
+-rw-r--r-- 1 pbekri01 cs22  148 Apr  7  2023 file.4
+-rw-r--r-- 1 pbekri01 cs22 3215 Apr  7  2023 guide.txt
+-rwxr-xr-x 1 pbekri01 cs22   49 Apr  6  2023 run.sh
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>./run.sh
+[pbekri01@103ws20 1048972]$ gdb bin.1
+gdb: warning: Couldn't determine a path for the index cache directory.
+GNU gdb (GDB) Rocky Linux 10.2-13.el9
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from bin.1...
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.1.
+(No debugging symbols found in bin.1)
+(gdb) disas main
+Dump of assembler code for function main:
+   0x080488b3 <+0>: lea    0x4(%esp),%ecx
+   0x080488b7 <+4>: and    $0xfffffff0,%esp
+   0x080488ba <+7>: push   -0x4(%ecx)
+   0x080488bd <+10>: push   %ebp
+   0x080488be <+11>: mov    %esp,%ebp
+   0x080488c0 <+13>: push   %esi
+   0x080488c1 <+14>: push   %ebx
+   0x080488c2 <+15>: push   %ecx
+   0x080488c3 <+16>: sub    $0x2c,%esp
+   0x080488c6 <+19>: mov    %ecx,%ebx
+   0x080488c8 <+21>: mov    (%ebx),%eax
+   0x080488ca <+23>: cmp    $0x1,%eax
+   0x080488cd <+26>: jne    0x80488db <main+40>
+   0x080488cf <+28>: movl   $0x1,(%esp)
+   0x080488d6 <+35>: call   0x8048560 <exit@plt>
+   0x080488db <+40>: call   0x8048520 <getuid@plt>
+   0x080488e0 <+45>: mov    %eax,0x804a054
+   0x080488e5 <+50>: movl   $0x8048a6a,(%esp)
+   0x080488ec <+57>: call   0x8048540 <getenv@plt>
+   0x080488f1 <+62>: mov    %eax,-0x1c(%ebp)
+   0x080488f4 <+65>: cmpl   $0x0,-0x1c(%ebp)
+   0x080488f8 <+69>: je     0x804890a <main+87>
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x080488fa <+71>: mov    -0x1c(%ebp),%eax
+   0x080488fd <+74>: mov    %eax,(%esp)
+   0x08048900 <+77>: call   0x80485c0 <atoi@plt>
+   0x08048905 <+82>: mov    %eax,0x804a054
+   0x0804890a <+87>: mov    %ebx,(%esp)
+   0x0804890d <+90>: call   0x80486ed <rnd_env>
+   0x08048912 <+95>: lea    0xf(%eax),%edx
+   0x08048915 <+98>: mov    $0x10,%eax
+   0x0804891a <+103>: sub    $0x1,%eax
+   0x0804891d <+106>: add    %edx,%eax
+   0x0804891f <+108>: mov    $0x10,%esi
+   0x08048924 <+113>: mov    $0x0,%edx
+   0x08048929 <+118>: div    %esi
+   0x0804892b <+120>: imul   $0x10,%eax,%eax
+   0x0804892e <+123>: sub    %eax,%esp
+   0x08048930 <+125>: mov    0x4(%ebx),%eax
+   0x08048933 <+128>: add    $0x4,%eax
+   0x08048936 <+131>: mov    (%eax),%eax
+   0x08048938 <+133>: mov    %eax,(%esp)
+   0x0804893b <+136>: call   0x8048764 <display_file>
+   0x08048940 <+141>: call   0x804889d <root_menu>
+   0x08048945 <+146>: mov    $0x1,%eax
+   0x0804894a <+151>: lea    -0xc(%ebp),%esp
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0804894d <+154>: pop    %ecx
+   0x0804894e <+155>: pop    %ebx
+   0x0804894f <+156>: pop    %esi
+   0x08048950 <+157>: pop    %ebp
+   0x08048951 <+158>: lea    -0x4(%ecx),%esp
+   0x08048954 <+161>: ret    
+End of assembler dump.
+(gdb) b main                                                                      
+Breakpoint 1 at 0x80488c3
+(gdb) b display_file
+Breakpoint 2 at 0x8048768
+(gdb) disas display_file
+Dump of assembler code for function display_file:
+   0x08048764 <+0>: push   %ebp
+   0x08048765 <+1>: mov    %esp,%ebp
+   0x08048767 <+3>: push   %ebx
+   0x08048768 <+4>: sub    $0x44,%esp
+   0x0804876b <+7>: movl   $0x8048a1e,0x4(%esp)
+   0x08048773 <+15>: mov    0x8(%ebp),%eax
+   0x08048776 <+18>: mov    %eax,(%esp)
+   0x08048779 <+21>: call   0x8048590 <fopen@plt>
+   0x0804877e <+26>: mov    %eax,-0x10(%ebp)
+   0x08048781 <+29>: movl   $0x0,-0xc(%ebp)
+   0x08048788 <+36>: movl   $0x0,-0x38(%ebp)
+   0x0804878f <+43>: lea    -0x38(%ebp),%eax
+   0x08048792 <+46>: mov    %eax,0x8(%esp)
+   0x08048796 <+50>: movl   $0x8048a20,0x4(%esp)
+   0x0804879e <+58>: mov    -0x10(%ebp),%eax
+   0x080487a1 <+61>: mov    %eax,(%esp)
+   0x080487a4 <+64>: call   0x8048500 <__isoc99_fscanf@plt>
+   0x080487a9 <+69>: cmp    $0x1,%eax
+   0x080487ac <+72>: jne    0x804886a <display_file+262>
+   0x080487b2 <+78>: mov    -0x38(%ebp),%eax
+   0x080487b5 <+81>: mov    %eax,(%esp)
+   0x080487b8 <+84>: call   0x8048550 <malloc@plt>
+   0x080487bd <+89>: mov    %eax,-0x14(%ebp)
+   0x080487c0 <+92>: movl   $0x0,-0xc(%ebp)
+   0x080487c7 <+99>: jmp    0x80487e3 <display_file+127>
+   0x080487c9 <+101>: mov    -0xc(%ebp),%eax
+   0x080487cc <+104>: mov    -0x14(%ebp),%edx
+   0x080487cf <+107>: lea    (%edx,%eax,1),%ebx
+   0x080487d2 <+110>: mov    -0x10(%ebp),%eax
+   0x080487d5 <+113>: mov    %eax,(%esp)
+   0x080487d8 <+116>: call   0x80485a0 <fgetc@plt>
+   0x080487dd <+121>: mov    %al,(%ebx)
+   0x080487df <+123>: addl   $0x1,-0xc(%ebp)
+   0x080487e3 <+127>: mov    -0x38(%ebp),%eax
+   0x080487e6 <+130>: cmp    -0xc(%ebp),%eax
+   0x080487e9 <+133>: ja     0x80487c9 <display_file+101>
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x080487eb <+135>: mov    -0x38(%ebp),%eax
+   0x080487ee <+138>: mov    %eax,0x8(%esp)
+   0x080487f2 <+142>: mov    -0x14(%ebp),%eax
+   0x080487f5 <+145>: mov    %eax,0x4(%esp)
+   0x080487f9 <+149>: lea    -0x34(%ebp),%eax
+   0x080487fc <+152>: mov    %eax,(%esp)
+   0x080487ff <+155>: call   0x8048510 <memcpy@plt>
+   0x08048804 <+160>: mov    -0x38(%ebp),%edx
+   0x08048807 <+163>: mov    0x804a04c,%eax
+   0x0804880c <+168>: mov    %edx,0x8(%esp)
+   0x08048810 <+172>: movl   $0x8048a24,0x4(%esp)
+   0x08048818 <+180>: mov    %eax,(%esp)
+   0x0804881b <+183>: call   0x8048580 <fprintf@plt>
+   0x08048820 <+188>: movl   $0x0,-0xc(%ebp)
+   0x08048827 <+195>: jmp    0x804884d <display_file+233>
+   0x08048829 <+197>: mov    0x804a04c,%edx
+   0x0804882f <+203>: lea    -0x34(%ebp),%ecx
+   0x08048832 <+206>: mov    -0xc(%ebp),%eax
+   0x08048835 <+209>: add    %ecx,%eax
+   0x08048837 <+211>: movzbl (%eax),%eax
+   0x0804883a <+214>: movsbl %al,%eax
+   0x0804883d <+217>: mov    %edx,0x4(%esp)
+   0x08048841 <+221>: mov    %eax,(%esp)
+   0x08048844 <+224>: call   0x80485b0 <fputc@plt>
+   0x08048849 <+229>: addl   $0x1,-0xc(%ebp)
+   0x0804884d <+233>: mov    -0x38(%ebp),%eax
+   0x08048850 <+236>: cmp    -0xc(%ebp),%eax
+   0x08048853 <+239>: ja     0x8048829 <display_file+197>
+   0x08048855 <+241>: mov    0x804a04c,%eax
+   0x0804885a <+246>: mov    %eax,0x4(%esp)
+   0x0804885e <+250>: movl   $0xa,(%esp)
+   0x08048865 <+257>: call   0x80485b0 <fputc@plt>
+   0x0804886a <+262>: add    $0x44,%esp
+   0x0804886d <+265>: pop    %ebx
+   0x0804886e <+266>: pop    %ebp
+   0x0804886f <+267>: ret    
+End of assembler dump.
+(gdb) b *0x08048804
+Breakpoint 3 at 0x8048804
+(gdb) r file.1
+Starting program: /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.1 file.1
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/system-supplied DSO at 0xb7fc7000.
+Download failed: Permission denied.  Continuing without debug info for /lib/libc.so.6.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+Missing separate debuginfos, use: dnf debuginfo-install glibc-2.34-100.el9_4.2.i686
+(gdb) x/32x $ebp-32
+0xbffff998: 0x00000000 0xb7dc1208 0xb7fc1180 0xb7fc7000
+0xbffff9a8: 0x00000000 0xbffff9d0 0xb7fa5000 0xbffffa84
+0xbffff9b8: 0xb7fff000 0xb7dda4b9 0xbffffbc5 0x00000000
+0xbffff9c8: 0x08048380 0xb7dda4b9 0x00000002 0xbffffa84
+0xbffff9d8: 0xbffffa90 0xbffff9f0 0xb7fa5000 0x080488b3
+0xbffff9e8: 0x00000002 0xbffffa84 0xb7fa5000 0xbffffa84
+0xbffff9f8: 0xb7ffeb60 0xb7fff000 0x8309cc33 0xc7b28623
+0xbffffa08: 0x00000000 0x00000000 0x00000000 0xb7ffeb60
+(gdb) c            
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffe8a8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe8b8: 0x00000000 0x00000000 0x00000000 0xbffff9d0
+0xbfffe8c8: 0xbffff9b8 0x08048940 0xbffffc07 0x00000000
+0xbfffe8d8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe8e8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe8f8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe908: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe918: 0x00000000 0x00000000 0x00000000 0x00000000
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffe8a8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8b8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8c8: 0xbfffffff 0x08048940 0xbffffc07 0x00000000
+0xbfffe8d8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe8e8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe8f8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe908: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe918: 0x00000000 0x00000000 0x00000000 0x00000000
+(gdb) R FILE.1
+Undefined command: "R".  Try "help".
+(gdb) r file.1
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.1 file.1
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/system-supplied DSO at 0xb7fc7000.
+Download failed: Permission denied.  Continuing without debug info for /lib/libc.so.6.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffe8a8: 0x41414141 0x41414141 0xffffff41 0xffffffff
+0xbfffe8b8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8c8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8d8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8e8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8f8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe908: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe918: 0x00000000 0x00000000 0x00000000 0x00000000
+(gdb) r file.1    
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.1 file.1
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/system-supplied DSO at 0xb7fc7000.
+Download failed: Permission denied.  Continuing without debug info for /lib/libc.so.6.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffe8a8: 0x41414141 0x41414141 0x41414141 0x41414141
+0xbfffe8b8: 0x41414141 0x41414141 0x41414141 0xff414141
+0xbfffe8c8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8d8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8e8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8f8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe908: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe918: 0x00000000 0x00000000 0x00000000 0x00000000
+(gdb) r file.1    
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.1 file.1
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/system-supplied DSO at 0xb7fc7000.
+Download failed: Permission denied.  Continuing without debug info for /lib/libc.so.6.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffe8a8: 0x41414141 0x41414141 0x41414141 0x41414141
+0xbfffe8b8: 0x41414141 0x41414141 0x41414141 0x41414141
+0xbfffe8c8: 0x41414141 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8d8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8e8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8f8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe908: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe918: 0x00000000 0x00000000 0x00000000 0x00000000
+(gdb) r file.1
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.1 file.1
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/system-supplied DSO at 0xb7fc7000.
+Download failed: Permission denied.  Continuing without debug info for /lib/libc.so.6.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffe8a8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe8b8: 0x00000000 0x00000000 0x00000000 0xbffff9d0
+0xbfffe8c8: 0xbffff9b8 0x08048940 0xbffffc07 0x00000000
+0xbfffe8d8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe8e8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe8f8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe908: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe918: 0x00000000 0x00000000 0x00000000 0x00000000
+(gdb) disas main        
+Dump of assembler code for function main:
+   0x080488b3 <+0>: lea    0x4(%esp),%ecx
+   0x080488b7 <+4>: and    $0xfffffff0,%esp
+   0x080488ba <+7>: push   -0x4(%ecx)
+   0x080488bd <+10>: push   %ebp
+   0x080488be <+11>: mov    %esp,%ebp
+   0x080488c0 <+13>: push   %esi
+   0x080488c1 <+14>: push   %ebx
+   0x080488c2 <+15>: push   %ecx
+   0x080488c3 <+16>: sub    $0x2c,%esp
+   0x080488c6 <+19>: mov    %ecx,%ebx
+   0x080488c8 <+21>: mov    (%ebx),%eax
+   0x080488ca <+23>: cmp    $0x1,%eax
+   0x080488cd <+26>: jne    0x80488db <main+40>
+   0x080488cf <+28>: movl   $0x1,(%esp)
+   0x080488d6 <+35>: call   0x8048560 <exit@plt>
+   0x080488db <+40>: call   0x8048520 <getuid@plt>
+   0x080488e0 <+45>: mov    %eax,0x804a054
+   0x080488e5 <+50>: movl   $0x8048a6a,(%esp)
+   0x080488ec <+57>: call   0x8048540 <getenv@plt>
+   0x080488f1 <+62>: mov    %eax,-0x1c(%ebp)
+   0x080488f4 <+65>: cmpl   $0x0,-0x1c(%ebp)
+   0x080488f8 <+69>: je     0x804890a <main+87>
+   0x080488fa <+71>: mov    -0x1c(%ebp),%eax
+   0x080488fd <+74>: mov    %eax,(%esp)
+   0x08048900 <+77>: call   0x80485c0 <atoi@plt>
+   0x08048905 <+82>: mov    %eax,0x804a054
+   0x0804890a <+87>: mov    %ebx,(%esp)
+   0x0804890d <+90>: call   0x80486ed <rnd_env>
+   0x08048912 <+95>: lea    0xf(%eax),%edx
+   0x08048915 <+98>: mov    $0x10,%eax
+   0x0804891a <+103>: sub    $0x1,%eax
+   0x0804891d <+106>: add    %edx,%eax
+   0x0804891f <+108>: mov    $0x10,%esi
+   0x08048924 <+113>: mov    $0x0,%edx
+   0x08048929 <+118>: div    %esi
+   0x0804892b <+120>: imul   $0x10,%eax,%eax
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x0804892e <+123>: sub    %eax,%esp
+   0x08048930 <+125>: mov    0x4(%ebx),%eax
+   0x08048933 <+128>: add    $0x4,%eax
+   0x08048936 <+131>: mov    (%eax),%eax
+   0x08048938 <+133>: mov    %eax,(%esp)
+   0x0804893b <+136>: call   0x8048764 <display_file>
+   0x08048940 <+141>: call   0x804889d <root_menu>
+   0x08048945 <+146>: mov    $0x1,%eax
+   0x0804894a <+151>: lea    -0xc(%ebp),%esp
+   0x0804894d <+154>: pop    %ecx
+   0x0804894e <+155>: pop    %ebx
+   0x0804894f <+156>: pop    %esi
+   0x08048950 <+157>: pop    %ebp
+   0x08048951 <+158>: lea    -0x4(%ecx),%esp
+   0x08048954 <+161>: ret    
+End of assembler dump.
+(gdb) disas root_menu
+Dump of assembler code for function root_menu:
+   0x0804889d <+0>: push   %ebp
+   0x0804889e <+1>: mov    %esp,%ebp
+   0x080488a0 <+3>: sub    $0x8,%esp
+   0x080488a3 <+6>: call   0x8048520 <getuid@plt>
+   0x080488a8 <+11>: test   %eax,%eax
+   0x080488aa <+13>: jne    0x80488b1 <root_menu+20>
+   0x080488ac <+15>: call   0x8048870 <display_root_menu>
+   0x080488b1 <+20>: leave  
+   0x080488b2 <+21>: ret    
+End of assembler dump.
+(gdb) exit
+Undefined command: "exit".  Try "help".
+(gdb) quit
+A debugging session is active.
+
+Inferior 1 [process 3783829] will be killed.
+
+Quit anyway? (y or n) y
+[pbekri01@103ws20 1048972]$ exit
+logout
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bin.2
+
+
+
+
+
+
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>./run.sh
+[pbekri01@103ws20 1048972]$ gdb bin.2
+gdb: warning: Couldn't determine a path for the index cache directory.
+GNU gdb (GDB) Rocky Linux 10.2-13.el9
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from bin.2...
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.2.
+(No debugging symbols found in bin.2)
+(gdb) b main
+Breakpoint 1 at 0x80488c3
+(gdb) disas main
+Dump of assembler code for function main:
+   0x080488b3 <+0>: lea    0x4(%esp),%ecx
+   0x080488b7 <+4>: and    $0xfffffff0,%esp
+   0x080488ba <+7>: push   -0x4(%ecx)
+   0x080488bd <+10>: push   %ebp
+   0x080488be <+11>: mov    %esp,%ebp
+   0x080488c0 <+13>: push   %esi
+   0x080488c1 <+14>: push   %ebx
+   0x080488c2 <+15>: push   %ecx
+   0x080488c3 <+16>: sub    $0x2c,%esp
+   0x080488c6 <+19>: mov    %ecx,%ebx
+   0x080488c8 <+21>: mov    (%ebx),%eax
+   0x080488ca <+23>: cmp    $0x1,%eax
+   0x080488cd <+26>: jne    0x80488db <main+40>
+   0x080488cf <+28>: movl   $0x1,(%esp)
+   0x080488d6 <+35>: call   0x8048560 <exit@plt>
+   0x080488db <+40>: call   0x8048520 <getuid@plt>
+   0x080488e0 <+45>: mov    %eax,0x804a054
+   0x080488e5 <+50>: movl   $0x8048a6a,(%esp)
+   0x080488ec <+57>: call   0x8048540 <getenv@plt>
+   0x080488f1 <+62>: mov    %eax,-0x1c(%ebp)
+   0x080488f4 <+65>: cmpl   $0x0,-0x1c(%ebp)
+   0x080488f8 <+69>: je     0x804890a <main+87>
+   0x080488fa <+71>: mov    -0x1c(%ebp),%eax
+   0x080488fd <+74>: mov    %eax,(%esp)
+   0x08048900 <+77>: call   0x80485c0 <atoi@plt>
+   0x08048905 <+82>: mov    %eax,0x804a054
+   0x0804890a <+87>: mov    %ebx,(%esp)
+   0x0804890d <+90>: call   0x80486ed <rnd_env>
+   0x08048912 <+95>: lea    0xf(%eax),%edx
+   0x08048915 <+98>: mov    $0x10,%eax
+   0x0804891a <+103>: sub    $0x1,%eax
+   0x0804891d <+106>: add    %edx,%eax
+   0x0804891f <+108>: mov    $0x10,%esi
+   0x08048924 <+113>: mov    $0x0,%edx
+   0x08048929 <+118>: div    %esi
+   0x0804892b <+120>: imul   $0x10,%eax,%eax
+--Type <RET> for more, q to quit, c to continue without paging--  
+   0x0804892e <+123>: sub    %eax,%esp
+   0x08048930 <+125>: mov    0x4(%ebx),%eax
+   0x08048933 <+128>: add    $0x4,%eax
+   0x08048936 <+131>: mov    (%eax),%eax
+   0x08048938 <+133>: mov    %eax,(%esp)
+   0x0804893b <+136>: call   0x8048764 <display_file>
+   0x08048940 <+141>: call   0x804889d <root_menu>
+   0x08048945 <+146>: mov    $0x1,%eax
+   0x0804894a <+151>: lea    -0xc(%ebp),%esp
+   0x0804894d <+154>: pop    %ecx
+   0x0804894e <+155>: pop    %ebx
+   0x0804894f <+156>: pop    %esi
+   0x08048950 <+157>: pop    %ebp
+   0x08048951 <+158>: lea    -0x4(%ecx),%esp
+   0x08048954 <+161>: ret    
+End of assembler dump.
+(gdb) b display_file
+Breakpoint 2 at 0x8048768
+(gdb) disas
+No frame selected.
+(gdb) disas display_file
+Dump of assembler code for function display_file:
+   0x08048764 <+0>: push   %ebp
+   0x08048765 <+1>: mov    %esp,%ebp
+   0x08048767 <+3>: push   %ebx
+   0x08048768 <+4>: sub    $0x44,%esp
+   0x0804876b <+7>: movl   $0x8048a1e,0x4(%esp)
+   0x08048773 <+15>: mov    0x8(%ebp),%eax
+   0x08048776 <+18>: mov    %eax,(%esp)
+   0x08048779 <+21>: call   0x8048590 <fopen@plt>
+   0x0804877e <+26>: mov    %eax,-0x10(%ebp)
+   0x08048781 <+29>: movl   $0x0,-0xc(%ebp)
+   0x08048788 <+36>: movl   $0x0,-0x38(%ebp)
+   0x0804878f <+43>: lea    -0x38(%ebp),%eax
+   0x08048792 <+46>: mov    %eax,0x8(%esp)
+   0x08048796 <+50>: movl   $0x8048a20,0x4(%esp)
+   0x0804879e <+58>: mov    -0x10(%ebp),%eax
+   0x080487a1 <+61>: mov    %eax,(%esp)
+   0x080487a4 <+64>: call   0x8048500 <__isoc99_fscanf@plt>
+   0x080487a9 <+69>: cmp    $0x1,%eax
+   0x080487ac <+72>: jne    0x804886a <display_file+262>
+   0x080487b2 <+78>: mov    -0x38(%ebp),%eax
+   0x080487b5 <+81>: mov    %eax,(%esp)
+   0x080487b8 <+84>: call   0x8048550 <malloc@plt>
+   0x080487bd <+89>: mov    %eax,-0x14(%ebp)
+   0x080487c0 <+92>: movl   $0x0,-0xc(%ebp)
+   0x080487c7 <+99>: jmp    0x80487e3 <display_file+127>
+   0x080487c9 <+101>: mov    -0xc(%ebp),%eax
+   0x080487cc <+104>: mov    -0x14(%ebp),%edx
+   0x080487cf <+107>: lea    (%edx,%eax,1),%ebx
+   0x080487d2 <+110>: mov    -0x10(%ebp),%eax
+   0x080487d5 <+113>: mov    %eax,(%esp)
+   0x080487d8 <+116>: call   0x80485a0 <fgetc@plt>
+   0x080487dd <+121>: mov    %al,(%ebx)
+   0x080487df <+123>: addl   $0x1,-0xc(%ebp)
+   0x080487e3 <+127>: mov    -0x38(%ebp),%eax
+   0x080487e6 <+130>: cmp    -0xc(%ebp),%eax
+   0x080487e9 <+133>: ja     0x80487c9 <display_file+101>
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x080487eb <+135>: mov    -0x38(%ebp),%eax
+   0x080487ee <+138>: mov    %eax,0x8(%esp)
+   0x080487f2 <+142>: mov    -0x14(%ebp),%eax
+   0x080487f5 <+145>: mov    %eax,0x4(%esp)
+   0x080487f9 <+149>: lea    -0x34(%ebp),%eax
+   0x080487fc <+152>: mov    %eax,(%esp)
+   0x080487ff <+155>: call   0x8048510 <memcpy@plt>
+   0x08048804 <+160>: mov    -0x38(%ebp),%edx
+   0x08048807 <+163>: mov    0x804a04c,%eax
+   0x0804880c <+168>: mov    %edx,0x8(%esp)
+   0x08048810 <+172>: movl   $0x8048a24,0x4(%esp)
+   0x08048818 <+180>: mov    %eax,(%esp)
+   0x0804881b <+183>: call   0x8048580 <fprintf@plt>
+   0x08048820 <+188>: movl   $0x0,-0xc(%ebp)
+   0x08048827 <+195>: jmp    0x804884d <display_file+233>
+   0x08048829 <+197>: mov    0x804a04c,%edx
+   0x0804882f <+203>: lea    -0x34(%ebp),%ecx
+   0x08048832 <+206>: mov    -0xc(%ebp),%eax
+   0x08048835 <+209>: add    %ecx,%eax
+   0x08048837 <+211>: movzbl (%eax),%eax
+   0x0804883a <+214>: movsbl %al,%eax
+   0x0804883d <+217>: mov    %edx,0x4(%esp)
+   0x08048841 <+221>: mov    %eax,(%esp)
+   0x08048844 <+224>: call   0x80485b0 <fputc@plt>
+   0x08048849 <+229>: addl   $0x1,-0xc(%ebp)
+   0x0804884d <+233>: mov    -0x38(%ebp),%eax
+   0x08048850 <+236>: cmp    -0xc(%ebp),%eax
+   0x08048853 <+239>: ja     0x8048829 <display_file+197>
+   0x08048855 <+241>: mov    0x804a04c,%eax
+   0x0804885a <+246>: mov    %eax,0x4(%esp)
+   0x0804885e <+250>: movl   $0xa,(%esp)
+   0x08048865 <+257>: call   0x80485b0 <fputc@plt>
+   0x0804886a <+262>: add    $0x44,%esp
+   0x0804886d <+265>: pop    %ebx
+   0x0804886e <+266>: pop    %ebp
+   0x0804886f <+267>: ret    
+End of assembler dump.
+(gdb) b *0x08048804
+Breakpoint 3 at 0x8048804
+(gdb) r file.2
+Starting program: /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.2 file.2
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/system-supplied DSO at 0xb7fc7000.
+Download failed: Permission denied.  Continuing without debug info for /lib/libc.so.6.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+Missing separate debuginfos, use: dnf debuginfo-install glibc-2.34-100.el9_4.2.i686
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) x/32x $ebp-32    
+0xbfffe8a8: 0x31c931e3 0xcd0bb0d2 0x41414180 0xff414141
+0xbfffe8b8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8c8: 0xbfffffff 0x08048940 0xbffffc07 0x00000000
+0xbfffe8d8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe8e8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe8f8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe908: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe918: 0x00000000 0x00000000 0x00000000 0x00000000
+(gdb) r file.2      
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.2 file.2
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/system-supplied DSO at 0xb7fc7000.
+Download failed: Permission denied.  Continuing without debug info for /lib/libc.so.6.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffe8a8: 0x31c931e3 0xcd0bb0d2 0x41414180 0x41414141
+0xbfffe8b8: 0x41414141 0x41414141 0xffff4141 0xffffffff
+0xbfffe8c8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8d8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8e8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8f8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe908: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe918: 0x00000000 0x00000000 0x00000000 0x00000000
+(gdb) r file.2      
+The program being debugged has been started already.
+Start it from the beginning? (y or n) Y
+Starting program: /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.2 file.2
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/system-supplied DSO at 0xb7fc7000.
+Download failed: Permission denied.  Continuing without debug info for /lib/libc.so.6.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+
+Breakpoint 1, 0x080488c3 in main ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x08048768 in display_file ()
+(gdb)
+Continuing.
+
+Breakpoint 3, 0x08048804 in display_file ()
+(gdb) x/32x $ebp-32
+0xbfffe8a8: 0x31c931e3 0xcd0bb0d2 0x41414180 0x41414141
+0xbfffe8b8: 0x41414141 0x41414141 0x41414141 0x41414141
+0xbfffe8c8: 0x41414141 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8d8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8e8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8f8: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe908: 0x00000000 0x00000000 0x00000000 0x00000000
+0xbfffe918: 0x00000000 0x00000000 0x00000000 0x00000000
+(gdb) x/32x $ebp-64
+0xbfffe888: 0x00000064 0x00000000 0x00000064 0x90909090
+0xbfffe898: 0xc0319090 0x2f2f6850 0x2f686873 0x896e6962
+0xbfffe8a8: 0x31c931e3 0xcd0bb0d2 0x41414180 0x41414141
+0xbfffe8b8: 0x41414141 0x41414141 0x41414141 0x41414141
+0xbfffe8c8: 0x41414141 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8d8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8e8: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8f8: 0x00000000 0x00000000 0x00000000 0x00000000
+(gdb) x/32x $ebp-62
+0xbfffe88a: 0x00000000 0x00640000 0x90900000 0x90909090
+0xbfffe89a: 0x6850c031 0x68732f2f 0x69622f68 0x31e3896e
+0xbfffe8aa: 0xb0d231c9 0x4180cd0b 0x41414141 0x41414141
+0xbfffe8ba: 0x41414141 0x41414141 0x41414141 0x41414141
+0xbfffe8ca: 0xffff4141 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8da: 0xffffffff 0xffffffff 0xffffffff 0xffffffff
+0xbfffe8ea: 0xffffffff 0xffffffff 0xffffffff 0x0000ffff
+0xbfffe8fa: 0x00000000 0x00000000 0x00000000 0x00000000
+(gdb)                                                                            
+[1]+  Stopped(SIGTSTP)        gdb bin.2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bin.3
+
+103ws20:/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972>./run.sh
+[pbekri01@103ws20 1048972]$ gdb bin.3
+gdb: warning: Couldn't determine a path for the index cache directory.
+GNU gdb (GDB) Rocky Linux 10.2-13.el9
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from bin.3...
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.3.
+(No debugging symbols found in bin.3)
+(gdb) disas main
+Dump of assembler code for function main:
+   0x08048980 <+0>: lea    0x4(%esp),%ecx
+   0x08048984 <+4>: and    $0xfffffff0,%esp
+   0x08048987 <+7>: push   -0x4(%ecx)
+   0x0804898a <+10>: push   %ebp
+   0x0804898b <+11>: mov    %esp,%ebp
+   0x0804898d <+13>: push   %edi
+   0x0804898e <+14>: push   %esi
+   0x0804898f <+15>: push   %ebx
+   0x08048990 <+16>: push   %ecx
+   0x08048991 <+17>: sub    $0x48,%esp
+   0x08048994 <+20>: mov    %ecx,%ebx
+   0x08048996 <+22>: movl   $0x18,(%esp)
+   0x0804899d <+29>: call   0x80485e0 <malloc@plt>
+   0x080489a2 <+34>: mov    %eax,-0x1c(%ebp)
+   0x080489a5 <+37>: mov    -0x1c(%ebp),%eax
+   0x080489a8 <+40>: movb   $0x58,(%eax)
+   0x080489ab <+43>: mov    -0x1c(%ebp),%eax
+   0x080489ae <+46>: add    $0x1,%eax
+   0x080489b1 <+49>: movb   $0x5b,(%eax)
+   0x080489b4 <+52>: mov    -0x1c(%ebp),%eax
+   0x080489b7 <+55>: add    $0x2,%eax
+   0x080489ba <+58>: movb   $0xc3,(%eax)
+   0x080489bd <+61>: mov    -0x1c(%ebp),%eax
+   0x080489c0 <+64>: add    $0x3,%eax
+   0x080489c3 <+67>: movb   $0x31,(%eax)
+   0x080489c6 <+70>: mov    -0x1c(%ebp),%eax
+   0x080489c9 <+73>: add    $0x4,%eax
+   0x080489cc <+76>: movb   $0xc0,(%eax)
+   0x080489cf <+79>: mov    -0x1c(%ebp),%eax
+   0x080489d2 <+82>: add    $0x5,%eax
+   0x080489d5 <+85>: movb   $0xc3,(%eax)
+   0x080489d8 <+88>: mov    -0x1c(%ebp),%eax
+   0x080489db <+91>: add    $0x6,%eax
+   0x080489de <+94>: movb   $0x89,(%eax)
+   0x080489e1 <+97>: mov    -0x1c(%ebp),%eax
+   0x080489e4 <+100>: add    $0x7,%eax
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x080489e7 <+103>: movb   $0x3,(%eax)
+   0x080489ea <+106>: mov    -0x1c(%ebp),%eax
+   0x080489ed <+109>: add    $0x8,%eax
+   0x080489f0 <+112>: movb   $0xc3,(%eax)
+   0x080489f3 <+115>: mov    -0x1c(%ebp),%eax
+   0x080489f6 <+118>: add    $0x9,%eax
+   0x080489f9 <+121>: movb   $0x89,(%eax)
+   0x080489fc <+124>: mov    -0x1c(%ebp),%eax
+   0x080489ff <+127>: add    $0xa,%eax
+   0x08048a02 <+130>: movb   $0xc3,(%eax)
+   0x08048a05 <+133>: mov    -0x1c(%ebp),%eax
+   0x08048a08 <+136>: add    $0xb,%eax
+   0x08048a0b <+139>: movb   $0xc3,(%eax)
+   0x08048a0e <+142>: mov    -0x1c(%ebp),%eax
+   0x08048a11 <+145>: add    $0xc,%eax
+   0x08048a14 <+148>: movb   $0x31,(%eax)
+   0x08048a17 <+151>: mov    -0x1c(%ebp),%eax
+   0x08048a1a <+154>: add    $0xd,%eax
+   0x08048a1d <+157>: movb   $0xc9,(%eax)
+   0x08048a20 <+160>: mov    -0x1c(%ebp),%eax
+   0x08048a23 <+163>: add    $0xe,%eax
+   0x08048a26 <+166>: movb   $0xc3,(%eax)
+   0x08048a29 <+169>: mov    -0x1c(%ebp),%eax
+   0x08048a2c <+172>: add    $0xf,%eax
+   0x08048a2f <+175>: movb   $0x31,(%eax)
+   0x08048a32 <+178>: mov    -0x1c(%ebp),%eax
+   0x08048a35 <+181>: add    $0x10,%eax
+   0x08048a38 <+184>: movb   $0xd2,(%eax)
+   0x08048a3b <+187>: mov    -0x1c(%ebp),%eax
+   0x08048a3e <+190>: add    $0x11,%eax
+   0x08048a41 <+193>: movb   $0xc3,(%eax)
+   0x08048a44 <+196>: mov    -0x1c(%ebp),%eax
+   0x08048a47 <+199>: add    $0x12,%eax
+   0x08048a4a <+202>: movb   $0xb0,(%eax)
+   0x08048a4d <+205>: mov    -0x1c(%ebp),%eax
+   0x08048a50 <+208>: add    $0x13,%eax
+   0x08048a53 <+211>: movb   $0xb,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x08048a56 <+214>: mov    -0x1c(%ebp),%eax
+   0x08048a59 <+217>: add    $0x14,%eax
+   0x08048a5c <+220>: movb   $0xc3,(%eax)
+   0x08048a5f <+223>: mov    -0x1c(%ebp),%eax
+   0x08048a62 <+226>: add    $0x15,%eax
+   0x08048a65 <+229>: movb   $0xcd,(%eax)
+   0x08048a68 <+232>: mov    -0x1c(%ebp),%eax
+   0x08048a6b <+235>: add    $0x16,%eax
+   0x08048a6e <+238>: movb   $0x80,(%eax)
+   0x08048a71 <+241>: mov    -0x1c(%ebp),%eax
+   0x08048a74 <+244>: add    $0x17,%eax
+   0x08048a77 <+247>: movb   $0xc3,(%eax)
+   0x08048a7a <+250>: mov    (%ebx),%eax
+   0x08048a7c <+252>: cmp    $0x1,%eax
+   0x08048a7f <+255>: jne    0x8048a8d <main+269>
+   0x08048a81 <+257>: movl   $0x1,(%esp)
+   0x08048a88 <+264>: call   0x80485f0 <exit@plt>
+   0x08048a8d <+269>: call   0x80485a0 <getuid@plt>
+   0x08048a92 <+274>: mov    %eax,0x804a064
+   0x08048a97 <+279>: movl   $0x8048cba,(%esp)
+   0x08048a9e <+286>: call   0x80485d0 <getenv@plt>
+   0x08048aa3 <+291>: mov    %eax,-0x20(%ebp)
+   0x08048aa6 <+294>: cmpl   $0x0,-0x20(%ebp)
+   0x08048aaa <+298>: je     0x8048abc <main+316>
+   0x08048aac <+300>: mov    -0x20(%ebp),%eax
+   0x08048aaf <+303>: mov    %eax,(%esp)
+   0x08048ab2 <+306>: call   0x8048680 <atoi@plt>
+   0x08048ab7 <+311>: mov    %eax,0x804a064
+   0x08048abc <+316>: call   0x8048640 <getpagesize@plt>
+   0x08048ac1 <+321>: mov    %eax,-0x24(%ebp)
+   0x08048ac4 <+324>: movl   $0x8048980,-0x28(%ebp)
+   0x08048acb <+331>: mov    -0x28(%ebp),%eax
+   0x08048ace <+334>: mov    $0x0,%edx
+   0x08048ad3 <+339>: divl   -0x24(%ebp)
+   0x08048ad6 <+342>: sub    $0x1000,%eax
+   0x08048adb <+347>: imul   -0x24(%ebp),%eax
+   0x08048adf <+351>: mov    %eax,-0x2c(%ebp)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x08048ae2 <+354>: mov    -0x2c(%ebp),%eax
+   0x08048ae5 <+357>: movl   $0x1000,0x14(%esp)
+   0x08048aed <+365>: movl   $0xffffffff,0x10(%esp)
+   0x08048af5 <+373>: movl   $0x32,0xc(%esp)
+   0x08048afd <+381>: movl   $0x7,0x8(%esp)
+   0x08048b05 <+389>: movl   $0x1000,0x4(%esp)
+   0x08048b0d <+397>: mov    %eax,(%esp)
+   0x08048b10 <+400>: call   0x8048600 <mmap@plt>
+   0x08048b15 <+405>: mov    %eax,-0x30(%ebp)
+   0x08048b18 <+408>: cmpl   $0xffffffff,-0x30(%ebp)
+   0x08048b1c <+412>: jne    0x8048b2a <main+426>
+   0x08048b1e <+414>: movl   $0x8048cbf,(%esp)
+   0x08048b25 <+421>: call   0x80485b0 <perror@plt>
+   0x08048b2a <+426>: mov    -0x1c(%ebp),%eax
+   0x08048b2d <+429>: mov    %eax,(%esp)
+   0x08048b30 <+432>: call   0x8048610 <strlen@plt>
+   0x08048b35 <+437>: mov    %eax,%esi
+   0x08048b37 <+439>: mov    0x804a064,%eax
+   0x08048b3c <+444>: mov    %eax,(%esp)
+   0x08048b3f <+447>: call   0x8048960 <offset>
+   0x08048b44 <+452>: mov    %eax,%edx
+   0x08048b46 <+454>: mov    -0x30(%ebp),%eax
+   0x08048b49 <+457>: add    %eax,%edx
+   0x08048b4b <+459>: mov    %esi,0x8(%esp)
+   0x08048b4f <+463>: mov    -0x1c(%ebp),%eax
+   0x08048b52 <+466>: mov    %eax,0x4(%esp)
+   0x08048b56 <+470>: mov    %edx,(%esp)
+   0x08048b59 <+473>: call   0x8048590 <memcpy@plt>
+   0x08048b5e <+478>: mov    %ebx,(%esp)
+   0x08048b61 <+481>: call   0x80487ad <rnd_env>
+   0x08048b66 <+486>: lea    0xf(%eax),%edx
+   0x08048b69 <+489>: mov    $0x10,%eax
+   0x08048b6e <+494>: sub    $0x1,%eax
+   0x08048b71 <+497>: add    %edx,%eax
+   0x08048b73 <+499>: mov    $0x10,%edi
+   0x08048b78 <+504>: mov    $0x0,%edx
+   0x08048b7d <+509>: div    %edi
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x08048b7f <+511>: imul   $0x10,%eax,%eax
+   0x08048b82 <+514>: sub    %eax,%esp
+   0x08048b84 <+516>: mov    0x4(%ebx),%eax
+   0x08048b87 <+519>: add    $0x4,%eax
+   0x08048b8a <+522>: mov    (%eax),%eax
+   0x08048b8c <+524>: mov    %eax,(%esp)
+   0x08048b8f <+527>: call   0x804881e <display_file>
+   0x08048b94 <+532>: call   0x804892a <root_menu>
+   0x08048b99 <+537>: mov    $0x1,%eax
+   0x08048b9e <+542>: lea    -0x10(%ebp),%esp
+   0x08048ba1 <+545>: pop    %ecx
+   0x08048ba2 <+546>: pop    %ebx
+   0x08048ba3 <+547>: pop    %esi
+   0x08048ba4 <+548>: pop    %edi
+   0x08048ba5 <+549>: pop    %ebp
+   0x08048ba6 <+550>: lea    -0x4(%ecx),%esp
+   0x08048ba9 <+553>: ret    
+End of assembler dump.
+(gdb) disas display_file
+Dump of assembler code for function display_file:
+   0x0804881e <+0>: push   %ebp
+   0x0804881f <+1>: mov    %esp,%ebp
+   0x08048821 <+3>: push   %ebx
+   0x08048822 <+4>: sub    $0x44,%esp
+   0x08048825 <+7>: movl   $0x8048c6e,0x4(%esp)
+   0x0804882d <+15>: mov    0x8(%ebp),%eax
+   0x08048830 <+18>: mov    %eax,(%esp)
+   0x08048833 <+21>: call   0x8048650 <fopen@plt>
+   0x08048838 <+26>: mov    %eax,-0x10(%ebp)
+   0x0804883b <+29>: movl   $0x0,-0xc(%ebp)
+   0x08048842 <+36>: movl   $0x0,-0x38(%ebp)
+   0x08048849 <+43>: lea    -0x38(%ebp),%eax
+   0x0804884c <+46>: mov    %eax,0x8(%esp)
+   0x08048850 <+50>: movl   $0x8048c70,0x4(%esp)
+   0x08048858 <+58>: mov    -0x10(%ebp),%eax
+   0x0804885b <+61>: mov    %eax,(%esp)
+   0x0804885e <+64>: call   0x8048580 <__isoc99_fscanf@plt>
+   0x08048863 <+69>: cmp    $0x1,%eax
+   0x08048866 <+72>: jne    0x8048924 <display_file+262>
+   0x0804886c <+78>: mov    -0x38(%ebp),%eax
+   0x0804886f <+81>: mov    %eax,(%esp)
+   0x08048872 <+84>: call   0x80485e0 <malloc@plt>
+   0x08048877 <+89>: mov    %eax,-0x14(%ebp)
+   0x0804887a <+92>: movl   $0x0,-0xc(%ebp)
+   0x08048881 <+99>: jmp    0x804889d <display_file+127>
+   0x08048883 <+101>: mov    -0xc(%ebp),%eax
+   0x08048886 <+104>: mov    -0x14(%ebp),%edx
+   0x08048889 <+107>: lea    (%edx,%eax,1),%ebx
+   0x0804888c <+110>: mov    -0x10(%ebp),%eax
+   0x0804888f <+113>: mov    %eax,(%esp)
+   0x08048892 <+116>: call   0x8048660 <fgetc@plt>
+   0x08048897 <+121>: mov    %al,(%ebx)
+   0x08048899 <+123>: addl   $0x1,-0xc(%ebp)
+   0x0804889d <+127>: mov    -0x38(%ebp),%eax
+   0x080488a0 <+130>: cmp    -0xc(%ebp),%eax
+   0x080488a3 <+133>: ja     0x8048883 <display_file+101>
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x080488a5 <+135>: mov    -0x38(%ebp),%eax
+   0x080488a8 <+138>: mov    %eax,0x8(%esp)
+   0x080488ac <+142>: mov    -0x14(%ebp),%eax
+   0x080488af <+145>: mov    %eax,0x4(%esp)
+   0x080488b3 <+149>: lea    -0x34(%ebp),%eax
+   0x080488b6 <+152>: mov    %eax,(%esp)
+   0x080488b9 <+155>: call   0x8048590 <memcpy@plt>
+   0x080488be <+160>: mov    -0x38(%ebp),%edx
+   0x080488c1 <+163>: mov    0x804a05c,%eax
+   0x080488c6 <+168>: mov    %edx,0x8(%esp)
+   0x080488ca <+172>: movl   $0x8048c74,0x4(%esp)
+   0x080488d2 <+180>: mov    %eax,(%esp)
+   0x080488d5 <+183>: call   0x8048630 <fprintf@plt>
+   0x080488da <+188>: movl   $0x0,-0xc(%ebp)
+   0x080488e1 <+195>: jmp    0x8048907 <display_file+233>
+   0x080488e3 <+197>: mov    0x804a05c,%edx
+   0x080488e9 <+203>: lea    -0x34(%ebp),%ecx
+   0x080488ec <+206>: mov    -0xc(%ebp),%eax
+   0x080488ef <+209>: add    %ecx,%eax
+   0x080488f1 <+211>: movzbl (%eax),%eax
+   0x080488f4 <+214>: movsbl %al,%eax
+   0x080488f7 <+217>: mov    %edx,0x4(%esp)
+   0x080488fb <+221>: mov    %eax,(%esp)
+   0x080488fe <+224>: call   0x8048670 <fputc@plt>
+   0x08048903 <+229>: addl   $0x1,-0xc(%ebp)
+   0x08048907 <+233>: mov    -0x38(%ebp),%eax
+   0x0804890a <+236>: cmp    -0xc(%ebp),%eax
+   0x0804890d <+239>: ja     0x80488e3 <display_file+197>
+   0x0804890f <+241>: mov    0x804a05c,%eax
+   0x08048914 <+246>: mov    %eax,0x4(%esp)
+   0x08048918 <+250>: movl   $0xa,(%esp)
+   0x0804891f <+257>: call   0x8048670 <fputc@plt>
+   0x08048924 <+262>: add    $0x44,%esp
+   0x08048927 <+265>: pop    %ebx
+   0x08048928 <+266>: pop    %ebp
+   0x08048929 <+267>: ret    
+End of assembler dump.
+(gdb) b display_file
+Breakpoint 1 at 0x8048822
+(gdb) r file.1
+Starting program: /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.3 file.1
+Download failed: Permission denied.  Continuing without debug info for /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/system-supplied DSO at 0xb7fc7000.
+Download failed: Permission denied.  Continuing without debug info for /lib/libc.so.6.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+
+Breakpoint 1, 0x08048822 in display_file ()
+Missing separate debuginfos, use: dnf debuginfo-install glibc-2.34-100.el9_4.2.i686
+(gdb) info proc mapping
+process 3819965
+Mapped address spaces:
+
+Start Addr   End Addr       Size     Offset objfile
+0x7048000  0x7049000     0x1000        0x0
+0x8048000  0x8049000     0x1000        0x0 /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.3
+0x8049000  0x804a000     0x1000        0x0 /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.3
+0x804a000  0x804b000     0x1000     0x1000 /home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.3
+0x804b000  0x806d000    0x22000        0x0 [heap]
+0xb7db9000 0xb7dd9000    0x20000        0x0 /usr/lib/libc.so.6
+0xb7dd9000 0xb7f28000   0x14f000    0x20000 /usr/lib/libc.so.6
+0xb7f28000 0xb7fa3000    0x7b000   0x16f000 /usr/lib/libc.so.6
+0xb7fa3000 0xb7fa5000     0x2000   0x1e9000 /usr/lib/libc.so.6
+0xb7fa5000 0xb7fa6000     0x1000   0x1eb000 /usr/lib/libc.so.6
+0xb7fa6000 0xb7fb0000     0xa000        0x0
+0xb7fc1000 0xb7fc3000     0x2000        0x0
+0xb7fc3000 0xb7fc7000     0x4000        0x0 [vvar]
+0xb7fc7000 0xb7fc9000     0x2000        0x0 [vdso]
+0xb7fc9000 0xb7fca000     0x1000        0x0 /usr/lib/ld-linux.so.2
+0xb7fca000 0xb7fee000    0x24000     0x1000 /usr/lib/ld-linux.so.2
+0xb7fee000 0xb7ffd000     0xf000    0x25000 /usr/lib/ld-linux.so.2
+0xb7ffd000 0xb7fff000     0x2000    0x33000 /usr/lib/ld-linux.so.2
+0xb7fff000 0xb8000000     0x1000    0x35000 /usr/lib/ld-linux.so.2
+0xbffdf000 0xc0000000    0x21000        0x0 [stack]
+(gdb) x/1000i 0x7048000
+   0x7048000: add    %al,(%eax)
+   0x7048002: add    %al,(%eax)
+   0x7048004: add    %al,(%eax)
+   0x7048006: add    %al,(%eax)
+   0x7048008: add    %al,(%eax)
+   0x704800a: add    %al,(%eax)
+   0x704800c: add    %al,(%eax)
+   0x704800e: add    %al,(%eax)
+   0x7048010: add    %al,(%eax)
+   0x7048012: add    %al,(%eax)
+   0x7048014: add    %al,(%eax)
+   0x7048016: add    %al,(%eax)
+   0x7048018: add    %al,(%eax)
+   0x704801a: add    %al,(%eax)
+   0x704801c: add    %al,(%eax)
+   0x704801e: add    %al,(%eax)
+   0x7048020: add    %al,(%eax)
+   0x7048022: add    %al,(%eax)
+   0x7048024: add    %al,(%eax)
+   0x7048026: add    %al,(%eax)
+   0x7048028: add    %al,(%eax)
+   0x704802a: add    %al,(%eax)
+   0x704802c: add    %al,(%eax)
+   0x704802e: add    %al,(%eax)
+   0x7048030: add    %al,(%eax)
+   0x7048032: add    %al,(%eax)
+   0x7048034: add    %al,(%eax)
+   0x7048036: add    %al,(%eax)
+   0x7048038: add    %al,(%eax)
+   0x704803a: add    %al,(%eax)
+   0x704803c: add    %al,(%eax)
+   0x704803e: add    %al,(%eax)
+   0x7048040: add    %al,(%eax)
+   0x7048042: add    %al,(%eax)
+   0x7048044: add    %al,(%eax)
+   0x7048046: add    %al,(%eax)
+   0x7048048: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x704804a: add    %al,(%eax)
+   0x704804c: add    %al,(%eax)
+   0x704804e: add    %al,(%eax)
+   0x7048050: add    %al,(%eax)
+   0x7048052: add    %al,(%eax)
+   0x7048054: add    %al,(%eax)
+   0x7048056: add    %al,(%eax)
+   0x7048058: add    %al,(%eax)
+   0x704805a: add    %al,(%eax)
+   0x704805c: add    %al,(%eax)
+   0x704805e: add    %al,(%eax)
+   0x7048060: add    %al,(%eax)
+   0x7048062: add    %al,(%eax)
+   0x7048064: add    %al,(%eax)
+   0x7048066: add    %al,(%eax)
+   0x7048068: add    %al,(%eax)
+   0x704806a: add    %al,(%eax)
+   0x704806c: add    %al,(%eax)
+   0x704806e: add    %al,(%eax)
+   0x7048070: add    %al,(%eax)
+   0x7048072: add    %al,(%eax)
+   0x7048074: add    %al,(%eax)
+   0x7048076: add    %al,(%eax)
+   0x7048078: add    %al,(%eax)
+   0x704807a: add    %al,(%eax)
+   0x704807c: add    %al,(%eax)
+   0x704807e: add    %al,(%eax)
+   0x7048080: add    %al,(%eax)
+   0x7048082: add    %al,(%eax)
+   0x7048084: add    %al,(%eax)
+   0x7048086: add    %al,(%eax)
+   0x7048088: add    %al,(%eax)
+   0x704808a: add    %al,(%eax)
+   0x704808c: add    %al,(%eax)
+   0x704808e: add    %al,(%eax)
+   0x7048090: add    %al,(%eax)
+   0x7048092: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048094: add    %al,(%eax)
+   0x7048096: add    %al,(%eax)
+   0x7048098: add    %al,(%eax)
+   0x704809a: add    %al,(%eax)
+   0x704809c: add    %al,(%eax)
+   0x704809e: add    %al,(%eax)
+   0x70480a0: add    %al,(%eax)
+   0x70480a2: add    %al,(%eax)
+   0x70480a4: add    %al,(%eax)
+   0x70480a6: add    %al,(%eax)
+   0x70480a8: add    %al,(%eax)
+   0x70480aa: add    %al,(%eax)
+   0x70480ac: add    %al,(%eax)
+   0x70480ae: add    %al,(%eax)
+   0x70480b0: add    %al,(%eax)
+   0x70480b2: add    %al,(%eax)
+   0x70480b4: add    %al,(%eax)
+   0x70480b6: add    %al,(%eax)
+   0x70480b8: add    %al,(%eax)
+   0x70480ba: add    %al,(%eax)
+   0x70480bc: add    %al,(%eax)
+   0x70480be: add    %al,(%eax)
+   0x70480c0: add    %al,(%eax)
+   0x70480c2: add    %al,(%eax)
+   0x70480c4: add    %al,(%eax)
+   0x70480c6: add    %al,(%eax)
+   0x70480c8: add    %al,(%eax)
+   0x70480ca: add    %al,(%eax)
+   0x70480cc: add    %al,(%eax)
+   0x70480ce: add    %al,(%eax)
+   0x70480d0: add    %al,(%eax)
+   0x70480d2: add    %al,(%eax)
+   0x70480d4: add    %al,(%eax)
+   0x70480d6: add    %al,(%eax)
+   0x70480d8: add    %al,(%eax)
+   0x70480da: add    %al,(%eax)
+   0x70480dc: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x70480de: add    %al,(%eax)
+   0x70480e0: add    %al,(%eax)
+   0x70480e2: add    %al,(%eax)
+   0x70480e4: add    %al,(%eax)
+   0x70480e6: add    %al,(%eax)
+   0x70480e8: add    %al,(%eax)
+   0x70480ea: add    %al,(%eax)
+   0x70480ec: add    %al,(%eax)
+   0x70480ee: add    %al,(%eax)
+   0x70480f0: add    %al,(%eax)
+   0x70480f2: add    %al,(%eax)
+   0x70480f4: add    %al,(%eax)
+   0x70480f6: add    %al,(%eax)
+   0x70480f8: add    %al,(%eax)
+   0x70480fa: add    %al,(%eax)
+   0x70480fc: add    %al,(%eax)
+   0x70480fe: add    %al,(%eax)
+   0x7048100: add    %al,(%eax)
+   0x7048102: add    %al,(%eax)
+   0x7048104: add    %al,(%eax)
+   0x7048106: add    %al,(%eax)
+   0x7048108: add    %al,(%eax)
+   0x704810a: add    %al,(%eax)
+   0x704810c: add    %al,(%eax)
+   0x704810e: add    %al,(%eax)
+   0x7048110: add    %al,(%eax)
+   0x7048112: add    %al,(%eax)
+   0x7048114: add    %al,(%eax)
+   0x7048116: add    %al,(%eax)
+   0x7048118: add    %al,(%eax)
+   0x704811a: add    %al,(%eax)
+   0x704811c: add    %al,(%eax)
+   0x704811e: add    %al,(%eax)
+   0x7048120: add    %al,(%eax)
+   0x7048122: add    %al,(%eax)
+   0x7048124: add    %al,(%eax)
+   0x7048126: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048128: add    %al,(%eax)
+   0x704812a: add    %al,(%eax)
+   0x704812c: add    %al,(%eax)
+   0x704812e: add    %al,(%eax)
+   0x7048130: add    %al,(%eax)
+   0x7048132: add    %al,(%eax)
+   0x7048134: add    %al,(%eax)
+   0x7048136: add    %al,(%eax)
+   0x7048138: add    %al,(%eax)
+   0x704813a: add    %al,(%eax)
+   0x704813c: add    %al,(%eax)
+   0x704813e: add    %al,(%eax)
+   0x7048140: add    %al,(%eax)
+   0x7048142: add    %al,(%eax)
+   0x7048144: add    %al,(%eax)
+   0x7048146: add    %al,(%eax)
+   0x7048148: add    %al,(%eax)
+   0x704814a: add    %al,(%eax)
+   0x704814c: add    %al,(%eax)
+   0x704814e: add    %al,(%eax)
+   0x7048150: add    %al,(%eax)
+   0x7048152: add    %al,(%eax)
+   0x7048154: add    %al,(%eax)
+   0x7048156: add    %al,(%eax)
+   0x7048158: add    %al,(%eax)
+   0x704815a: add    %al,(%eax)
+   0x704815c: add    %al,(%eax)
+   0x704815e: add    %al,(%eax)
+   0x7048160: add    %al,(%eax)
+   0x7048162: add    %al,(%eax)
+   0x7048164: add    %al,(%eax)
+   0x7048166: add    %al,(%eax)
+   0x7048168: add    %al,(%eax)
+   0x704816a: add    %al,(%eax)
+   0x704816c: add    %al,(%eax)
+   0x704816e: add    %al,(%eax)
+   0x7048170: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048172: add    %al,(%eax)
+   0x7048174: add    %al,(%eax)
+   0x7048176: add    %al,(%eax)
+   0x7048178: add    %al,(%eax)
+   0x704817a: add    %al,(%eax)
+   0x704817c: add    %al,(%eax)
+   0x704817e: add    %al,(%eax)
+   0x7048180: add    %al,(%eax)
+   0x7048182: add    %al,(%eax)
+   0x7048184: add    %al,(%eax)
+   0x7048186: add    %al,(%eax)
+   0x7048188: add    %al,(%eax)
+   0x704818a: add    %al,(%eax)
+   0x704818c: add    %al,(%eax)
+   0x704818e: add    %al,(%eax)
+   0x7048190: add    %al,(%eax)
+   0x7048192: add    %al,(%eax)
+   0x7048194: add    %al,(%eax)
+   0x7048196: add    %al,(%eax)
+   0x7048198: add    %al,(%eax)
+   0x704819a: add    %al,(%eax)
+   0x704819c: add    %al,(%eax)
+   0x704819e: add    %al,(%eax)
+   0x70481a0: add    %al,(%eax)
+   0x70481a2: add    %al,(%eax)
+   0x70481a4: add    %al,(%eax)
+   0x70481a6: add    %al,(%eax)
+   0x70481a8: add    %al,(%eax)
+   0x70481aa: add    %al,(%eax)
+   0x70481ac: add    %al,(%eax)
+   0x70481ae: add    %al,(%eax)
+   0x70481b0: add    %al,(%eax)
+   0x70481b2: add    %al,(%eax)
+   0x70481b4: add    %al,(%eax)
+   0x70481b6: add    %al,(%eax)
+   0x70481b8: add    %al,(%eax)
+   0x70481ba: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x70481bc: add    %al,(%eax)
+   0x70481be: add    %al,(%eax)
+   0x70481c0: add    %al,(%eax)
+   0x70481c2: add    %al,(%eax)
+   0x70481c4: add    %al,(%eax)
+   0x70481c6: add    %al,(%eax)
+   0x70481c8: add    %al,(%eax)
+   0x70481ca: add    %al,(%eax)
+   0x70481cc: add    %al,(%eax)
+   0x70481ce: add    %al,(%eax)
+   0x70481d0: add    %al,(%eax)
+   0x70481d2: add    %al,(%eax)
+   0x70481d4: add    %al,(%eax)
+   0x70481d6: add    %al,(%eax)
+   0x70481d8: add    %al,(%eax)
+   0x70481da: add    %al,(%eax)
+   0x70481dc: add    %al,(%eax)
+   0x70481de: add    %al,(%eax)
+   0x70481e0: add    %al,(%eax)
+   0x70481e2: add    %al,(%eax)
+   0x70481e4: add    %al,(%eax)
+   0x70481e6: add    %al,(%eax)
+   0x70481e8: add    %al,(%eax)
+   0x70481ea: add    %al,(%eax)
+   0x70481ec: add    %al,(%eax)
+   0x70481ee: add    %al,(%eax)
+   0x70481f0: add    %al,(%eax)
+   0x70481f2: add    %al,(%eax)
+   0x70481f4: add    %al,(%eax)
+   0x70481f6: add    %al,(%eax)
+   0x70481f8: add    %al,(%eax)
+   0x70481fa: add    %al,(%eax)
+   0x70481fc: add    %al,(%eax)
+   0x70481fe: add    %al,(%eax)
+   0x7048200: add    %al,(%eax)
+   0x7048202: add    %al,(%eax)
+   0x7048204: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048206: add    %al,(%eax)
+   0x7048208: add    %al,(%eax)
+   0x704820a: add    %al,(%eax)
+   0x704820c: add    %al,(%eax)
+   0x704820e: add    %al,(%eax)
+   0x7048210: add    %al,(%eax)
+   0x7048212: add    %al,(%eax)
+   0x7048214: add    %al,(%eax)
+   0x7048216: add    %al,(%eax)
+   0x7048218: add    %al,(%eax)
+   0x704821a: add    %al,(%eax)
+   0x704821c: add    %al,(%eax)
+   0x704821e: add    %al,(%eax)
+   0x7048220: add    %al,(%eax)
+   0x7048222: add    %al,(%eax)
+   0x7048224: add    %al,(%eax)
+   0x7048226: add    %al,(%eax)
+   0x7048228: add    %al,(%eax)
+   0x704822a: add    %al,(%eax)
+   0x704822c: add    %al,(%eax)
+   0x704822e: add    %al,(%eax)
+   0x7048230: add    %al,(%eax)
+   0x7048232: add    %al,(%eax)
+   0x7048234: add    %al,(%eax)
+   0x7048236: add    %al,(%eax)
+   0x7048238: add    %al,(%eax)
+   0x704823a: add    %al,(%eax)
+   0x704823c: add    %al,(%eax)
+   0x704823e: add    %al,(%eax)
+   0x7048240: add    %al,(%eax)
+   0x7048242: add    %al,(%eax)
+   0x7048244: add    %al,(%eax)
+   0x7048246: add    %al,(%eax)
+   0x7048248: add    %al,(%eax)
+   0x704824a: add    %al,(%eax)
+   0x704824c: add    %al,(%eax)
+   0x704824e: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048250: add    %al,(%eax)
+   0x7048252: add    %al,(%eax)
+   0x7048254: add    %al,(%eax)
+   0x7048256: add    %al,(%eax)
+   0x7048258: add    %al,(%eax)
+   0x704825a: add    %al,(%eax)
+   0x704825c: add    %al,(%eax)
+   0x704825e: add    %al,(%eax)
+   0x7048260: add    %al,(%eax)
+   0x7048262: add    %al,(%eax)
+   0x7048264: add    %al,(%eax)
+   0x7048266: add    %al,(%eax)
+   0x7048268: add    %al,(%eax)
+   0x704826a: add    %al,(%eax)
+   0x704826c: add    %al,(%eax)
+   0x704826e: add    %al,(%eax)
+   0x7048270: add    %al,(%eax)
+   0x7048272: add    %al,(%eax)
+   0x7048274: add    %al,(%eax)
+   0x7048276: add    %al,(%eax)
+   0x7048278: add    %al,(%eax)
+   0x704827a: add    %al,(%eax)
+   0x704827c: add    %al,(%eax)
+   0x704827e: add    %al,(%eax)
+   0x7048280: add    %al,(%eax)
+   0x7048282: add    %al,(%eax)
+   0x7048284: add    %al,(%eax)
+   0x7048286: add    %al,(%eax)
+   0x7048288: add    %al,(%eax)
+   0x704828a: add    %al,(%eax)
+   0x704828c: add    %al,(%eax)
+   0x704828e: add    %al,(%eax)
+   0x7048290: add    %al,(%eax)
+   0x7048292: add    %al,(%eax)
+   0x7048294: add    %al,(%eax)
+   0x7048296: add    %al,(%eax)
+   0x7048298: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x704829a: add    %al,(%eax)
+   0x704829c: add    %al,(%eax)
+   0x704829e: add    %al,(%eax)
+   0x70482a0: add    %al,(%eax)
+   0x70482a2: add    %al,(%eax)
+   0x70482a4: add    %al,(%eax)
+   0x70482a6: add    %al,(%eax)
+   0x70482a8: add    %al,(%eax)
+   0x70482aa: add    %al,(%eax)
+   0x70482ac: add    %al,(%eax)
+   0x70482ae: add    %al,(%eax)
+   0x70482b0: add    %al,(%eax)
+   0x70482b2: add    %al,(%eax)
+   0x70482b4: add    %al,(%eax)
+   0x70482b6: add    %al,(%eax)
+   0x70482b8: add    %al,(%eax)
+   0x70482ba: add    %al,(%eax)
+   0x70482bc: add    %al,(%eax)
+   0x70482be: add    %al,(%eax)
+   0x70482c0: add    %al,(%eax)
+   0x70482c2: add    %al,(%eax)
+   0x70482c4: add    %al,(%eax)
+   0x70482c6: add    %al,(%eax)
+   0x70482c8: add    %al,(%eax)
+   0x70482ca: add    %al,(%eax)
+   0x70482cc: add    %al,(%eax)
+   0x70482ce: add    %al,(%eax)
+   0x70482d0: add    %al,(%eax)
+   0x70482d2: add    %al,(%eax)
+   0x70482d4: add    %al,(%eax)
+   0x70482d6: add    %al,(%eax)
+   0x70482d8: add    %al,(%eax)
+   0x70482da: add    %al,(%eax)
+   0x70482dc: add    %al,(%eax)
+   0x70482de: add    %al,(%eax)
+   0x70482e0: add    %al,(%eax)
+   0x70482e2: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x70482e4: add    %al,(%eax)
+   0x70482e6: add    %al,(%eax)
+   0x70482e8: add    %al,(%eax)
+   0x70482ea: add    %al,(%eax)
+   0x70482ec: add    %al,(%eax)
+   0x70482ee: add    %al,(%eax)
+   0x70482f0: add    %al,(%eax)
+   0x70482f2: add    %al,(%eax)
+   0x70482f4: add    %al,(%eax)
+   0x70482f6: add    %al,(%eax)
+   0x70482f8: add    %al,(%eax)
+   0x70482fa: add    %al,(%eax)
+   0x70482fc: add    %al,(%eax)
+   0x70482fe: add    %al,(%eax)
+   0x7048300: add    %al,(%eax)
+   0x7048302: add    %al,(%eax)
+   0x7048304: add    %al,(%eax)
+   0x7048306: add    %al,(%eax)
+   0x7048308: add    %al,(%eax)
+   0x704830a: add    %al,(%eax)
+   0x704830c: add    %al,(%eax)
+   0x704830e: add    %al,(%eax)
+   0x7048310: add    %al,(%eax)
+   0x7048312: add    %al,(%eax)
+   0x7048314: add    %al,(%eax)
+   0x7048316: add    %al,(%eax)
+   0x7048318: add    %al,(%eax)
+   0x704831a: add    %al,(%eax)
+   0x704831c: add    %al,(%eax)
+   0x704831e: add    %al,(%eax)
+   0x7048320: add    %al,(%eax)
+   0x7048322: add    %al,(%eax)
+   0x7048324: add    %al,(%eax)
+   0x7048326: add    %al,(%eax)
+   0x7048328: add    %al,(%eax)
+   0x704832a: add    %al,(%eax)
+   0x704832c: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x704832e: add    %al,(%eax)
+   0x7048330: add    %al,(%eax)
+   0x7048332: add    %al,(%eax)
+   0x7048334: add    %al,(%eax)
+   0x7048336: add    %al,(%eax)
+   0x7048338: add    %al,(%eax)
+   0x704833a: add    %al,(%eax)
+   0x704833c: add    %al,(%eax)
+   0x704833e: add    %al,(%eax)
+   0x7048340: add    %al,(%eax)
+   0x7048342: add    %al,(%eax)
+   0x7048344: add    %al,(%eax)
+   0x7048346: add    %al,(%eax)
+   0x7048348: add    %al,(%eax)
+   0x704834a: add    %al,(%eax)
+   0x704834c: add    %al,(%eax)
+   0x704834e: add    %al,(%eax)
+   0x7048350: add    %al,(%eax)
+   0x7048352: add    %al,(%eax)
+   0x7048354: add    %al,(%eax)
+   0x7048356: add    %al,(%eax)
+   0x7048358: add    %al,(%eax)
+   0x704835a: add    %al,(%eax)
+   0x704835c: add    %al,(%eax)
+   0x704835e: add    %al,(%eax)
+   0x7048360: add    %al,(%eax)
+   0x7048362: add    %al,(%eax)
+   0x7048364: add    %al,(%eax)
+   0x7048366: add    %al,(%eax)
+   0x7048368: add    %al,(%eax)
+   0x704836a: add    %al,(%eax)
+   0x704836c: add    %al,(%eax)
+   0x704836e: add    %al,(%eax)
+   0x7048370: add    %al,(%eax)
+   0x7048372: add    %al,(%eax)
+   0x7048374: add    %al,(%eax)
+   0x7048376: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048378: add    %al,(%eax)
+   0x704837a: add    %al,(%eax)
+   0x704837c: add    %al,(%eax)
+   0x704837e: add    %al,(%eax)
+   0x7048380: add    %al,(%eax)
+   0x7048382: add    %al,(%eax)
+   0x7048384: add    %al,(%eax)
+   0x7048386: add    %al,(%eax)
+   0x7048388: add    %al,(%eax)
+   0x704838a: add    %al,(%eax)
+   0x704838c: add    %al,(%eax)
+   0x704838e: add    %al,(%eax)
+   0x7048390: add    %al,(%eax)
+   0x7048392: add    %al,(%eax)
+   0x7048394: add    %al,(%eax)
+   0x7048396: add    %al,(%eax)
+   0x7048398: add    %al,(%eax)
+   0x704839a: add    %al,(%eax)
+   0x704839c: add    %al,(%eax)
+   0x704839e: add    %al,(%eax)
+   0x70483a0: add    %al,(%eax)
+   0x70483a2: add    %al,(%eax)
+   0x70483a4: add    %al,(%eax)
+   0x70483a6: add    %al,(%eax)
+   0x70483a8: add    %al,(%eax)
+   0x70483aa: add    %al,(%eax)
+   0x70483ac: add    %al,(%eax)
+   0x70483ae: add    %al,(%eax)
+   0x70483b0: add    %al,(%eax)
+   0x70483b2: add    %al,(%eax)
+   0x70483b4: add    %al,(%eax)
+   0x70483b6: add    %al,(%eax)
+   0x70483b8: add    %al,(%eax)
+   0x70483ba: add    %al,(%eax)
+   0x70483bc: add    %al,(%eax)
+   0x70483be: add    %al,(%eax)
+   0x70483c0: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x70483c2: add    %al,(%eax)
+   0x70483c4: add    %al,(%eax)
+   0x70483c6: add    %al,(%eax)
+   0x70483c8: add    %al,(%eax)
+   0x70483ca: add    %al,(%eax)
+   0x70483cc: add    %al,(%eax)
+   0x70483ce: add    %al,(%eax)
+   0x70483d0: add    %al,(%eax)
+   0x70483d2: add    %al,(%eax)
+   0x70483d4: add    %al,(%eax)
+   0x70483d6: add    %al,(%eax)
+   0x70483d8: add    %al,(%eax)
+   0x70483da: add    %al,(%eax)
+   0x70483dc: add    %al,(%eax)
+   0x70483de: pop    %eax
+   0x70483df: pop    %ebx
+   0x70483e0: ret    
+   0x70483e1: xor    %eax,%eax
+   0x70483e3: ret    
+   0x70483e4: mov    %eax,(%ebx)
+   0x70483e6: ret    
+   0x70483e7: mov    %eax,%ebx
+   0x70483e9: ret    
+   0x70483ea: xor    %ecx,%ecx
+   0x70483ec: ret    
+   0x70483ed: xor    %edx,%edx
+   0x70483ef: ret    
+   0x70483f0: mov    $0xb,%al
+   0x70483f2: ret    
+   0x70483f3: int    $0x80
+   0x70483f5: ret    
+   0x70483f6: add    %al,(%eax)
+   0x70483f8: add    %al,(%eax)
+   0x70483fa: add    %al,(%eax)
+   0x70483fc: add    %al,(%eax)
+   0x70483fe: add    %al,(%eax)
+   0x7048400: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048402: add    %al,(%eax)
+   0x7048404: add    %al,(%eax)
+   0x7048406: add    %al,(%eax)
+   0x7048408: add    %al,(%eax)
+   0x704840a: add    %al,(%eax)
+   0x704840c: add    %al,(%eax)
+   0x704840e: add    %al,(%eax)
+   0x7048410: add    %al,(%eax)
+   0x7048412: add    %al,(%eax)
+   0x7048414: add    %al,(%eax)
+   0x7048416: add    %al,(%eax)
+   0x7048418: add    %al,(%eax)
+   0x704841a: add    %al,(%eax)
+   0x704841c: add    %al,(%eax)
+   0x704841e: add    %al,(%eax)
+   0x7048420: add    %al,(%eax)
+   0x7048422: add    %al,(%eax)
+   0x7048424: add    %al,(%eax)
+   0x7048426: add    %al,(%eax)
+   0x7048428: add    %al,(%eax)
+   0x704842a: add    %al,(%eax)
+   0x704842c: add    %al,(%eax)
+   0x704842e: add    %al,(%eax)
+   0x7048430: add    %al,(%eax)
+   0x7048432: add    %al,(%eax)
+   0x7048434: add    %al,(%eax)
+   0x7048436: add    %al,(%eax)
+   0x7048438: add    %al,(%eax)
+   0x704843a: add    %al,(%eax)
+   0x704843c: add    %al,(%eax)
+   0x704843e: add    %al,(%eax)
+   0x7048440: add    %al,(%eax)
+   0x7048442: add    %al,(%eax)
+   0x7048444: add    %al,(%eax)
+   0x7048446: add    %al,(%eax)
+   0x7048448: add    %al,(%eax)
+   0x704844a: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x704844c: add    %al,(%eax)
+   0x704844e: add    %al,(%eax)
+   0x7048450: add    %al,(%eax)
+   0x7048452: add    %al,(%eax)
+   0x7048454: add    %al,(%eax)
+   0x7048456: add    %al,(%eax)
+   0x7048458: add    %al,(%eax)
+   0x704845a: add    %al,(%eax)
+   0x704845c: add    %al,(%eax)
+   0x704845e: add    %al,(%eax)
+   0x7048460: add    %al,(%eax)
+   0x7048462: add    %al,(%eax)
+   0x7048464: add    %al,(%eax)
+   0x7048466: add    %al,(%eax)
+   0x7048468: add    %al,(%eax)
+   0x704846a: add    %al,(%eax)
+   0x704846c: add    %al,(%eax)
+   0x704846e: add    %al,(%eax)
+   0x7048470: add    %al,(%eax)
+   0x7048472: add    %al,(%eax)
+   0x7048474: add    %al,(%eax)
+   0x7048476: add    %al,(%eax)
+   0x7048478: add    %al,(%eax)
+   0x704847a: add    %al,(%eax)
+   0x704847c: add    %al,(%eax)
+   0x704847e: add    %al,(%eax)
+   0x7048480: add    %al,(%eax)
+   0x7048482: add    %al,(%eax)
+   0x7048484: add    %al,(%eax)
+   0x7048486: add    %al,(%eax)
+   0x7048488: add    %al,(%eax)
+   0x704848a: add    %al,(%eax)
+   0x704848c: add    %al,(%eax)
+   0x704848e: add    %al,(%eax)
+   0x7048490: add    %al,(%eax)
+   0x7048492: add    %al,(%eax)
+   0x7048494: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048496: add    %al,(%eax)
+   0x7048498: add    %al,(%eax)
+   0x704849a: add    %al,(%eax)
+   0x704849c: add    %al,(%eax)
+   0x704849e: add    %al,(%eax)
+   0x70484a0: add    %al,(%eax)
+   0x70484a2: add    %al,(%eax)
+   0x70484a4: add    %al,(%eax)
+   0x70484a6: add    %al,(%eax)
+   0x70484a8: add    %al,(%eax)
+   0x70484aa: add    %al,(%eax)
+   0x70484ac: add    %al,(%eax)
+   0x70484ae: add    %al,(%eax)
+   0x70484b0: add    %al,(%eax)
+   0x70484b2: add    %al,(%eax)
+   0x70484b4: add    %al,(%eax)
+   0x70484b6: add    %al,(%eax)
+   0x70484b8: add    %al,(%eax)
+   0x70484ba: add    %al,(%eax)
+   0x70484bc: add    %al,(%eax)
+   0x70484be: add    %al,(%eax)
+   0x70484c0: add    %al,(%eax)
+   0x70484c2: add    %al,(%eax)
+   0x70484c4: add    %al,(%eax)
+   0x70484c6: add    %al,(%eax)
+   0x70484c8: add    %al,(%eax)
+   0x70484ca: add    %al,(%eax)
+   0x70484cc: add    %al,(%eax)
+   0x70484ce: add    %al,(%eax)
+   0x70484d0: add    %al,(%eax)
+   0x70484d2: add    %al,(%eax)
+   0x70484d4: add    %al,(%eax)
+   0x70484d6: add    %al,(%eax)
+   0x70484d8: add    %al,(%eax)
+   0x70484da: add    %al,(%eax)
+   0x70484dc: add    %al,(%eax)
+   0x70484de: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x70484e0: add    %al,(%eax)
+   0x70484e2: add    %al,(%eax)
+   0x70484e4: add    %al,(%eax)
+   0x70484e6: add    %al,(%eax)
+   0x70484e8: add    %al,(%eax)
+   0x70484ea: add    %al,(%eax)
+   0x70484ec: add    %al,(%eax)
+   0x70484ee: add    %al,(%eax)
+   0x70484f0: add    %al,(%eax)
+   0x70484f2: add    %al,(%eax)
+   0x70484f4: add    %al,(%eax)
+   0x70484f6: add    %al,(%eax)
+   0x70484f8: add    %al,(%eax)
+   0x70484fa: add    %al,(%eax)
+   0x70484fc: add    %al,(%eax)
+   0x70484fe: add    %al,(%eax)
+   0x7048500: add    %al,(%eax)
+   0x7048502: add    %al,(%eax)
+   0x7048504: add    %al,(%eax)
+   0x7048506: add    %al,(%eax)
+   0x7048508: add    %al,(%eax)
+   0x704850a: add    %al,(%eax)
+   0x704850c: add    %al,(%eax)
+   0x704850e: add    %al,(%eax)
+   0x7048510: add    %al,(%eax)
+   0x7048512: add    %al,(%eax)
+   0x7048514: add    %al,(%eax)
+   0x7048516: add    %al,(%eax)
+   0x7048518: add    %al,(%eax)
+   0x704851a: add    %al,(%eax)
+   0x704851c: add    %al,(%eax)
+   0x704851e: add    %al,(%eax)
+   0x7048520: add    %al,(%eax)
+   0x7048522: add    %al,(%eax)
+   0x7048524: add    %al,(%eax)
+   0x7048526: add    %al,(%eax)
+   0x7048528: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x704852a: add    %al,(%eax)
+   0x704852c: add    %al,(%eax)
+   0x704852e: add    %al,(%eax)
+   0x7048530: add    %al,(%eax)
+   0x7048532: add    %al,(%eax)
+   0x7048534: add    %al,(%eax)
+   0x7048536: add    %al,(%eax)
+   0x7048538: add    %al,(%eax)
+   0x704853a: add    %al,(%eax)
+   0x704853c: add    %al,(%eax)
+   0x704853e: add    %al,(%eax)
+   0x7048540: add    %al,(%eax)
+   0x7048542: add    %al,(%eax)
+   0x7048544: add    %al,(%eax)
+   0x7048546: add    %al,(%eax)
+   0x7048548: add    %al,(%eax)
+   0x704854a: add    %al,(%eax)
+   0x704854c: add    %al,(%eax)
+   0x704854e: add    %al,(%eax)
+   0x7048550: add    %al,(%eax)
+   0x7048552: add    %al,(%eax)
+   0x7048554: add    %al,(%eax)
+   0x7048556: add    %al,(%eax)
+   0x7048558: add    %al,(%eax)
+   0x704855a: add    %al,(%eax)
+   0x704855c: add    %al,(%eax)
+   0x704855e: add    %al,(%eax)
+   0x7048560: add    %al,(%eax)
+   0x7048562: add    %al,(%eax)
+   0x7048564: add    %al,(%eax)
+   0x7048566: add    %al,(%eax)
+   0x7048568: add    %al,(%eax)
+   0x704856a: add    %al,(%eax)
+   0x704856c: add    %al,(%eax)
+   0x704856e: add    %al,(%eax)
+   0x7048570: add    %al,(%eax)
+   0x7048572: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048574: add    %al,(%eax)
+   0x7048576: add    %al,(%eax)
+   0x7048578: add    %al,(%eax)
+   0x704857a: add    %al,(%eax)
+   0x704857c: add    %al,(%eax)
+   0x704857e: add    %al,(%eax)
+   0x7048580: add    %al,(%eax)
+   0x7048582: add    %al,(%eax)
+   0x7048584: add    %al,(%eax)
+   0x7048586: add    %al,(%eax)
+   0x7048588: add    %al,(%eax)
+   0x704858a: add    %al,(%eax)
+   0x704858c: add    %al,(%eax)
+   0x704858e: add    %al,(%eax)
+   0x7048590: add    %al,(%eax)
+   0x7048592: add    %al,(%eax)
+   0x7048594: add    %al,(%eax)
+   0x7048596: add    %al,(%eax)
+   0x7048598: add    %al,(%eax)
+   0x704859a: add    %al,(%eax)
+   0x704859c: add    %al,(%eax)
+   0x704859e: add    %al,(%eax)
+   0x70485a0: add    %al,(%eax)
+   0x70485a2: add    %al,(%eax)
+   0x70485a4: add    %al,(%eax)
+   0x70485a6: add    %al,(%eax)
+   0x70485a8: add    %al,(%eax)
+   0x70485aa: add    %al,(%eax)
+   0x70485ac: add    %al,(%eax)
+   0x70485ae: add    %al,(%eax)
+   0x70485b0: add    %al,(%eax)
+   0x70485b2: add    %al,(%eax)
+   0x70485b4: add    %al,(%eax)
+   0x70485b6: add    %al,(%eax)
+   0x70485b8: add    %al,(%eax)
+   0x70485ba: add    %al,(%eax)
+   0x70485bc: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x70485be: add    %al,(%eax)
+   0x70485c0: add    %al,(%eax)
+   0x70485c2: add    %al,(%eax)
+   0x70485c4: add    %al,(%eax)
+   0x70485c6: add    %al,(%eax)
+   0x70485c8: add    %al,(%eax)
+   0x70485ca: add    %al,(%eax)
+   0x70485cc: add    %al,(%eax)
+   0x70485ce: add    %al,(%eax)
+   0x70485d0: add    %al,(%eax)
+   0x70485d2: add    %al,(%eax)
+   0x70485d4: add    %al,(%eax)
+   0x70485d6: add    %al,(%eax)
+   0x70485d8: add    %al,(%eax)
+   0x70485da: add    %al,(%eax)
+   0x70485dc: add    %al,(%eax)
+   0x70485de: add    %al,(%eax)
+   0x70485e0: add    %al,(%eax)
+   0x70485e2: add    %al,(%eax)
+   0x70485e4: add    %al,(%eax)
+   0x70485e6: add    %al,(%eax)
+   0x70485e8: add    %al,(%eax)
+   0x70485ea: add    %al,(%eax)
+   0x70485ec: add    %al,(%eax)
+   0x70485ee: add    %al,(%eax)
+   0x70485f0: add    %al,(%eax)
+   0x70485f2: add    %al,(%eax)
+   0x70485f4: add    %al,(%eax)
+   0x70485f6: add    %al,(%eax)
+   0x70485f8: add    %al,(%eax)
+   0x70485fa: add    %al,(%eax)
+   0x70485fc: add    %al,(%eax)
+   0x70485fe: add    %al,(%eax)
+   0x7048600: add    %al,(%eax)
+   0x7048602: add    %al,(%eax)
+   0x7048604: add    %al,(%eax)
+   0x7048606: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048608: add    %al,(%eax)
+   0x704860a: add    %al,(%eax)
+   0x704860c: add    %al,(%eax)
+   0x704860e: add    %al,(%eax)
+   0x7048610: add    %al,(%eax)
+   0x7048612: add    %al,(%eax)
+   0x7048614: add    %al,(%eax)
+   0x7048616: add    %al,(%eax)
+   0x7048618: add    %al,(%eax)
+   0x704861a: add    %al,(%eax)
+   0x704861c: add    %al,(%eax)
+   0x704861e: add    %al,(%eax)
+   0x7048620: add    %al,(%eax)
+   0x7048622: add    %al,(%eax)
+   0x7048624: add    %al,(%eax)
+   0x7048626: add    %al,(%eax)
+   0x7048628: add    %al,(%eax)
+   0x704862a: add    %al,(%eax)
+   0x704862c: add    %al,(%eax)
+   0x704862e: add    %al,(%eax)
+   0x7048630: add    %al,(%eax)
+   0x7048632: add    %al,(%eax)
+   0x7048634: add    %al,(%eax)
+   0x7048636: add    %al,(%eax)
+   0x7048638: add    %al,(%eax)
+   0x704863a: add    %al,(%eax)
+   0x704863c: add    %al,(%eax)
+   0x704863e: add    %al,(%eax)
+   0x7048640: add    %al,(%eax)
+   0x7048642: add    %al,(%eax)
+   0x7048644: add    %al,(%eax)
+   0x7048646: add    %al,(%eax)
+   0x7048648: add    %al,(%eax)
+   0x704864a: add    %al,(%eax)
+   0x704864c: add    %al,(%eax)
+   0x704864e: add    %al,(%eax)
+   0x7048650: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048652: add    %al,(%eax)
+   0x7048654: add    %al,(%eax)
+   0x7048656: add    %al,(%eax)
+   0x7048658: add    %al,(%eax)
+   0x704865a: add    %al,(%eax)
+   0x704865c: add    %al,(%eax)
+   0x704865e: add    %al,(%eax)
+   0x7048660: add    %al,(%eax)
+   0x7048662: add    %al,(%eax)
+   0x7048664: add    %al,(%eax)
+   0x7048666: add    %al,(%eax)
+   0x7048668: add    %al,(%eax)
+   0x704866a: add    %al,(%eax)
+   0x704866c: add    %al,(%eax)
+   0x704866e: add    %al,(%eax)
+   0x7048670: add    %al,(%eax)
+   0x7048672: add    %al,(%eax)
+   0x7048674: add    %al,(%eax)
+   0x7048676: add    %al,(%eax)
+   0x7048678: add    %al,(%eax)
+   0x704867a: add    %al,(%eax)
+   0x704867c: add    %al,(%eax)
+   0x704867e: add    %al,(%eax)
+   0x7048680: add    %al,(%eax)
+   0x7048682: add    %al,(%eax)
+   0x7048684: add    %al,(%eax)
+   0x7048686: add    %al,(%eax)
+   0x7048688: add    %al,(%eax)
+   0x704868a: add    %al,(%eax)
+   0x704868c: add    %al,(%eax)
+   0x704868e: add    %al,(%eax)
+   0x7048690: add    %al,(%eax)
+   0x7048692: add    %al,(%eax)
+   0x7048694: add    %al,(%eax)
+   0x7048696: add    %al,(%eax)
+   0x7048698: add    %al,(%eax)
+   0x704869a: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x704869c: add    %al,(%eax)
+   0x704869e: add    %al,(%eax)
+   0x70486a0: add    %al,(%eax)
+   0x70486a2: add    %al,(%eax)
+   0x70486a4: add    %al,(%eax)
+   0x70486a6: add    %al,(%eax)
+   0x70486a8: add    %al,(%eax)
+   0x70486aa: add    %al,(%eax)
+   0x70486ac: add    %al,(%eax)
+   0x70486ae: add    %al,(%eax)
+   0x70486b0: add    %al,(%eax)
+   0x70486b2: add    %al,(%eax)
+   0x70486b4: add    %al,(%eax)
+   0x70486b6: add    %al,(%eax)
+   0x70486b8: add    %al,(%eax)
+   0x70486ba: add    %al,(%eax)
+   0x70486bc: add    %al,(%eax)
+   0x70486be: add    %al,(%eax)
+   0x70486c0: add    %al,(%eax)
+   0x70486c2: add    %al,(%eax)
+   0x70486c4: add    %al,(%eax)
+   0x70486c6: add    %al,(%eax)
+   0x70486c8: add    %al,(%eax)
+   0x70486ca: add    %al,(%eax)
+   0x70486cc: add    %al,(%eax)
+   0x70486ce: add    %al,(%eax)
+   0x70486d0: add    %al,(%eax)
+   0x70486d2: add    %al,(%eax)
+   0x70486d4: add    %al,(%eax)
+   0x70486d6: add    %al,(%eax)
+   0x70486d8: add    %al,(%eax)
+   0x70486da: add    %al,(%eax)
+   0x70486dc: add    %al,(%eax)
+   0x70486de: add    %al,(%eax)
+   0x70486e0: add    %al,(%eax)
+   0x70486e2: add    %al,(%eax)
+   0x70486e4: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x70486e6: add    %al,(%eax)
+   0x70486e8: add    %al,(%eax)
+   0x70486ea: add    %al,(%eax)
+   0x70486ec: add    %al,(%eax)
+   0x70486ee: add    %al,(%eax)
+   0x70486f0: add    %al,(%eax)
+   0x70486f2: add    %al,(%eax)
+   0x70486f4: add    %al,(%eax)
+   0x70486f6: add    %al,(%eax)
+   0x70486f8: add    %al,(%eax)
+   0x70486fa: add    %al,(%eax)
+   0x70486fc: add    %al,(%eax)
+   0x70486fe: add    %al,(%eax)
+   0x7048700: add    %al,(%eax)
+   0x7048702: add    %al,(%eax)
+   0x7048704: add    %al,(%eax)
+   0x7048706: add    %al,(%eax)
+   0x7048708: add    %al,(%eax)
+   0x704870a: add    %al,(%eax)
+   0x704870c: add    %al,(%eax)
+   0x704870e: add    %al,(%eax)
+   0x7048710: add    %al,(%eax)
+   0x7048712: add    %al,(%eax)
+   0x7048714: add    %al,(%eax)
+   0x7048716: add    %al,(%eax)
+   0x7048718: add    %al,(%eax)
+   0x704871a: add    %al,(%eax)
+   0x704871c: add    %al,(%eax)
+   0x704871e: add    %al,(%eax)
+   0x7048720: add    %al,(%eax)
+   0x7048722: add    %al,(%eax)
+   0x7048724: add    %al,(%eax)
+   0x7048726: add    %al,(%eax)
+   0x7048728: add    %al,(%eax)
+   0x704872a: add    %al,(%eax)
+   0x704872c: add    %al,(%eax)
+   0x704872e: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x7048730: add    %al,(%eax)
+   0x7048732: add    %al,(%eax)
+   0x7048734: add    %al,(%eax)
+   0x7048736: add    %al,(%eax)
+   0x7048738: add    %al,(%eax)
+   0x704873a: add    %al,(%eax)
+   0x704873c: add    %al,(%eax)
+   0x704873e: add    %al,(%eax)
+   0x7048740: add    %al,(%eax)
+   0x7048742: add    %al,(%eax)
+   0x7048744: add    %al,(%eax)
+   0x7048746: add    %al,(%eax)
+   0x7048748: add    %al,(%eax)
+   0x704874a: add    %al,(%eax)
+   0x704874c: add    %al,(%eax)
+   0x704874e: add    %al,(%eax)
+   0x7048750: add    %al,(%eax)
+   0x7048752: add    %al,(%eax)
+   0x7048754: add    %al,(%eax)
+   0x7048756: add    %al,(%eax)
+   0x7048758: add    %al,(%eax)
+   0x704875a: add    %al,(%eax)
+   0x704875c: add    %al,(%eax)
+   0x704875e: add    %al,(%eax)
+   0x7048760: add    %al,(%eax)
+   0x7048762: add    %al,(%eax)
+   0x7048764: add    %al,(%eax)
+   0x7048766: add    %al,(%eax)
+   0x7048768: add    %al,(%eax)
+   0x704876a: add    %al,(%eax)
+   0x704876c: add    %al,(%eax)
+   0x704876e: add    %al,(%eax)
+   0x7048770: add    %al,(%eax)
+   0x7048772: add    %al,(%eax)
+   0x7048774: add    %al,(%eax)
+   0x7048776: add    %al,(%eax)
+   0x7048778: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x704877a: add    %al,(%eax)
+   0x704877c: add    %al,(%eax)
+   0x704877e: add    %al,(%eax)
+   0x7048780: add    %al,(%eax)
+   0x7048782: add    %al,(%eax)
+   0x7048784: add    %al,(%eax)
+   0x7048786: add    %al,(%eax)
+   0x7048788: add    %al,(%eax)
+   0x704878a: add    %al,(%eax)
+   0x704878c: add    %al,(%eax)
+   0x704878e: add    %al,(%eax)
+   0x7048790: add    %al,(%eax)
+   0x7048792: add    %al,(%eax)
+   0x7048794: add    %al,(%eax)
+   0x7048796: add    %al,(%eax)
+   0x7048798: add    %al,(%eax)
+   0x704879a: add    %al,(%eax)
+   0x704879c: add    %al,(%eax)
+   0x704879e: add    %al,(%eax)
+   0x70487a0: add    %al,(%eax)
+   0x70487a2: add    %al,(%eax)
+   0x70487a4: add    %al,(%eax)
+   0x70487a6: add    %al,(%eax)
+   0x70487a8: add    %al,(%eax)
+   0x70487aa: add    %al,(%eax)
+   0x70487ac: add    %al,(%eax)
+   0x70487ae: add    %al,(%eax)
+   0x70487b0: add    %al,(%eax)
+   0x70487b2: add    %al,(%eax)
+   0x70487b4: add    %al,(%eax)
+   0x70487b6: add    %al,(%eax)
+   0x70487b8: add    %al,(%eax)
+   0x70487ba: add    %al,(%eax)
+   0x70487bc: add    %al,(%eax)
+   0x70487be: add    %al,(%eax)
+   0x70487c0: add    %al,(%eax)
+   0x70487c2: add    %al,(%eax)
+--Type <RET> for more, q to quit, c to continue without paging--
+   0x70487c4: add    %al,(%eax)
+(gdb) info file
+Symbols from "/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.3".
+Native process:
+Using the running image of child Thread 0xb7fc21c0 (LWP 3819965).
+While running this, GDB does not access memory from...
+Local exec file:
+`/home/students/cs/2022/pbekri01/Downloads/QUIZ2 (5)/1048972/bin.3',
+        file type elf32-i386.
+Entry point: 0x80486b0
+0x08048154 - 0x08048167 is .interp
+0x08048168 - 0x08048188 is .note.ABI-tag
+0x08048188 - 0x080481ac is .note.gnu.build-id
+0x080481ac - 0x080481d0 is .gnu.hash
+0x080481d0 - 0x08048340 is .dynsym
+0x08048340 - 0x0804841e is .dynstr
+0x0804841e - 0x0804844c is .gnu.version
+0x0804844c - 0x0804848c is .gnu.version_r
+0x0804848c - 0x0804849c is .rel.dyn
+0x0804849c - 0x08048534 is .rel.plt
+0x08048534 - 0x08048557 is .init
+0x08048560 - 0x080486a0 is .plt
+0x080486a0 - 0x080486a8 is .plt.got
+0x080486b0 - 0x08048c22 is .text
+0x08048c24 - 0x08048c38 is .fini
+0x08048c38 - 0x08048cc4 is .rodata
+0x08048cc4 - 0x08048d10 is .eh_frame_hdr
+0x08048d10 - 0x08048e6c is .eh_frame
+0x08049f08 - 0x08049f0c is .init_array
+0x08049f0c - 0x08049f10 is .fini_array
+0x08049f10 - 0x08049f14 is .jcr
+0x08049f14 - 0x08049ffc is .dynamic
+0x08049ffc - 0x0804a000 is .got
+0x0804a000 - 0x0804a058 is .got.plt
+0x0804a058 - 0x0804a05c is .data
+0x0804a05c - 0x0804a068 is .bss
+0xb7fc9174 - 0xb7fc9198 is .note.gnu.build-id in /lib/ld-linux.so.2
+0xb7fc9198 - 0xb7fc91b4 is .note.gnu.property in /lib/ld-linux.so.2
+0xb7fc91b4 - 0xb7fc92f8 is .hash in /lib/ld-linux.so.2
+--Type <RET> for more, q to quit, c to continue without paging--    
+
+
+
+
+
+
+
+
+
+
+
+

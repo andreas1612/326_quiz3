@@ -1,0 +1,71 @@
+Week 7 - Lab 6
+
+Shellcode Writing
+
+Introduction
+
+In this lab the students should write and test a shellcode. The students should
+develop from scratch the shellcode for the exit system call.
+
+* Step 1
+
+See how exit works in C.
+
+* Step 2
+
+Write the shellcode in asm:
+
+.section .data
+.section .text
+.globl _start
+ 
+_start:
+    xor  %eax, %eax
+    inc  %eax
+    mov  %eax, %ebx
+    int  $0x80
+
+$ as --32 exit-sh.s -o exit-sh.o
+$ ld -m elf_i386 exit-sh.o -o exit-sh
+$ ./exit-sh
+$ 
+
+* Step 3
+
+Grab the shellcode:
+
+elathan@l64:~/ucy/epl326/labs/6$ objdump -d exit-sh.o
+
+exit-sh.o:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	31 c0                	xor    %eax,%eax
+   2:	40                   	inc    %eax
+   3:	89 c3                	mov    %eax,%ebx
+   5:	cd 80                	int    $0x80
+
+* Step 4
+
+Test the shellcode:
+
+#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+	char *shellcode ="\x31\xc0\x40\x89\xc3\xcd\x80";
+
+	int (*fptr)() = (int (*)()) shellcode;
+
+	fptr();
+
+	fprintf(stderr, "Should not be printed\n");
+
+	return 1;
+}
+
+Compilation:
+
+$ gcc -Wall -m32 -z execstack run-shellcode.c -o run-shellcode
+

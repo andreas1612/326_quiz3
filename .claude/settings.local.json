@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wsl -e bash -c \"uname -a && which gdb && which objdump && dpkg -l | grep -E ''gdb|libc6-i386|gcc-multilib'' 2>/dev/null | head -20\")",
+      "Bash(wsl -e bash -c \"cp ''/mnt/c/Users/andre/Desktop/326_quiz3/Warm-up lab/bin.0'' /tmp/bin.0 && chmod +x /tmp/bin.0 && objdump -d /tmp/bin.0 2>&1 | head -200\")",
+      "Bash(wsl -e bash -c \"objdump -d /tmp/bin.0 2>&1 | grep -A 100 ''<main>:''\")",
+      "Bash(wsl -e bash -c \"objdump -d /tmp/bin.0 2>&1 | grep -A 200 ''<display_file>:''\")",
+      "Bash(wsl -e bash -c \"objdump -d /tmp/bin.0 2>&1 | grep -A 150 ''<rnd_env>:''\")",
+      "Bash(wsl -e bash -c \"objdump -d /tmp/bin.0 2>&1 | grep -A 150 ''rnd_env''\")",
+      "Bash(wsl -e bash -c \"objdump -d /tmp/bin.0 | grep -E ''rnd|<[a-z]''\")"
+    ]
+  }
+}

