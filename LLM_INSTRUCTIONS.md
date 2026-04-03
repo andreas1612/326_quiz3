@@ -13,8 +13,8 @@ The professor grades the addresses — a correct exploit with WSL addresses will
 ### Lab machine details:
 | Item | Value |
 |------|-------|
-| IP | `10.16.13.89` |
-| Hostname | `103ws14.in.cs.ucy.ac.cy` |
+| IP | `10.16.13.53` |
+| Hostname | `103ws15.in.cs.ucy.ac.cy` |
 | User | `apieri01` |
 | Home | `/home/students/cs/2024/apieri01` |
 | OS | Rocky Linux x86_64 (i686 binaries) |
@@ -23,8 +23,8 @@ The professor grades the addresses — a correct exploit with WSL addresses will
 
 ### SSH test (run this first — if it returns the hostname, you are done):
 ```powershell
-powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 'hostname' 2>&1"
-# Expected: 103ws14.in.cs.ucy.ac.cy
+powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53 'hostname' 2>&1"
+# Expected: 103ws15.in.cs.ucy.ac.cy
 # If this hangs or times out → VPN is down → run VPN connect command below
 ```
 
@@ -69,8 +69,8 @@ Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList
 Start-Sleep -Seconds 10
 
 # 2. Verify SSH (MUST succeed before proceeding)
-ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 "hostname"
-# → 103ws14.in.cs.ucy.ac.cy  ← only continue if you see this
+ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53 "hostname"
+# → 103ws15.in.cs.ucy.ac.cy  ← only continue if you see this
 ```
 
 ---
@@ -81,7 +81,7 @@ ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13
 
 ### SSH command template (use this for ALL lab machine commands):
 ```powershell
-powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 'COMMAND HERE' 2>&1"
+powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53 'COMMAND HERE' 2>&1"
 ```
 
 ### What MUST run on the lab machine (professor grades these addresses):
@@ -98,17 +98,17 @@ powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChec
 
 ### Transfer binaries to lab machine:
 ```powershell
-powershell.exe -Command "scp -i C:\Users\andre\.ssh\lab_key 'C:\PATH\TO\bin.1' 'C:\PATH\TO\bin.2' 'C:\PATH\TO\bin.3' apieri01@10.16.13.89:/home/students/cs/2024/apieri01/"
+powershell.exe -Command "scp -i C:\Users\andre\.ssh\lab_key 'C:\PATH\TO\bin.1' 'C:\PATH\TO\bin.2' 'C:\PATH\TO\bin.3' apieri01@10.16.13.53:/home/students/cs/2024/apieri01/"
 ```
 
 ### Transfer exploit files to lab machine:
 ```powershell
-powershell.exe -Command "scp -i C:\Users\andre\.ssh\lab_key exploit.1 exploit.2 exploit.3 apieri01@10.16.13.89:/home/students/cs/2024/apieri01/"
+powershell.exe -Command "scp -i C:\Users\andre\.ssh\lab_key exploit.1 exploit.2 exploit.3 apieri01@10.16.13.53:/home/students/cs/2024/apieri01/"
 ```
 
 ### Verify on lab machine:
 ```powershell
-powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key apieri01@10.16.13.89 'echo id | env -i TEMP=1000 setarch i686 -R --3gb ./bin.1 ./exploit.1' 2>&1"
+powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key apieri01@10.16.13.53 'echo id | env -i TEMP=1000 setarch i686 -R --3gb ./bin.1 ./exploit.1' 2>&1"
 ```
 
 ---

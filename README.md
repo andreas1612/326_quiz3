@@ -16,8 +16,8 @@ SSH is **passwordless** (key-based). VPN is **credential-based** (username + pas
 | VPN config | `C:\Program Files\OpenVPN\config\CSVPNv4.ovpn` |
 | VPN username | `apieri01@ucy.ac.cy` |
 | VPN credentials file | `C:\Users\andre\.ssh\vpn_creds.txt` (see one-time setup below) |
-| Lab machine IP | `10.16.13.89` |
-| Lab hostname | `103ws14.in.cs.ucy.ac.cy` |
+| Lab machine IP | `10.16.13.53` |
+| Lab hostname | `103ws15.in.cs.ucy.ac.cy` |
 | SSH key | `C:\Users\andre\.ssh\lab_key` (passwordless — no prompt) |
 | Lab home dir | `/home/students/cs/2024/apieri01` |
 | Other machines | `103ws1`–`103ws33.in.cs.ucy.ac.cy` |
@@ -36,16 +36,16 @@ Wait ~10 seconds after running, then verify SSH.
 
 ### SSH test — run after VPN connect:
 ```powershell
-powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 'hostname' 2>&1"
-# Must return: 103ws14.in.cs.ucy.ac.cy
+powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53 'hostname' 2>&1"
+# Must return: 103ws15.in.cs.ucy.ac.cy
 # If it hangs or times out → VPN not up yet, wait 5 more seconds and retry
 ```
 
 ### Full session start — copy-paste this block every time:
 ```powershell
 # Kill old VPN processes and reconnect
-Stop-Process -Name openvpn -Force -ErrorAction SilentlyContinue; Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config "C:\Program Files\OpenVPN\config\CSVPNv4.ovpn" --auth-user-pass "C:\Users\andre\.ssh\vpn_creds.txt"' -Verb RunAs -WindowStyle Hidden; Start-Sleep -Seconds 10; ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 "hostname"
-# → 103ws14.in.cs.ucy.ac.cy  ← only proceed if you see this
+Stop-Process -Name openvpn -Force -ErrorAction SilentlyContinue; Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config "C:\Program Files\OpenVPN\config\CSVPNv4.ovpn" --auth-user-pass "C:\Users\andre\.ssh\vpn_creds.txt"' -Verb RunAs -WindowStyle Hidden; Start-Sleep -Seconds 10; ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53 "hostname"
+# → 103ws15.in.cs.ucy.ac.cy  ← only proceed if you see this
 ```
 
 > **VPN disconnects mid-session:** re-run the one-command VPN connect above. SSH reconnects automatically.
@@ -886,7 +886,7 @@ Each bin also has a **different `lea` offset** — do not assume offset=52 like 
 | bin.2 | RWE | `-0x2c` → offset=**48** | Shellcode |
 | bin.3 | RWE | `-0x28` → offset=**44** | Shellcode |
 
-**Libc addresses — from lab machine (`10.16.13.89`, Rocky Linux i686, TEMP=1000):**
+**Libc addresses — from lab machine (`10.16.13.53`, Rocky Linux i686, TEMP=1000):**
 ```
 system()   = 0xb7dffd30
 "/bin/sh"  = 0xb7f40caa
