@@ -4,6 +4,44 @@
 
 ---
 
+## VPN + SSH SETUP (do this BEFORE anything else on quiz day)
+
+### Step 1 — Connect VPN (Windows, must be Administrator)
+The OpenVPN GUI is broken — it launches but the window never shows. Use this workaround every time:
+
+```powershell
+# In PowerShell (Run as Administrator) — kills any old instance and force-connects:
+Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue
+Start-Sleep 1
+Start-Process "C:\Program Files\OpenVPN\bin\openvpn-gui.exe" -ArgumentList "--connect CSVPNv4.ovpn" -Verb RunAs
+```
+
+- A credentials dialog will pop up — enter `apieri01@ucy.ac.cy` and your university password
+- The GUI window will disappear immediately — **this is normal**, it minimizes to tray
+- Check tray (`^` near clock) for the padlock icon — locked = connected
+- VPN assigns you IP in `10.16.19.x` range
+
+### Step 2 — Verify VPN + SSH working (Claude does this automatically):
+```powershell
+ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 "hostname"
+# Should return: 103ws14.in.cs.ucy.ac.cy
+```
+
+### Key details:
+| Item | Value |
+|------|-------|
+| VPN config | `C:\Program Files\OpenVPN\config\CSVPNv4.ovpn` |
+| VPN username | `apieri01@ucy.ac.cy` |
+| Lab machine IP | `10.16.13.89` |
+| Lab hostname | `103ws14.in.cs.ucy.ac.cy` |
+| SSH key | `C:\Users\andre\.ssh\lab_key` (passwordless) |
+| Lab home dir | `/home/students/cs/2024/apieri01` |
+| Other machines | `103ws1`–`103ws33.in.cs.ucy.ac.cy` |
+
+> **If VPN disconnects mid-session:** re-run the Stop-Process + Start-Process commands above. SSH will reconnect automatically once VPN is back up.
+
+---
+
 ## ENVIRONMENT SETUP (do this FIRST — no help given during quiz)
 
 ### On the lab machine (room 103), run once per session:
