@@ -13,19 +13,27 @@ The professor grades the addresses — a correct exploit with WSL addresses will
 ### Lab machine details:
 | Item | Value |
 |------|-------|
-| IP | `10.16.13.53` |
-| Hostname | `103ws15.in.cs.ucy.ac.cy` |
+| **Machines** | `103ws1`–`103ws33.in.cs.ucy.ac.cy` — **any one will do** |
+| Last known working | `103ws15` = `10.16.13.53` |
 | User | `apieri01` |
-| Home | `/home/students/cs/2024/apieri01` |
-| OS | Rocky Linux x86_64 (i686 binaries) |
-| SSH key | `C:\Users\andre\.ssh\lab_key` (passwordless — no password prompt) |
-| Other machines | `103ws1`–`103ws33.in.cs.ucy.ac.cy` |
+| Home | `/home/students/cs/2024/apieri01` (**NFS-shared — identical on every machine**) |
+| OS | Rocky Linux x86_64 — **same libc on every machine** |
+| SSH key | `C:\Users\andre\.ssh\lab_key` (passwordless — no password prompt ever) |
 
-### SSH test (run this first — if it returns the hostname, you are done):
+**The specific machine number does not matter.** All ws machines share:
+- The same NFS home directory → files on ws15 are instantly visible on ws1, ws33, any other
+- The same libc → `system`, `/bin/sh`, and buf_addr are identical regardless of which machine you SSH into
+- **SSH connection is mandatory. The machine you connect to is not.**
+
+### SSH test — try ws15 first, fall back to any other:
 ```powershell
+# Try last known working (ws15):
 powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53 'hostname' 2>&1"
-# Expected: 103ws15.in.cs.ucy.ac.cy
-# If this hangs or times out → VPN is down → run VPN connect command below
+
+# If that times out, try by hostname (any number 1-33):
+powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@103ws1.in.cs.ucy.ac.cy 'hostname' 2>&1"
+
+# Any response at all → you are connected → proceed
 ```
 
 ---

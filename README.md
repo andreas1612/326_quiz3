@@ -6,9 +6,11 @@
 
 ## ⚠️ VPN + SSH — DO THIS FIRST, EVERY SESSION
 
-**SSH to the lab machine is the first mandatory step. All exploit addresses come from the lab machine. The professor grades the addresses — wrong machine = zero marks.**
+**SSH to a lab machine is the first mandatory step. All exploit addresses come from the lab machine. The professor grades the addresses — WSL addresses = zero marks.**
 
 SSH is **passwordless** (key-based). VPN is **credential-based** (username + password). Assume VPN is down at the start of every session.
+
+**The specific machine number does not matter.** All ws machines share the same NFS home directory and the same libc. SSH connection is mandatory — which machine you land on is not.
 
 ### Key details:
 | Item | Value |
@@ -16,11 +18,10 @@ SSH is **passwordless** (key-based). VPN is **credential-based** (username + pas
 | VPN config | `C:\Program Files\OpenVPN\config\CSVPNv4.ovpn` |
 | VPN username | `apieri01@ucy.ac.cy` |
 | VPN credentials file | `C:\Users\andre\.ssh\vpn_creds.txt` (see one-time setup below) |
-| Lab machine IP | `10.16.13.53` |
-| Lab hostname | `103ws15.in.cs.ucy.ac.cy` |
-| SSH key | `C:\Users\andre\.ssh\lab_key` (passwordless — no prompt) |
-| Lab home dir | `/home/students/cs/2024/apieri01` |
-| Other machines | `103ws1`–`103ws33.in.cs.ucy.ac.cy` |
+| **Lab machines** | `103ws1`–`103ws33.in.cs.ucy.ac.cy` — **any one works** |
+| Last known working | `103ws15` = `10.16.13.53` |
+| SSH key | `C:\Users\andre\.ssh\lab_key` (passwordless — no prompt ever) |
+| Lab home dir | `/home/students/cs/2024/apieri01` (**NFS-shared across all machines**) |
 
 ### One-time setup — save VPN credentials to file (do once, reuse forever):
 ```powershell
