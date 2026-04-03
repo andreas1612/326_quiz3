@@ -4,6 +4,50 @@
 
 ---
 
+## LAB MACHINE ACCESS (QUIZ DAY)
+
+### Prerequisites
+1. **VPN:** Connect OpenVPN on Windows (Run as Administrator)
+   - Config: `C:\Program Files\OpenVPN\config\CSVPNv4.ovpn`
+   - Credentials: `apieri01@ucy.ac.cy` + university password
+   - Tray icon → right-click → Connect
+2. **SSH key** already installed on lab machine — passwordless auth ready
+
+### SSH command template (use this for ALL lab machine commands):
+```powershell
+powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 'COMMAND HERE' 2>&1"
+```
+
+### Lab machine details:
+- **IP:** `10.16.13.89` (= `103ws14.in.cs.ucy.ac.cy`)
+- **Home:** `/home/students/cs/2024/apieri01`
+- **OS:** Rocky Linux x86_64
+- **Other machines:** `103ws1`–`103ws33` on `in.cs.ucy.ac.cy` (DNS only works when querying `10.16.1.115` directly)
+
+### What MUST run on the lab machine (addresses differ from WSL):
+1. **libc addresses** — run once per quiz session:
+```powershell
+powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key apieri01@10.16.13.89 'echo -e \"b main\nrun /dev/null\np system\nfind \$system,+99999999,\\\"/bin/sh\\\"\nquit\" | env -i TEMP=1000 setarch i686 -R --3gb gdb -batch ./BINARY' 2>&1"
+```
+2. **buf_addr for RWE binaries** — GDB batch after memcpy breakpoint (see FAST PATH section)
+
+### What runs locally (laptop) — no SSH needed:
+- All recon (`readelf`, `objdump`) — binaries are on laptop
+- Python exploit generation — runs locally
+- Exploit files written locally, then transferred via `scp` or copied to lab machine
+
+### Transfer exploit files to lab machine:
+```powershell
+powershell.exe -Command "scp -i C:\Users\andre\.ssh\lab_key exploit.1 apieri01@10.16.13.89:/home/students/cs/2024/apieri01/"
+```
+
+### Verify on lab machine:
+```powershell
+powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key apieri01@10.16.13.89 'echo id | env -i TEMP=1000 setarch i686 -R --3gb ./bin.1 ./exploit.1' 2>&1"
+```
+
+---
+
 ## SOLVING APPROACH — 3-TIER ESCALATION
 
 Always start at Tier 1. Only escalate if the current tier fails or the binary doesn't match.
