@@ -4,41 +4,51 @@
 
 ---
 
-## VPN + SSH SETUP (do this BEFORE anything else on quiz day)
+## ⚠️ VPN + SSH — DO THIS FIRST, EVERY SESSION
 
-### Step 1 — Connect VPN (Windows, must be Administrator)
-The OpenVPN GUI is broken — it launches but the window never shows. Use this workaround every time:
+**SSH to the lab machine is the first mandatory step. All exploit addresses come from the lab machine. The professor grades the addresses — wrong machine = zero marks.**
 
-```powershell
-# In PowerShell (Run as Administrator) — kills any old instance and force-connects:
-Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue
-Start-Sleep 1
-Start-Process "C:\Program Files\OpenVPN\bin\openvpn-gui.exe" -ArgumentList "--connect CSVPNv4.ovpn" -Verb RunAs
-```
-
-- A credentials dialog will pop up — enter `apieri01@ucy.ac.cy` and your university password
-- The GUI window will disappear immediately — **this is normal**, it minimizes to tray
-- Check tray (`^` near clock) for the padlock icon — locked = connected
-- VPN assigns you IP in `10.16.19.x` range
-
-### Step 2 — Verify VPN + SSH working (Claude does this automatically):
-```powershell
-ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 "hostname"
-# Should return: 103ws14.in.cs.ucy.ac.cy
-```
+SSH is **passwordless** (key-based). VPN is **credential-based** (username + password). Assume VPN is down at the start of every session.
 
 ### Key details:
 | Item | Value |
 |------|-------|
 | VPN config | `C:\Program Files\OpenVPN\config\CSVPNv4.ovpn` |
 | VPN username | `apieri01@ucy.ac.cy` |
+| VPN credentials file | `C:\Users\andre\.ssh\vpn_creds.txt` (see one-time setup below) |
 | Lab machine IP | `10.16.13.89` |
 | Lab hostname | `103ws14.in.cs.ucy.ac.cy` |
-| SSH key | `C:\Users\andre\.ssh\lab_key` (passwordless) |
+| SSH key | `C:\Users\andre\.ssh\lab_key` (passwordless — no prompt) |
 | Lab home dir | `/home/students/cs/2024/apieri01` |
 | Other machines | `103ws1`–`103ws33.in.cs.ucy.ac.cy` |
 
-> **If VPN disconnects mid-session:** re-run the Stop-Process + Start-Process commands above. SSH will reconnect automatically once VPN is back up.
+### One-time setup — save VPN credentials to file (do once, reuse forever):
+```powershell
+# Run in PowerShell as Administrator:
+"apieri01@ucy.ac.cy`nYOUR_PASSWORD_HERE" | Out-File -FilePath "C:\Users\andre\.ssh\vpn_creds.txt" -Encoding ascii
+```
+
+### VPN connect — ONE COMMAND (PowerShell as Administrator):
+```powershell
+Stop-Process -Name openvpn -Force -ErrorAction SilentlyContinue; Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config "C:\Program Files\OpenVPN\config\CSVPNv4.ovpn" --auth-user-pass "C:\Users\andre\.ssh\vpn_creds.txt"' -Verb RunAs -WindowStyle Hidden
+```
+Wait ~10 seconds after running, then verify SSH.
+
+### SSH test — run after VPN connect:
+```powershell
+powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 'hostname' 2>&1"
+# Must return: 103ws14.in.cs.ucy.ac.cy
+# If it hangs or times out → VPN not up yet, wait 5 more seconds and retry
+```
+
+### Full session start — copy-paste this block every time:
+```powershell
+# Kill old VPN processes and reconnect
+Stop-Process -Name openvpn -Force -ErrorAction SilentlyContinue; Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config "C:\Program Files\OpenVPN\config\CSVPNv4.ovpn" --auth-user-pass "C:\Users\andre\.ssh\vpn_creds.txt"' -Verb RunAs -WindowStyle Hidden; Start-Sleep -Seconds 10; ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 "hostname"
+# → 103ws14.in.cs.ucy.ac.cy  ← only proceed if you see this
+```
+
+> **VPN disconnects mid-session:** re-run the one-command VPN connect above. SSH reconnects automatically.
 
 ---
 

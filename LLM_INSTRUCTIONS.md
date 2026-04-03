@@ -4,41 +4,106 @@
 
 ---
 
-## LAB MACHINE ACCESS (QUIZ DAY)
+## ⚠️ MANDATORY FIRST STEP: ESTABLISH SSH TO LAB MACHINE
 
-### Prerequisites
-1. **VPN:** Connect OpenVPN on Windows (Run as Administrator)
-   - Config: `C:\Program Files\OpenVPN\config\CSVPNv4.ovpn`
-   - Credentials: `apieri01@ucy.ac.cy` + university password
-   - Tray icon → right-click → Connect
-2. **SSH key** already installed on lab machine — passwordless auth ready
+**Do NOT touch any binary, run any recon, or generate any exploit until SSH is confirmed working.**
+All exploit-relevant addresses (libc, buf_addr) MUST come from the lab machine.
+The professor grades the addresses — a correct exploit with WSL addresses will fail on the lab machine and receive zero marks.
+
+### Lab machine details:
+| Item | Value |
+|------|-------|
+| IP | `10.16.13.89` |
+| Hostname | `103ws14.in.cs.ucy.ac.cy` |
+| User | `apieri01` |
+| Home | `/home/students/cs/2024/apieri01` |
+| OS | Rocky Linux x86_64 (i686 binaries) |
+| SSH key | `C:\Users\andre\.ssh\lab_key` (passwordless — no password prompt) |
+| Other machines | `103ws1`–`103ws33.in.cs.ucy.ac.cy` |
+
+### SSH test (run this first — if it returns the hostname, you are done):
+```powershell
+powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 'hostname' 2>&1"
+# Expected: 103ws14.in.cs.ucy.ac.cy
+# If this hangs or times out → VPN is down → run VPN connect command below
+```
+
+---
+
+## VPN — ASSUME IT IS DOWN, RECONNECT WITH ONE COMMAND
+
+**The VPN is credential-based (username + password), not key-based.**
+The OpenVPN GUI is broken on this machine (window disappears). Always use the command below.
+
+### One-time setup (do this once, saves credentials for future use):
+```powershell
+# Run in PowerShell as Administrator — creates the credentials file:
+"apieri01@ucy.ac.cy`nYOUR_PASSWORD_HERE" | Out-File -FilePath "C:\Users\andre\.ssh\vpn_creds.txt" -Encoding ascii
+```
+Replace `YOUR_PASSWORD_HERE` with the actual university password. File stays on disk for future sessions.
+
+### VPN connect — ONE COMMAND (run as Administrator in PowerShell):
+```powershell
+Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn-gui.exe" -ArgumentList "--connect CSVPNv4.ovpn" -Verb RunAs
+```
+
+### VPN connect without GUI (background, uses credentials file — most reliable):
+```powershell
+Stop-Process -Name openvpn -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config "C:\Program Files\OpenVPN\config\CSVPNv4.ovpn" --auth-user-pass "C:\Users\andre\.ssh\vpn_creds.txt"' -Verb RunAs -WindowStyle Hidden
+```
+Wait ~10 seconds, then re-run the SSH test. If SSH returns the hostname, VPN is up.
+
+### VPN status check:
+```powershell
+powershell.exe -Command "ipconfig | findstr 10.16"
+# Should show an IP in 10.16.19.x range when VPN is connected
+```
+
+### Full session start sequence (copy-paste this entire block):
+```powershell
+# 1. Kill old VPN + reconnect
+Stop-Process -Name openvpn -Force -ErrorAction SilentlyContinue
+Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue
+Start-Sleep -Seconds 1
+Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config "C:\Program Files\OpenVPN\config\CSVPNv4.ovpn" --auth-user-pass "C:\Users\andre\.ssh\vpn_creds.txt"' -Verb RunAs -WindowStyle Hidden
+Start-Sleep -Seconds 10
+
+# 2. Verify SSH (MUST succeed before proceeding)
+ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 "hostname"
+# → 103ws14.in.cs.ucy.ac.cy  ← only continue if you see this
+```
+
+---
+
+## LAB MACHINE — ALL ADDRESS WORK HAPPENS HERE
+
+**The SSH key is passwordless. Once VPN is up, all lab machine access is automatic.**
 
 ### SSH command template (use this for ALL lab machine commands):
 ```powershell
 powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89 'COMMAND HERE' 2>&1"
 ```
 
-### Lab machine details:
-- **IP:** `10.16.13.89` (= `103ws14.in.cs.ucy.ac.cy`)
-- **Home:** `/home/students/cs/2024/apieri01`
-- **OS:** Rocky Linux x86_64
-- **Other machines:** `103ws1`–`103ws33` on `in.cs.ucy.ac.cy` (DNS only works when querying `10.16.1.115` directly)
-
-### What MUST run on the lab machine (addresses differ from WSL):
-1. **libc addresses** — run once per quiz session:
-```powershell
-powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key apieri01@10.16.13.89 'echo -e \"b main\nrun /dev/null\np system\nfind \$system,+99999999,\\\"/bin/sh\\\"\nquit\" | env -i TEMP=1000 setarch i686 -R --3gb gdb -batch ./BINARY' 2>&1"
-```
-2. **buf_addr for RWE binaries** — GDB batch after memcpy breakpoint (see FAST PATH section)
+### What MUST run on the lab machine (professor grades these addresses):
+1. **libc addresses** (`system` + `/bin/sh`) — get once per quiz session via GDB:
+   - Write a gdbscript file, scp it to lab, run it there (inline gdb commands break due to shell escaping)
+   - See FAST PATH section for the exact script template
+2. **buf_addr for RWE shellcode binaries** — GDB batch after memcpy breakpoint
+3. **Exploit verification** — `echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./bin.X ./exploit.X`
 
 ### What runs locally (laptop) — no SSH needed:
-- All recon (`readelf`, `objdump`) — binaries are on laptop
-- Python exploit generation — runs locally
-- Exploit files written locally, then transferred via `scp` or copied to lab machine
+- Recon: `readelf`, `objdump` — binaries are on the laptop
+- Python exploit generation — runs locally via WSL
+- Exploit files written locally, then transferred via `scp`
+
+### Transfer binaries to lab machine:
+```powershell
+powershell.exe -Command "scp -i C:\Users\andre\.ssh\lab_key 'C:\PATH\TO\bin.1' 'C:\PATH\TO\bin.2' 'C:\PATH\TO\bin.3' apieri01@10.16.13.89:/home/students/cs/2024/apieri01/"
+```
 
 ### Transfer exploit files to lab machine:
 ```powershell
-powershell.exe -Command "scp -i C:\Users\andre\.ssh\lab_key exploit.1 apieri01@10.16.13.89:/home/students/cs/2024/apieri01/"
+powershell.exe -Command "scp -i C:\Users\andre\.ssh\lab_key exploit.1 exploit.2 exploit.3 apieri01@10.16.13.89:/home/students/cs/2024/apieri01/"
 ```
 
 ### Verify on lab machine:
