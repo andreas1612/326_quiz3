@@ -5,6 +5,25 @@
 
 ---
 
+## ⚠️ NEXT QUIZ — WHAT TO EXPECT (ROP focused)
+
+> **This quiz will focus on Return-Oriented Programming (ROP) and mmap-based gadget chains.**
+> The previous quiz (Quiz 3) covered shellcode + ret2libc. This one goes further.
+
+**Expected binary patterns:**
+- NX on (`GNU_STACK RW`) — shellcode won't work → **ROP or ret2libc**
+- `main()` may call `mmap()` + write gadgets via `movb` → **pre-built ROP gadgets at fixed address**
+- Gadget tables will differ between bin.1/bin.2/bin.3 — **decode fresh for each binary**
+- `.bss` may be poisoned by `init_data()` → **use mmap_base+0x500 as writable address**
+
+**Start here for this quiz:**
+1. `readelf -l ./bin.X | grep GNU_STACK` → RW = ROP/ret2libc, RWE = shellcode
+2. `objdump -d ./bin.X | sed -n '/<main>/,/<__libc_csu_init>/p' | grep -E "mmap|movb"` → detect mmap gadgets
+3. `python3 ~/326_quiz3/tools/find_gadgets.py ./bin.X` → auto-find gadgets
+4. See **Section 6 (ROP)** for full step-by-step workflow
+
+---
+
 ## ENVIRONMENT SETUP (do this FIRST — no help given during quiz)
 
 ### On the lab machine (room 103), run once per session:

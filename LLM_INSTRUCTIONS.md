@@ -4,6 +4,27 @@
 
 ---
 
+## ⚠️ NEXT QUIZ FOCUS — READ THIS FIRST
+
+> **The upcoming quiz covers ROP (Return-Oriented Programming) and mmap-based gadget chains.**
+> Previous quizzes used shellcode + ret2libc. This quiz expects ROP knowledge.
+
+**What will likely appear:**
+- Binaries with NX on (`GNU_STACK RW`) — shellcode will segfault silently
+- `main()` building gadgets at runtime via `mmap()` + `movb` byte writes
+- Gadget tables that differ between binaries in the same set — **never copy addresses across binaries**
+- `.bss` poisoned by `init_data()` — must use `mmap_base + 0x500` as writable region
+- Possibly a warm-up bin.0 (PIE, skip) + 3 exploit binaries
+
+**LLM workflow for this quiz:**
+1. Read `main()` disasm first: `objdump -d ./bin.X | sed -n '/<main>/,/<__libc_csu_init>/p'`
+2. If `mmap` + `movb` found → decode gadget table from movb bytes, calculate gadget_base
+3. If no mmap → run `python3 ~/326_quiz3/tools/find_gadgets.py ./bin.X`
+4. Copy `~/326_quiz3/tools/solve_rop_template.py`, fill in addresses, run it
+5. See **SECTION C** for full ROP workflow
+
+---
+
 ## ⚠️ MANDATORY FIRST STEP: ENVIRONMENT SETUP
 
 **You are sitting directly at a lab machine (room 103). Open a terminal and run everything there.**
