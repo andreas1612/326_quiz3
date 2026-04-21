@@ -1,7 +1,29 @@
-# SSH & VPN Setup — Remote Access from Personal Laptop
+# SSH & VPN Setup — Remote Access
 
-> This file is for working remotely from a personal Windows laptop.
-> **During the quiz you sit directly at the lab machine — none of this is needed.**
+---
+
+## QUIZ DAY — Sitting in a different lab, SSHing into room 103
+
+> Key is stored in NFS home — works from ANY lab machine automatically.
+
+```bash
+# From any lab machine terminal (no key flag needed — ~/.ssh/config handles it):
+ssh lab103                          # → connects to 10.16.13.53 (ws15)
+
+# Or by IP (any ws machine in 10.16.13.x range):
+ssh apieri01@10.16.13.53
+
+# Once connected — go straight to work:
+cd ~/326_quiz3
+source ~/.bashrc                    # loads nvm + claude + ROPgadget into PATH
+claude                              # launch Claude Code
+```
+
+`~/.ssh/lab_key` is already on the NFS home (copied 2026-04-21) — no setup needed on any lab machine.
+
+---
+
+## From personal Windows laptop (remote from home)
 
 ---
 
