@@ -10,20 +10,20 @@ Prints addresses + readable chain diagram.
 import subprocess, sys, re
 
 REQUIRED = {
-    "pop eax; pop ebx; ret":  re.compile(r"58\s+5b\s+c3"),
-    "xor eax,eax; ret":       re.compile(r"31\s+c0\s+c3"),
-    "mov \[ebx\],eax; ret":   re.compile(r"89\s+03\s+c3"),
-    "mov ebx,eax; ret":       re.compile(r"89\s+c3\s+c3"),
-    "xor ecx,ecx; ret":       re.compile(r"31\s+c9\s+c3"),
-    "xor edx,edx; ret":       re.compile(r"31\s+d2\s+c3"),
-    "mov al,0xb; ret":        re.compile(r"b0\s+0b\s+c3"),
-    "int 0x80; ret":          re.compile(r"cd\s+80\s+c3"),
+    "pop eax; pop ebx; ret":  re.compile(r"585bc3"),
+    "xor eax,eax; ret":       re.compile(r"31c0c3"),
+    "mov [ebx],eax; ret":     re.compile(r"8903c3"),
+    "mov ebx,eax; ret":       re.compile(r"89c3c3"),
+    "xor ecx,ecx; ret":       re.compile(r"31c9c3"),
+    "xor edx,edx; ret":       re.compile(r"31d2c3"),
+    "mov al,0xb; ret":        re.compile(r"b00bc3"),
+    "int 0x80; ret":          re.compile(r"cd80c3"),
 }
 
 FALLBACK = {
-    "pop eax; ret":           re.compile(r"58\s+c3"),
-    "pop ebx; ret":           re.compile(r"5b\s+c3"),
-    "mov eax,ebx; ret":       re.compile(r"89\s+d8\s+c3"),
+    "pop eax; ret":           re.compile(r"58c3"),
+    "pop ebx; ret":           re.compile(r"5bc3"),
+    "mov eax,ebx; ret":       re.compile(r"89d8c3"),
 }
 
 def get_objdump(binary):

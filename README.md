@@ -78,10 +78,11 @@ chmod +x run.sh
 
 ```bash
 # Check NX / execstack / RELRO / canary / PIE
-checksec --file=./binary         # if checksec installed
 readelf -l ./binary | grep GNU_STACK   # RWE = executable stack (no NX)
 readelf -h ./binary | grep Type        # ET_EXEC = no PIE, ET_DYN = PIE
 file ./binary                          # "not stripped" = symbols present
+objdump -d ./binary | grep stack_chk   # if present → stack canary
+# checksec is NOT installed on lab machine — use readelf above
 ```
 
 Key flags:

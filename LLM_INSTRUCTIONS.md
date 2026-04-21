@@ -227,23 +227,26 @@ objdump -d ./bin.X | sed -n '/<main>/,/<__libc_csu_init>/p'
 
 **Lab machine:** Rocky Linux 9.6 x86_64, room 103, `103ws1`–`103ws33.in.cs.ucy.ac.cy`
 **Home directory:** `/home/students/cs/2024/apieri01` (NFS-shared across all machines)
-**libc addresses (confirmed, TEMP=1000, ASLR off):**
+**libc:** `/lib/libc.so.6` (32-bit), confirmed addresses below
 
-**WSL invocation:** Raw `wsl` in Git Bash/MSYS shell prepends the Windows PATH and breaks paths.
-Use PowerShell to call WSL reliably:
-```powershell
-# One-liner:
-powershell.exe -Command "wsl bash /path/to/script.sh"
+**Confirmed libc addresses (TEMP=1000, ASLR off, Rocky Linux lab machine):**
+| Symbol | Address |
+|--------|---------|
+| `system()` | `0xb7dffd30` |
+| `"/bin/sh"` | `0xb7f40caa` |
 
-# Write script to /tmp first, then run — most reliable for multi-line commands:
-cat > /tmp/exploit.sh << 'EOF'
-#!/bin/bash
-env -i TEMP=1000 setarch i686 -R --3gb ./binary exploit_file
-EOF
-powershell.exe -Command "wsl bash /tmp/exploit.sh"
-```
-
-**Do NOT use:** `wsl command args` directly from Git Bash — it silently mangles paths.
+**Tools installed on lab machine:**
+| Tool | Status | Use |
+|------|--------|-----|
+| gdb 14.2 | ✓ installed | Debug, find offsets, libc addresses |
+| objdump | ✓ installed | Disassemble, find gadgets |
+| readelf | ✓ installed | Check NX/PIE/stack flags |
+| python3.9 | ✓ installed | Build exploit scripts |
+| ROPgadget | ✓ installed | `ROPgadget --binary ./bin.X` |
+| ropper | ✓ installed | `ropper -f ./bin.X` |
+| strace/ltrace | ✓ installed | Trace syscalls if needed |
+| pwntools | ✗ not installed | Not needed — use struct.pack directly |
+| checksec | ✗ not installed | Use `readelf -l` + `readelf -h` instead |
 
 ## MANDATORY ENVIRONMENT — USE THIS FOR EVERY BINARY
 
