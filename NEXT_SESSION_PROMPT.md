@@ -21,12 +21,11 @@ I am student `apieri01`, group 6.
    - OFFSET differs between binaries — always read `lea -0xNN(%ebp)` in `display_file` per binary
    - Never use `.bss` as WR_ADDR — always use `mmap_base + 0x500`
 
-3. **SSH to the lab machine** using the instructions in `SSH_SETUP.md`:
-   - You are already on a lab machine — use `ssh lab103` (key is in NFS home `~/.ssh/lab_key`)
-   - Or: `ssh -i ~/.ssh/lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53`
-   - If 10.16.13.53 (ws15) is down, try 10.16.13.89 (ws14) or other 103wsX IPs in the 10.16.13.x range
-   - Once connected: `cd ~/326_quiz3` (repo is already cloned there)
-   - If repo not present: `git clone https://github.com/andreas1612/326_quiz3.git ~/326_quiz3`
+3. **SSH to the Lab 103 machines (Target Environment)**:
+   - You are in a random lab (e.g. 101/105) — use `ssh lab103` (alias for ws15) or `ssh apieri01@10.16.13.53`.
+   - **NFS Note:** Your home directory is shared. `~/326_quiz3/` is available everywhere, but you **MUST EXECUTE** inside a Lab 103 session for the binaries to work correctly.
+   - If 10.16.13.53 is down, target any ws machine in 10.16.13.x range.
+   - Once connected: `cd ~/326_quiz3`
 
 4. **I will tell you where the quiz binaries are.** Upload them to the lab:
    ```bash
