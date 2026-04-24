@@ -4,24 +4,25 @@
 
 ---
 
-## ⚠️ NEXT QUIZ FOCUS — READ THIS FIRST
+## ✅ QUIZ 4 STATUS — SOLVED (mmap ROP, example sets bin2 + g1)
 
-> **The upcoming quiz covers ROP (Return-Oriented Programming) and mmap-based gadget chains.**
-> Previous quizzes used shellcode + ret2libc. This quiz expects ROP knowledge.
+> Quiz 4 covered mmap-based dynamic ROP gadget chains. All 4 example binaries solved 2026-04-24.
+> Full methodology: [FINDINGS.md](FINDINGS.md) · Summary: [STATUS.md](STATUS.md)
+> Quiz day prep (group 6): [NEXT_SESSION_PROMPT.md](NEXT_SESSION_PROMPT.md)
 
-**What will likely appear:**
-- Binaries with NX on (`GNU_STACK RW`) — shellcode will segfault silently
-- `main()` building gadgets at runtime via `mmap()` + `movb` byte writes
-- Gadget tables that differ between binaries in the same set — **never copy addresses across binaries**
-- `.bss` poisoned by `init_data()` — must use `mmap_base + 0x500` as writable region
-- Possibly a warm-up bin.0 (PIE, skip) + 3 exploit binaries
+**Confirmed values for Quiz 4 example sets:**
+- `gadget_base = 0x070493e0` (formula gives +0x3e8 — off by 8, always verify via GDB)
+- `WR_ADDR = 0x07049500` (mmap_base + 0x500, zeroed by MAP_ANONYMOUS — never .bss)
+- OFFSET: **56** for bin2 set (`lea -0x34(%ebp)`), **52** for g1 set (`lea -0x30(%ebp)`)
+- Gadget byte order **differs between bin.1 and bin.2 in every set** — decode fresh each time
 
-**LLM workflow for this quiz:**
-1. Read `main()` disasm first: `objdump -d ./bin.X | sed -n '/<main>/,/<__libc_csu_init>/p'`
-2. If `mmap` + `movb` found → decode gadget table from movb bytes, calculate gadget_base
-3. If no mmap → run `python3 ~/326_quiz3/tools/find_gadgets.py ./bin.X`
-4. Copy `~/326_quiz3/tools/solve_rop_template.py`, fill in addresses, run it
-5. See **SECTION C** for full ROP workflow
+**LLM workflow for mmap ROP (confirmed working):**
+1. Read `main()` disasm: `objdump -d ./bin.X | sed -n '/<main>/,/<__libc_csu_init>/p'`
+2. Extract `movb` bytes in order → decode 3-byte groups into gadget table
+3. Find hardcoded addr before `call mmap` → calculate `mmap_base` → verify `gadget_base` via GDB
+4. Read `lea -0xNN(%ebp)` in `display_file` → OFFSET = NN + 4
+5. Build chain using `~/326_quiz3/tools/solve_rop_template.py`, WR_ADDR = mmap_base+0x500
+6. See **SECTION C** for full ROP workflow
 
 ---
 
@@ -621,6 +622,9 @@ objdump -d ./binary | sed -n '/<main>/,/<__libc_csu_init>/p' | grep -E "mmap|mov
    gadget_base = mmap_base + 1000   # TEMP=1000, offset = TEMP value directly
    # each gadget: gadget_base + byte_offset (+0x00, +0x03, +0x06, +0x09...)
    ```
+   **⚠️ CONFIRMED BUG IN FORMULA:** In Quiz 4 example sets, formula gives `mmap_base + 0x3e8`
+   but GDB showed gadgets actually at `mmap_base + 0x3e0` (8 bytes earlier). ALWAYS verify
+   via GDB memory dump before building the chain.
 
 6. **Chain re-sequencing:** gadget byte order DIFFERS between binaries in the same set.
    After decoding YOUR binary's movb table, map each gadget to its offset:

