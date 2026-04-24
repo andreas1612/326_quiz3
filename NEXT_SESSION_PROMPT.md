@@ -166,3 +166,10 @@ cp ~/326_quiz3/tools/solve_rop_template.py ./solve_g6.py  # fill in addresses an
    `objdump -d bin.X | awk '/<display_file>/{f=1} f{print} /<root_menu>/{exit}' | grep -A2 "memcpy"`
 
 Detailed failure diagnosis in `LLM_INSTRUCTIONS.md` Section C → "ROP failure diagnosis" table.
+
+---
+
+## 🚀 Copy-Paste Command to Start AI Session
+
+> **Clone `https://github.com/andreas1612/326_quiz3.git`, analyze `NEXT_SESSION_PROMPT.md` in full, and then follow its steps sequentially to solve the binaries in [DIR]. Ensure the SSH connection is established first as per the instructions.**
+
