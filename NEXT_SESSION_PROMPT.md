@@ -130,8 +130,8 @@ Expected: `uid=9992(apieri01) gid=3633(cs24) groups=3633(cs24)`
 | gadget_base | `0x070493e0` | Verify via GDB — may differ for new binaries |
 | mmap_base | `0x07049000` | Recompute from hardcoded_addr in new binary |
 | WR_ADDR | `0x07049500` | Always mmap_base+0x500, never .bss |
-| OFFSET bin.1 | 56 or 52 | Read `lea -0xNN(%ebp)` fresh for each binary |
-| OFFSET bin.2 | 56 or 52 | Read `lea -0xNN(%ebp)` fresh for each binary |
+| OFFSET bin.1 | 56, 52, or 48 | Read `lea -0xNN(%ebp)` fresh for each binary |
+| OFFSET bin.2 | 56, 52, or 48 | Read `lea -0xNN(%ebp)` fresh for each binary |
 | Gadget bytes | Same 8 gadgets | ORDER may differ — decode movb table fresh |
 
 ---
